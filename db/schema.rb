@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160408024750) do
+ActiveRecord::Schema.define(version: 20160408033624) do
 
   create_table "user_stats", force: :cascade do |t|
     t.integer "user_id"
@@ -23,5 +23,14 @@ ActiveRecord::Schema.define(version: 20160408024750) do
   end
 
   add_index "user_stats", ["user_id"], name: "index_user_stats_on_user_id"
+
+  create_table "users", force: :cascade do |t|
+    t.string   "email",      null: false
+    t.string   "username"
+    t.string   "password",   null: false
+    t.string   "avatar_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
 end
