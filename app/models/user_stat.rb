@@ -10,6 +10,12 @@ class UserStat < ActiveRecord::Base
   end
 
   def win_loss_ratio
-    self.wins / self.losses
+    if self.losses == 0 && self.wins == 0
+      0.0
+    elsif self.losses == 0
+      100.0
+    else
+      self.wins / self.games_played
+    end
   end
 end
