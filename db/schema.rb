@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20160408033624) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "user_stats", force: :cascade do |t|
     t.integer "user_id"
     t.integer "wins",               default: 0, null: false
@@ -22,7 +25,7 @@ ActiveRecord::Schema.define(version: 20160408033624) do
     t.integer "players_killed",     default: 0, null: false
   end
 
-  add_index "user_stats", ["user_id"], name: "index_user_stats_on_user_id"
+  add_index "user_stats", ["user_id"], name: "index_user_stats_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",      null: false
