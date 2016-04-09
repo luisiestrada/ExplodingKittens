@@ -1,8 +1,12 @@
 class User < ActiveRecord::Base
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable
   belongs_to :game
   has_one :stats, class_name: UserStat
 
-  validates_presence_of :email, :password
+  validates_presence_of :email, :encrypted_password
   before_create :generate_anon_username
   after_create :init_stats
 
