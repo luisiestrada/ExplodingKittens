@@ -11,29 +11,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160408033624) do
+ActiveRecord::Schema.define(version: 20160410001649) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "user_stats", force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "wins",               default: 0, null: false
-    t.integer "losses",             default: 0, null: false
+  create_table "stats", force: :cascade do |t|
+    t.integer "user_id",                        null: false
+    t.integer "game_id"
+    t.string  "type",                           null: false
     t.integer "cards_played",       default: 0, null: false
     t.integer "card_combos_played", default: 0, null: false
     t.integer "players_killed",     default: 0, null: false
   end
 
-  add_index "user_stats", ["user_id"], name: "index_user_stats_on_user_id", using: :btree
+  add_index "stats", ["game_id"], name: "index_stats_on_game_id", using: :btree
+  add_index "stats", ["type"], name: "index_stats_on_type", using: :btree
+  add_index "stats", ["user_id"], name: "index_stats_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",      null: false
+    t.string   "email",                  null: false
     t.string   "username"
-    t.string   "password",   null: false
+    t.string   "password",               null: false
     t.string   "avatar_url"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.integer  "wins",       default: 0, null: false
+    t.integer  "losses",     default: 0, null: false
   end
 
 end
