@@ -44,6 +44,6 @@ group :development, :test do
   gem 'spring'
 end
 
+gem 'devise'
 #for Heroku logging and static asset serving
 gem 'rails_12factor', group: :production
-
