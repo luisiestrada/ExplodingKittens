@@ -11,18 +11,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160409072754) do
+ActiveRecord::Schema.define(version: 20160410014258) do
 
-  create_table "user_stats", force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "wins",               default: 0, null: false
-    t.integer "losses",             default: 0, null: false
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "games", force: :cascade do |t|
+    t.boolean  "active",     default: false, null: false
+    t.integer  "winner_id"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  add_index "games", ["winner_id"], name: "index_games_on_winner_id", using: :btree
+
+  create_table "stats", force: :cascade do |t|
+    t.integer "user_id",                        null: false
+    t.integer "game_id"
+    t.string  "type",                           null: false
     t.integer "cards_played",       default: 0, null: false
     t.integer "card_combos_played", default: 0, null: false
     t.integer "players_killed",     default: 0, null: false
   end
 
-  add_index "user_stats", ["user_id"], name: "index_user_stats_on_user_id"
+  add_index "stats", ["game_id"], name: "index_stats_on_game_id", using: :btree
+  add_index "stats", ["type"], name: "index_stats_on_type", using: :btree
+  add_index "stats", ["user_id"], name: "index_stats_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "username"
@@ -31,6 +45,9 @@ ActiveRecord::Schema.define(version: 20160409072754) do
     t.datetime "updated_at",                          null: false
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
+    t.integer  "wins",                   default: 0, null: false
+    t.integer  "losses",                 default: 0, null: false
+    t.integer  "game_id"
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -43,5 +60,6 @@ ActiveRecord::Schema.define(version: 20160409072754) do
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  add_index "users", ["game_id"], name: "index_users_on_game_id", using: :btree
 
 end

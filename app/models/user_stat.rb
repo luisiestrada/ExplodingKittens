@@ -1,4 +1,4 @@
-class UserStat < ActiveRecord::Base
+class UserStat < Stat
   belongs_to :user
 
   validates_presence_of :user_id
