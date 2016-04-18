@@ -1,8 +1,109 @@
-<h2>Welcome to Exploding Kittens</h2>
-<p>
-  The time is now: <%= Time.now %>
-</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Exploding Kittens game</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <%= link_to 'List of games', games_path %><br/>
-  <%= link_to 'Create a new game', new_game_path %><br/>
-  <%= link_to 'List of players', users_path %><br/>
+	<link rel="stylesheet"
+		href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js">
+	</script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
+	</script>
+</head>
+
+<body>
+<nav class="navbar navbar-inverse" id ="nav">
+  <div class="container-fluid">
+    <div class="navbar-header"> <!-- Logo -->
+		<button type="button" class="navbar-toggle" data-toggle="collapse"
+				data-target="#myNavbar">
+			<!-- ≡ button at top right -->
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>
+        <a class="navbar-brand" href="#">Exploding Kittens</a>
+    </div>
+	<div class="collapse navbar-collapse" id="myNavbar">
+		<ul class="nav navbar-nav navbar-right"> <!-- Links to the right -->
+			<li class="active"><a href="#">Home</a></li>
+			<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown"
+				href="#">Play Game<span class="caret"></span></a>
+				<ul class="dropdown-menu">
+					<li><a href="#" class="dropdown-box">Create a Game</a></li>
+					<li><a href="#" class="dropdown-box">Join a Game</a></li>
+				</ul>
+			</li>
+			<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown"
+				href="#">How to Play<span class="caret"></span></a>
+				<ul class="dropdown-menu">
+					<li><a href="#" class="dropdown-box">Instructions</a></li>
+					<li><a href="#" class="dropdown-box">Card list</a></li>
+				</ul>
+			</li>
+			<li><a href="#">About Us</a></li>
+			<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown"
+				href="#">Settings<span class="caret"></span></a>
+				<ul class="dropdown-menu">
+					<li><a href="#" class="dropdown-box">Log out</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+  </div>
+</nav>
+
+<div class="container-fluid">
+	<!-- jumbotron 
+	<div class="jumbotron", id="jumbo">
+		<h1>Exploding Kittens<br/>
+	</div>
+-->
+	<div id="content">
+	<h2>Welcome to Exploding Kittens</h2>
+	<p>The time is now: <%= Time.now %></p>
+
+	<%= link_to 'List of games', games_path %><br/>
+	<%= link_to 'Create a new game', new_game_path %><br/>
+	<%= link_to 'List of players', users_path %><br/>
+	
+	<p>Lorem ipsum dolor sit amet consectetuer venenatis vitae Nulla fringilla consequat. Wisi magnis volutpat auctor Nulla Vivamus id In elit dictumst mollis. Curabitur auctor consectetuer dui interdum neque Curabitur vel auctor tellus netus. Sed tincidunt condimentum semper Vestibulum sed tellus ridiculus elit In dictum. Turpis lacus pellentesque In ac volutpat mi non nibh vitae laoreet. Elit.</p>
+	</div>
+	
+
+</div>
+
+<div id="myCarousel" class="carousel slide" data-ride="carousel">
+  <!-- Indicators -->
+  <ol class="carousel-indicators">
+    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+    <li data-target="#myCarousel" data-slide-to="1"></li>
+  </ol>
+
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner" role="listbox">
+    <div class="item active">
+      <%= image_tag("exploding-kitten.jpg") %>
+    </div>
+
+    <div class="item">
+    	<%= image_tag("kaboom.png", class: "img-responsive") %>
+    </div>
+  </div>
+
+  <!-- Left and right controls -->
+  <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+
+</body>
+</html>

@@ -1,3 +1,55 @@
 // Place all the styles related to the welcome controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+html body {
+	background-color: black;
+	color: white;
+	font-family: times_new_roman;
+}
+
+/* navbar */
+.navbar.navbar-inverse {
+	background-color: #7C2213;
+}
+
+/* active links */
+.active a {
+	background-color: #303030 !important;
+}
+
+/* main page header */
+html #content {
+	display: block;
+	border: 2px solid #999;
+	padding: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	color: white;
+	text-align: center;
+}
+
+/* jumbotron */
+#jumbo {
+	background-color: #7C2213;
+	margin-left: auto;
+	margin-right: auto;
+	color: white;
+	text-align: center;
+}
+
+/* images */
+html img {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* carousel images */
+.carousel-inner img {
+	max-width: 100%;
+	max-height: 80%;
+	margin-left: auto;
+	margin-right: auto;
+	width: auto\9;
+}
