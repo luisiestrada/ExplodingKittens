@@ -1,0 +1,22 @@
+<p>
+  <strong>Game id:</strong>
+  <%= @game.id %>
+</p>
+ 
+<p>
+  <strong>Players:</strong>
+  <table>
+  <tr>
+    <th>ID</th>
+    <th>Email</th>
+    <th colspan="3"></th>
+  </tr>
+ 
+  <% @game.users.each do |user| %>
+    <tr>
+      <td><%= user.id %></td>
+      <td><%= user.email %></td>
+    </tr>
+  <% end %>
+</table>
+</p>

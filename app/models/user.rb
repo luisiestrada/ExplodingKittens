@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
   has_one :stats, class_name: UserStat
   has_many :games_won, foreign_key: :winner_id, class_name: Game
 
-  validates_presence_of :email, :password, :encrypted_password
+  validates_presence_of :email, :encrypted_password
   validates_numericality_of :wins, :losses,
     only_integer: true, greater_than_or_equal_to: 0
 
