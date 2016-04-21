@@ -56,20 +56,17 @@
   </div>
 </nav>
 
+<!-- main page header -->
 <div class="container-fluid">
-	<!-- jumbotron 
-	<div class="jumbotron", id="jumbo">
-		<h1>Exploding Kittens<br/>
-	</div>
--->
-	<div id="content">
+
+	<div id="content" class="well" style="background: black">
 	<h2>Welcome to Exploding Kittens</h2>
 	<p>The time is now: <%= Time.now %></p>
 
 	<%= link_to 'List of games', games_path %><br/>
 	<%= link_to 'Create a new game', new_game_path %><br/>
 	<%= link_to 'List of players', users_path %><br/>
-	
+
 	<p>Testing</p>
 	</div>
 </div>
