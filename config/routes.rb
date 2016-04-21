@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get 'chat/message'
+  post 'chat/message' => 'chat#message'
+
   devise_for :users
   get 'welcome/index'
 
@@ -18,6 +21,7 @@ Rails.application.routes.draw do
   #   resources :products
   resources :games
   resources :users
+  resources :chat
 
   # Example resource route with options:
   #   resources :products do
