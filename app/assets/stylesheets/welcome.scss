@@ -2,20 +2,57 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-html body {
-	background-color: black;
-	color: white;
-	font-family: times_new_roman;
-}
+/*********** NAVBAR ***********/
 
 /* navbar */
-.navbar.navbar-inverse {
+.navbar.navbar-custom.navbar-fixed-top {
 	background-color: #7C2213;
+	border: none;
+}
+
+/* navbar links */
+.navbar a {
+	color: white;
+}
+
+/* navbar links upon hover */
+.navbar a:hover {
+	color: black;
+	background-color: white !important;
+}
+
+/* navbar dropdown-menu link upon click */
+.dropdown-toggle:active, .open .dropdown-toggle {
+	color: black !important;
+}
+
+/* drop-down menu links */
+#nav .open .dropdown-menu>li>a, .navbar-nav .open .dropdown-menu {
+	color: white;
+	background-color: #7C2213;
+}
+
+/* drop-down menu links upon hover */
+#nav .open .dropdown-menu>li>a:hover, .navbar-nav .open .dropdown-menu {
+	color: black;
+}
+
+/* hamburger icon */
+.icon-bar {
+	background-color: white;
 }
 
 /* active links */
 .active a {
-	background-color: #303030 !important;
+	background-color: #303030;
+}
+
+
+/*********** PAGE BODY ***********/
+
+html body {
+	background-color: black;
+	color: white;
 }
 
 /* main page header */
@@ -29,22 +66,6 @@ html #content {
 	text-align: center;
 }
 
-/* jumbotron */
-#jumbo {
-	background-color: #7C2213;
-	margin-left: auto;
-	margin-right: auto;
-	color: white;
-	text-align: center;
-}
-
-/* images */
-html img {
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
-}
-
 /* carousel images */
 .carousel-inner img {
 	max-width: 100%;
@@ -52,4 +73,69 @@ html img {
 	margin-left: auto;
 	margin-right: auto;
 	width: auto\9;
+}
+
+
+/*********** CHAT BOX ***********/
+
+form, p, span {
+    margin:0;
+    padding:0;
+}
+#menu {
+	padding:12.5px 25px 12.5px 25px;
+}
+
+#wrapper {
+    margin:0 auto;
+    padding-bottom:25px;
+    background:#7C2213;
+    max-width: 80%;
+    border:1px solid #7C2213;
+}
+
+#chatbox {
+    text-align:left;
+    margin:0 auto;
+    margin-bottom:25px;
+    padding:10px;
+    background:#fff;
+    height:270px;
+    max-width: 80%;
+    border:1px solid #7C2213;
+    overflow:auto;
+}
+
+/* chat name */  
+.welcome {
+	float:left;
+}
+
+/* exit link */
+.logout {
+	float:right;
+}
+
+form, p, span {
+	margin: 0;
+	padding: 0;
+}
+
+/* textbox + send button */
+#txtbox {
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 80%;
+}
+
+/* user message */
+#usermsg {
+    max-width: 80%;
+    border:1px solid #7C2213;
+    color: black;
+}
+
+/* send button */
+#submitmsg {
+	color: black;
 }
