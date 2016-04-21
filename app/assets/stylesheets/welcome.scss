@@ -8,8 +8,12 @@ html body {
 	font-family: times_new_roman;
 }
 
+title{
+	background-color: #7C2213;
+}
+
 /* navbar */
-.navbar.navbar-inverse {
+.navbar.navbar-custom.navbar-fixed-top {
 	background-color: #7C2213;
 }
 
@@ -53,3 +57,53 @@ html img {
 	margin-right: auto;
 	width: auto\9;
 }
+  
+form, p, span {
+    margin:0;
+    padding:0; }
+  
+input { font:12px arial; }
+  
+a {
+    color:#0000FF;
+    text-decoration:none; }
+  
+    a:hover { text-decoration:underline; }
+  
+#wrapper, #loginform {
+    margin:0 auto;
+    padding-bottom:25px;
+    background:#7C2213;
+    width:1200px;
+    border:1px solid #7C2213; }
+  
+#loginform { padding-top:18px; }
+  
+    #loginform p { margin: 5px; }
+  
+#chatbox {
+    text-align:left;
+    margin:0 auto;
+    margin-bottom:25px;
+    padding:10px;
+    background:#fff;
+    height:270px;
+    width:1100px;
+    border:1px solid #7C2213;
+    overflow:auto; }
+  
+#usermsg {
+    width:1050px;
+    border:1px solid #7C2213; }
+  
+#submit { width: 1100px; }
+  
+.error { color: #ff0000; }
+  
+#menu { padding:12.5px 25px 12.5px 25px; }
+  
+.welcome { float:left; }
+  
+.logout { float:right; }
+  
+.msgln { margin:0 0 2px 0; }
