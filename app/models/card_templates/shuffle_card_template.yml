@@ -1,0 +1,6 @@
+card_attributes:
+  description: 'Shuffle the draw pile without looking at the cards.'
+  card_type: 'shuffle'
+  shuffle_deck: true
+
+default_quantity: 4

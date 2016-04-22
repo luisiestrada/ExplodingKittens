@@ -1,0 +1,6 @@
+card_attributes:
+  description: 'Force any player to give you any one of their cards of your choice.'
+  card_type: 'favor'
+  steal_card: true
+
+default_quantity: 4

@@ -1,0 +1,6 @@
+card_attributes:
+  description: 'Stops exploding kittens.'
+  card_type: 'defuse'
+  cancel_immunity: true
+
+default_quantity: 6

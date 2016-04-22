@@ -1,0 +1,6 @@
+card_attributes:
+  description: 'Look at the top 3 cards and put them back in the same order.'
+  card_type: 'see_the_future'
+  view_top_deck_n: 3
+
+default_quantity: 5

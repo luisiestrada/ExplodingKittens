@@ -1,0 +1,7 @@
+card_attributes:
+  description: "Immediately ends your turn without drawing a card."
+  card_type: 'skip'
+  skip_turn: true
+  skip_draw: true
+
+default_quantity: 4
