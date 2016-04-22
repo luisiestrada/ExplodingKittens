@@ -139,3 +139,22 @@ form, p, span {
 #submitmsg {
 	color: black;
 }
+
+IMG.display{
+	display: block;
+	margin-left: auto;
+}
+
+.card_size{
+	width: 500px;
+	border: 5px #7C2213;
+	box-shadow: 1px 1px 4px #888;
+	border-top: 5px #7C2213;
+	margin-bottom: 100px;
+	height: 700px;
+}
+
+img{
+	height: 100%;
+	width: 100%;
+}
