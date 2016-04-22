@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 20160422030556) do
     t.string   "description"
     t.string   "card_type"
     t.string   "card_name"
+    t.integer  "default_quantity"
     t.integer  "opponent_draw_n",           default: 0
     t.boolean  "skip_turn",                 default: false
     t.integer  "view_top_deck_n",           default: 0

@@ -1,5 +1,5 @@
 class Card < ActiveRecord::Base
-  validates_presence_of :card_type
+  validates_presence_of :card_type, :default_quantity
 
   before_create :init_card_name, if: Proc.new { |c| c.card_name.blank? }
 
@@ -10,6 +10,7 @@ class Card < ActiveRecord::Base
       card.send("#{attribute}=", template['card_attributes'][attribute])
     end
 
+    card.default_quantity = template['default_quantity']
     card.save!
   end
 
