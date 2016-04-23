@@ -20,4 +20,11 @@ class GamesController < ApplicationController
   def show
       @game = Game.find(params[:id])
   end
+  
+  def update
+    @game=Game.find(params[:id])
+    @game.add_user(User.find(current_user.id))
+    @game.save
+    redirect_to @game
+  end
 end

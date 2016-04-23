@@ -13,7 +13,7 @@ class Game < ActiveRecord::Base
   scope :by_winner, -> (user) { where(winner_id: user.id) }
 
   def add_user(user)
-    return false unless self.users.count < (MAX_PLAYERS - 1)
+    return false unless self.users.count < MAX_PLAYERS
     
     self.users << user
     self.save!
@@ -29,5 +29,9 @@ class Game < ActiveRecord::Base
 
   def valid_player_count?
     self.players.count.between?(MIN_PLAYERS, MAX_PLAYERS)
+  end
+  
+  def max_players_reached?
+    return self.users.count == MAX_PLAYERS
   end
 end

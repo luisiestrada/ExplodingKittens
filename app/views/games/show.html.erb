@@ -18,5 +18,27 @@
       <td><%= user.email %></td>
     </tr>
   <% end %>
-</table>
+  </table>
 </p>
+
+<%= form_for @game do |f| %>
+ 
+  <% if @game.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= pluralize(@game.errors.count, "error") %> prohibited
+        this game from being modified:
+      </h2>
+      <ul>
+        <% @game.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+ 
+  <p>
+    <%= f.submit "Join", style: "#{'display:none' if (@game.users.include?(current_user) || @game.max_players_reached?)}" %>
+  </p>
+ 
+<% end %>
