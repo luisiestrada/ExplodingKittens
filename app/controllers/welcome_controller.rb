@@ -3,4 +3,8 @@ class WelcomeController < ApplicationController
 
   def index
   end
+
+  def card_list
+  end
+  
 end
