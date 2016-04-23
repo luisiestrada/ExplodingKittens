@@ -7,11 +7,6 @@
 
 	<link rel="stylesheet"
 		href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js">
-	</script>
-	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
-	</script>
 </head>
 
 <body>
@@ -25,11 +20,11 @@
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
 		</button>
-        <a class="navbar-brand" href="welcome">Exploding Kittens</a>
+        <a class="navbar-brand" href="/">Exploding Kittens</a>
     </div>
 	<div class="collapse navbar-collapse" id="myNavbar">
 		<ul class="nav navbar-nav navbar-right"> <!-- Links to the right -->
-			<li class="active"><a href="welcome">Home</a></li>
+			<li class="active"><a href="/">Home</a></li>
 			<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown"
 				href="#">Play Game<span class="caret"></span></a>
 				<ul class="dropdown-menu">
@@ -40,13 +35,11 @@
 			<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown"
 				href="#">How to Play<span class="caret"></span></a>
 				<ul class="dropdown-menu">
-					<li><a href="#">Instructions</a></li>
-					<li>
-						<%= link_to 'Card list', 'card_list' %>
-					</li>
+					<li><a href="instructions">Instructions</a></li>
+					<li><a href="card_list">Card list</a></li>
 				</ul>
 			</li>
-			<li><a href="#">About Us</a></li>
+			<li><a href="about_us">About Us</a></li>
 			<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown"
 				href="#">Settings<span class="caret"></span></a>
 				<ul class="dropdown-menu">
@@ -142,6 +135,17 @@ $(document).ready(function(){
 <%=image_tag("kaboom.png")%>
 </div>
 
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js">
+</script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
+</script>
+
+<script>
+    $(document).ready(function () {
+    	$('.dropdown-toggle').dropdown();
+	});
+</script>
 
 </body>
 </html>

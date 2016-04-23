@@ -8,10 +8,6 @@
 	<link rel="stylesheet"
 	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js">
-	</script>
-	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
-	</script>
 </head>
 
 <body>
@@ -40,11 +36,11 @@
 				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown"
 					href="#">How to Play<span class="caret"></span></a>
 					<ul class="dropdown-menu">
-						<li><a href="#">Instructions</a></li>
-						<li><a href="#">Card list</a></li>
+						<li><a href="/instructions">Instructions</a></li>
+						<li><a href="/card_list">Card list</a></li>
 					</ul>
 				</li>
-				<li><a href="#">About Us</a></li>
+				<li><a href="/about_us">About Us</a></li>
 				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown"
 					href="#">Settings<span class="caret"></span></a>
 					<ul class="dropdown-menu">
@@ -63,6 +59,17 @@
 	</p>
 	<% end %>
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js">
+</script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
+</script>
+
+<script>
+    $(document).ready(function () {
+    	$('.dropdown-toggle').dropdown();
+	});
+</script>
 
 </body>
 </html>

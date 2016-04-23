@@ -6,5 +6,11 @@ class WelcomeController < ApplicationController
 
   def card_list
   end
+
+  def instructions
+  end
+
+  def about_us
+  end
   
 end
