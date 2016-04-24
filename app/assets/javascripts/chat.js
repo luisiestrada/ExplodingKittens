@@ -8,13 +8,13 @@ $(document).ready(function() {
 
 	$('button#send').click(function() {
 		if(!input_is_empty()) {
-			var URI = '/chat/message'
+			var URI = '/chat/message';
 			var message = $('input#chatbox').val();
 			var payload = {
-				message:message
+				message: message
 			}
 			$.post(URI,payload,function(response) {
-				console.log(response); // don't need
+				console.log(response);
 			});
 		}
 	});
