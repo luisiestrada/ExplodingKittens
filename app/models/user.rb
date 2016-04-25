@@ -13,6 +13,7 @@ class User < ActiveRecord::Base
   validates_presence_of :email, :encrypted_password
   validates_numericality_of :wins, :losses,
     only_integer: true, greater_than_or_equal_to: 0
+  validates_associated :playing_cards
 
   before_create :generate_anon_username
   after_create :init_stats

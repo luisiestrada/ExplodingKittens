@@ -20,7 +20,7 @@ class CreateCards < ActiveRecord::Migration
 
       # these are for the PlayingCard model which inherits from this
       t.integer :game_id, index: true, null: false
-      t.integer :player_id, index: true
+      t.integer :user_id, index: true
       t.string  :state, null: false, default: 'deck'
 
       t.timestamps
