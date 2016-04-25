@@ -45,40 +45,39 @@ card_templates:
     skip_draw: true
     default_quantity: 4
 
+  shuffle:
+    description: 'Shuffle the draw pile without looking at the cards.'
+    card_type: 'shuffle'
+    shuffle_deck: true
+    default_quantity: 4
 
+  pair:
+    - card_type: 'pair'
+      card_name: 'Beard Cat'
+      pair_required: true
+      steal_card: true
+      default_quantity: 4
 
-  pairs:
-    - beard:
-        card_type: 'pair'
-        card_name: 'Beard Cat'
-        pair_required: true
-        steal_card: true
-        default_quantity: 4
+    - card_type: 'pair'
+      card_name: 'Hairy Potato Cat'
+      pair_required: true
+      steal_card: true
+      default_quantity: 4
 
-    - hairy_potato:
-        card_type: 'pair'
-        card_name: 'Hairy Potato Cat'
-        pair_required: true
-        steal_card: true
-        default_quantity: 4
+    - card_type: 'pair'
+      card_name: 'Rainbow Puking Cat'
+      pair_required: true
+      steal_card: true
+      default_quantity: 4
 
-    - rainbow_puking:
-        card_type: 'pair'
-        card_name: 'Rainbow Puking Cat'
-        pair_required: true
-        steal_card: true
-        default_quantity: 4
+    - card_type: 'pair'
+      card_name: 'Taco Cat'
+      pair_required: true
+      steal_card: true
+      default_quantity: 4
 
-    - taco:
-        card_type: 'pair'
-        card_name: 'Taco Cat'
-        pair_required: true
-        steal_card: true
-        default_quantity: 4
-
-      -watermelon:
-        card_type: 'pair'
-        card_name: 'Watermelon Cat'
-        pair_required: true
-        steal_card: true
-        default_quantity: 4
+    - card_type: 'pair'
+      card_name: 'Watermelon Cat'
+      pair_required: true
+      steal_card: true
+      default_quantity: 4

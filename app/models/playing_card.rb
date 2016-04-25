@@ -1,22 +1,24 @@
 class PlayingCard < Card
-  belongs_to :player
+  belongs_to :player, class_name: User
   belongs_to :game
 
   before_save :set_state
 
-  attr_accessible :discarded
+  @discarded = false
+
+  attr_writer :discarded
 
   def discarded?
-    self.discarded || self.state == 'discarded'
+    @discarded || self.state == 'discarded'
   end
 
   private
 
   def set_state
-  if self.user.present?
-    self.state = 'hand'
-  elsif self.discarded?
-    self.state = 'discarded'
+    if self.player.present?
+      self.state = 'hand'
+    elsif self.discarded?
+      self.state = 'discarded'
+    end
   end
-
 end

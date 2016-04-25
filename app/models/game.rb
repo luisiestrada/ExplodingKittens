@@ -20,15 +20,15 @@ class Game < ActiveRecord::Base
   def start_game
     # init the deck
     (VALID_CARD_TYPES - ['exploding_kitten', 'defuse']).each do |card_type|
-      self.init_card_by_type(card_type)
+      init_card_by_type(card_type)
     end
 
     # game setup: https://www.explodingkittens.com/explodingkittensrules.pdf
     self.shuffle_deck!
 
     # Rules say that there should be 1 less bomb than the player count
-    self.init_card_by_type('exploding_kitten', self.players.count - 1)
-    self.init_card_by_type('defuse')
+    init_card_by_type('exploding_kitten', qty: self.players.count - 1)
+    init_card_by_type('defuse')
 
     # pass out 1 defuse card & 4 other cards to each player
     self.players.each do |player|
@@ -86,12 +86,23 @@ class Game < ActiveRecord::Base
   private
 
   def init_card_by_type(type, qty:nil)
-    raise 'Invalid card type!' unless VALID_CARD_TYPES.include?(type)
+    template = Settings.card_templates[type]
+    raise "'#{type}' is not a valid card type." unless (template && VALID_CARD_TYPES.include?(type))
 
-    (qty || card.default_quantity).times do
-      self.playing_cards << PlayingCard.create_from_template(Settings.playing_cards[type])
+    Game.transaction do
+      if type == 'pair'
+        template.each do |pair_card|
+          (qty || pair_card.default_quantity).times do
+            self.playing_cards << PlayingCard.build_from_template(pair_card.to_h)
+          end
+        end
+      else
+        (qty || template.default_quantity).times do
+          self.playing_cards << PlayingCard.build_from_template(template.to_h)
+        end
+      end
+
+      self.save!
     end
-
-    self.save!
   end
 end
