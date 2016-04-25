@@ -35,7 +35,13 @@ ActiveRecord::Schema.define(version: 20160422030556) do
     t.boolean  "cancel_immunity",           default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer :user_id
+    t.integer :game_id, null: false
+    t.string  :state, null: false, default: 'deck'
   end
+
+   add_index "cards", ["user_id"], name: "index_cards_on_user_id", using: :btree
+   add_index "cards", ["game_id"], name: "index_cards_on_game_id", using: :btree
 
   create_table "games", force: :cascade do |t|
     t.boolean  "active",     default: false, null: false
