@@ -1,7 +1,0 @@
-card_attributes:
-  card_type: 'pair'
-  card_name: 'Taco Cat'
-  pair_required: true
-  steal_card: true
-
-default_quantity: 4

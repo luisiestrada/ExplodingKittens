@@ -1,7 +1,0 @@
-card_attributes:
-  description: 'Cancels any cards except defuse & exploding kittens'
-  card_type: 'nope'
-  cancel: true
-  playable_on_opponent_turn: true
-
-default_quantity: 4

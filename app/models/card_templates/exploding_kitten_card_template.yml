@@ -1,6 +1,0 @@
-card_attributes:
-  description: "Kills player instantly, unless there's a defuse card."
-  card_type: 'exploding_kitten'
-  cancel_immunity: true
-
-default_quantity: 4

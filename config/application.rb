@@ -22,5 +22,8 @@ module ExplodingKittens
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+
+    # Load all of our card templates into the Settings object
+    Config.load_and_set_settings('config/card_templates.yml')
   end
 end

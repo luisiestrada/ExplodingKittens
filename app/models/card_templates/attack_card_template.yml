@@ -1,8 +1,0 @@
-card_attributes:
-  description: 'Force the next player to take 2 turns in a row.'
-  card_type: 'attack'
-  skip_turn: true
-  skip_draw: true
-  opponent_draw_n: 2
-
-default_quantity: 4

@@ -25,12 +25,6 @@ class CreateCards < ActiveRecord::Migration
 
       t.timestamps
     end
-
-    # init the card templates
-    Dir.glob('app/models/card_templates/**.yml').each do |file|
-      template = YAML.load_file(file)
-      Card.create_from_template(template)
-    end
   end
 
   def down
