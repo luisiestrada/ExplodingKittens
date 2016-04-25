@@ -21,13 +21,18 @@ RSpec.describe PlayingCard, type: :model do
     @card.destroy!
   end
 
-  describe 'when given to a player' do
-    it 'the state should change to "hand"' do
+  describe 'when put in' do
+    it "a player's hand the state should be 'hand'" do
       @player.hand << @card
-      @player.save!
 
       expect(@card.state).to eql('hand')
       expect(@card.player).to eql(@player)
+    end
+
+    it "the discard pile the state should be 'discarded'" do
+      @card.discarded = true
+      @card.save!
+      expect(@card.state).to eql('discarded')
     end
   end
 end
