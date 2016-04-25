@@ -15,7 +15,7 @@
     });
 
     var channel = pusher.subscribe('public-chat');
-    channel.bind('message_sent', function(data) {
+    channel.bind('message-sent', function(data) {
       alert(data.message);
     });
   </script>
