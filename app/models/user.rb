@@ -6,6 +6,9 @@ class User < ActiveRecord::Base
   belongs_to :game
   has_one :stats, class_name: UserStat
   has_many :games_won, foreign_key: :winner_id, class_name: Game
+  has_many :playing_cards
+
+  alias :hand :playing_cards
 
   validates_presence_of :email, :encrypted_password
   validates_numericality_of :wins, :losses,
@@ -13,6 +16,7 @@ class User < ActiveRecord::Base
 
   before_create :generate_anon_username
   after_create :init_stats
+
 
   def games_played
     self.wins + self.losses

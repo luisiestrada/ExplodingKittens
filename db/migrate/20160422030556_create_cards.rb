@@ -18,9 +18,15 @@ class CreateCards < ActiveRecord::Migration
       t.boolean :cancel, default: false
       t.boolean :cancel_immunity, default: false
 
+      # these are for the PlayingCard model which inherits from this
+      t.integer :game_id, index: true, null: false
+      t.integer :player_id, index: true
+      t.string  :state, null: false, default: 'deck'
+
       t.timestamps
     end
 
+    # init the card templates
     Dir.glob('app/models/card_templates/**.yml').each do |file|
       template = YAML.load_file(file)
       Card.create_from_template(template)

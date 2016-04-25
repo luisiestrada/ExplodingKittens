@@ -2,6 +2,7 @@ class Game < ActiveRecord::Base
   belongs_to :winner, class_name: User
   has_many :users
   has_many :stats, class_name: GameStat
+  has_many :playing_cards
 
   alias :players :users
 
@@ -14,7 +15,7 @@ class Game < ActiveRecord::Base
 
   def add_user(user)
     return false unless self.users.count < (MAX_PLAYERS - 1)
-    
+
     self.users << user
     self.save!
   end
@@ -25,6 +26,14 @@ class Game < ActiveRecord::Base
 
   def end!
     self.users.delete_all
+  end
+
+  def draw_pile
+    self.playing_cards.where(state: 'deck')
+  end
+
+  def discard_pile
+    self.playing_cards.where(state: 'discarded')
   end
 
   def valid_player_count?
