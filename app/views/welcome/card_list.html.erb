@@ -51,25 +51,59 @@
 <div class="container-fluid">
 	<h1>Card list</h1>
 
-	<div class="card_size well" onclick="$('#explode').toggleClass('hidden');">
-		<%=image_tag("explode.png")%>
-		<div id="explode" class="hidden description">
-			<p>Explode (4): You must show this card immediately. 
-				Unless you have a Defuse card, you’re dead. 
-				Discard all of your cards, including the Exploding Kitten.</p>
-			</div>
-		</div>
-
-		<div class="card_size well" onclick="$('#kaboom').toggleClass('hidden');">
-			<%=image_tag("kaboom.png")%>
-			<div id="kaboom" class="hidden description">
-				<p>Explode (4): You must show this card immediately. 
-					Unless you have a Defuse card, you’re dead. 
-					Discard all of your cards, including the Exploding Kitten.</p>
+	<table class="table" style="border: none;">
+		<tr>
+			<td>
+				<div class="card_size">
+					<%=image_tag("explode.png")%>
 				</div>
-			</div>
+			</td>
 
-		</div>
+			<td>
+				<div class="description">
+					<p>Explode (4): You must show this card immediately. 
+						Unless you have a Defuse card, you’re dead. 
+						Discard all of your cards, including the Exploding Kitten.
+					</p>
+				</div>
+			</td>
 
-	</body>
-	</html>
+			<td>
+				<div class="card_size">
+					<%=image_tag("kaboom.png")%>
+				</div>
+			</td>
+
+			<td>
+				<div class="description">
+					<p>Explode (4): You must show this card immediately. 
+						Unless you have a Defuse card, you’re dead. 
+						Discard all of your cards, including the Exploding Kitten.
+					</p>
+				</div>
+			</td>
+		</tr>
+
+		<tr>
+			<td>
+				<div class="card_size">
+					<%=image_tag("kaboom.png")%>
+				</div>
+			</td>
+
+			<td>
+				<div class="description">
+					<p>Explode (4): You must show this card immediately. 
+						Unless you have a Defuse card, you’re dead. 
+						Discard all of your cards, including the Exploding Kitten.
+					</p>
+				</div>
+			</td>
+
+			<!- one more card and description ->
+		</tr>
+
+	</table>
+
+</body>
+</html>
