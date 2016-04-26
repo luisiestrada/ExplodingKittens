@@ -1,6 +1,5 @@
   <script src="https://js.pusher.com/3.0/pusher.min.js"></script>
   <script>
-  
   	$(document).ready(function(){
 		// Enable pusher logging - don't include this in production
 	    Pusher.log = function(message) {
@@ -14,12 +13,22 @@
 	    });
 	     
 	    var channel_name = "<%= @game_push_channel_name %>";
+	    var chat_channel_name = "<%= @game_chat_channel_name %>";
 	
 	    var channel = pusher.subscribe(channel_name);
+	    var chat_channel = pusher.subscribe(chat_channel_name);
 	    channel.bind('next_turn', function(data) {
 	      $( "div#status" ).add( "<span>User " + data.username + 
 	      " played a turn.</span><br/>" ).appendTo( "div#status" );
 	    });
+	    chat_channel.bind('message-sent', function(data) {
+	    	var msg = '<div class="message"><span>' + data.username + ':  ' 
+	    		+ data.message + "</span></div>";
+	      $( "div#chatbox" ).append(msg);
+	      $('div#chatbox').animate({
+  			scrollTop:$('div#chatbox').get(0).scrollHeight}, 'fast');
+	    });
+	    
 	    
 	    $('button#play_turn').click(function() {
 			var URI = '/games/play_turn';
@@ -32,7 +41,25 @@
 				console.log(response);
 			});
 		});
+		
 		$('button#play_turn').show();
+		
+		$('input#submitmsg').click(function() {
+			console.log("clicked");
+			if(!input_is_empty()) {
+				console.log("not empty");
+				var URI = '/chat/message';
+				var message = $('input#chatbox').val();
+				var payload = {
+					message: message,
+					game_id: <%= @game.id %>,
+					username: "<%= current_user.username %>"
+				}
+				$.post(URI,payload,function(response) {
+					console.log(response);
+				});
+			}
+		});
 	});
     
   </script>
@@ -71,11 +98,11 @@
         <div style="clear:both"></div>
     </div>
      
-    <div id="chatbox"></div>
+    <div id="chatbox" style="height: 250px; overflow-y: scroll; border: 1px solid"></div>
      
     <div id="txtbox"
     <form name="message" action="">
-        <input name="usermsg" type="text" id="usermsg" size="100" />
+        <input name="usermsg" type="text" id="chatbox" size="100" />
         <input name="submitmsg" type="submit" id="submitmsg" value="Send" />
     </form>
 	</div>

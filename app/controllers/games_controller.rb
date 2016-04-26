@@ -22,6 +22,7 @@ class GamesController < ApplicationController
   def show
       @game = Game.find(params[:id])
       @game_push_channel_name = "game_" + @game.id.to_s + "_notifications_channel"
+      @game_chat_channel_name = "game_" + @game.id.to_s + "_chat"
   end
   
   def play_turn
