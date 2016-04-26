@@ -32,17 +32,13 @@ class Game < ActiveRecord::Base
 
     # pass out 1 defuse card & 4 other cards to each player
     self.players.each do |player|
-      player.hand << self.playing_cards
-        .where(card_type: 'defuse')
-        .where(state: 'deck')
-        .first
+      player.hand << self.deck.where(card_type: 'defuse').first
 
       4.times do
-        player.hand << self.playing_cards.where(
-          "card_type != 'defuse' AND
-           card_type != 'exploding_kitten' AND
-           state = 'deck'"
-        ).first
+        player.hand << self.deck
+          .where.not(card_type: 'defuse')
+          .where.not(card_type: 'exploding_kitten')
+          .first
       end
 
       player.save!
