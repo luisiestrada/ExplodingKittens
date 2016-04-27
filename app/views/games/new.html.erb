@@ -25,7 +25,7 @@
 				<li class="dropdown active"><a class="dropdown-toggle" data-toggle="dropdown"
 					href="#">Play Game<span class="caret"></span></a>
 					<ul class="dropdown-menu">
-						<li><%= link_to 'Create a new game', new_game_path %></li>
+						<li><%= link_to 'Create a new game', new_game_path, :class => "active link"%></li>
 						<li><%= link_to 'List of games', games_path %></li>
 					</ul>
 				</li>
@@ -49,7 +49,7 @@
 </nav>
 
 <div class="container-fluid">
-	<%= form_for :game, url: games_path do |f| %>
+	<%= form_for :game, :html => {:style => "color: black"}, url: games_path do |f| %>
 	<p> 
 		<%= f.submit %>
 	</p>
