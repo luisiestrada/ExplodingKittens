@@ -1,4 +1,4 @@
-  <script src="https://js.pusher.com/3.0/pusher.min.js"></script>
+
   <script>
   	$(document).ready(function(){
 		// Enable pusher logging - don't include this in production
@@ -58,6 +58,7 @@
 				$.post(URI,payload,function(response) {
 					console.log(response);
 				});
+				$('input#chatbox').val("");
 			}
 		});
 	});
