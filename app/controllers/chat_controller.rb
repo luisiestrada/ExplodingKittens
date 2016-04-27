@@ -3,10 +3,17 @@ class ChatController < ApplicationController
 skip_before_filter  :verify_authenticity_token
 
   def message
-    Pusher.trigger('public-chat', 'message-sent', {
+    if params[:game_id] then
+      pusher_channel = "game_" + params[:game_id] + "_chat"
+    else
+      pusher_channel = 'public-chat'
+    end
+    
+    Pusher.trigger(pusher_channel, 'message-sent', {
     	user_email: 'test',
     	message: params[:message],
-    	timestamp: Time.now()
+    	timestamp: Time.now(),
+    	username: params[:username]
     });
     render json: {}, status: :ok
   end

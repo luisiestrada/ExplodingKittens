@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   get 'chat/message'
   post 'chat/message' => 'chat#message'
+  post 'games/play_turn' => 'games#play_turn'
 
   devise_for :users
   get 'welcome/index'
