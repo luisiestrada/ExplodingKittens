@@ -15,3 +15,4 @@
 //= require turbolinks
 //= require_tree .
 //= require lodash
+//= require pusher.min.js
