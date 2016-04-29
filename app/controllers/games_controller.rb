@@ -23,4 +23,11 @@ class GamesController < ApplicationController
 
   def game
   end
+  
+  def update
+    @game=Game.find(params[:id])
+    @game.add_user(User.find(current_user.id))
+    @game.save
+    redirect_to @game
+  end
 end
