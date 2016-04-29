@@ -48,12 +48,13 @@
 	</div>
 </nav>
 
-<div class="container-fluid" align="center" style="margin-top: 200px;">
-	<%= form_for :game, :html => {:style => "color: black"}, url: games_path do |f| %>
-	<p> 
-		<%= f.submit "Create New Game"%>
-	</p>
+<div class="container-fluid" align="center" style="">
+	<!-- <%= form_for :game, :html => {:style => "color: black"}, url: games_path do |f| %> -->
+
+	<div><%= f.submit "CREATE NEW GAME", :class => "creategame" %></div>
+	<div><%= image_tag "explosion.png", :class => "creategameimg" %></div>
 	<% end %>
+
 </div>
 
 </body>
