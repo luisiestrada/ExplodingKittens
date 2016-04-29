@@ -22,8 +22,10 @@
 	      " played a turn.</span><br/>" ).appendTo( "div#status" );
 	    });
 	    chat_channel.bind('message-sent', function(data) {
-	    	var msg = '<div class="message"><span>' + data.username + ':  ' 
+
+	    	var msg = '<div class="message"><span><span id="person">' + data.username + ':</span>  ' 
 	    		+ data.message + "</span></div>";
+
 	      $( "div#chatbox" ).append(msg);
 	      $('div#chatbox').animate({
   			scrollTop:$('div#chatbox').get(0).scrollHeight}, 'fast');
@@ -92,19 +94,38 @@
 	style="display: none">Play a turn</button>
 </p>
 
-<div id="wrapper">
+<!-- chat box -->
+<div id="chat-wrapper">
     <div id="menu">
         <p class="welcome">Game #<%= @game.id %> Chat <b></b></p>
         <p class="logout"><a id="exit" href="#">Exit Chat</a></p>
         <div style="clear:both"></div>
     </div>
      
-    <div id="chatbox" style="height: 250px; overflow-y: scroll; border: 1px solid"></div>
-     
-    <div id="txtbox"
-    <form name="message" action="">
-        <input name="usermsg" type="text" id="chatbox" size="100" />
-        <input name="submitmsg" type="submit" id="submitmsg" value="Send" />
-    </form>
+    <!-- chat text -->
+    <div id = "chat">
+    	<div id="chatbox"></div>
+    </div>
+
+    <div id="txtbox">
+    	<!-- send -->
+    	<input name="submitmsg" type="submit" id="submitmsg" value="Send" style="float:right"/>
+		<!-- user input -->
+    	<div style="overflow: hidden; padding-right: .5em">
+        	<input name="usermsg" type="text" id="chatbox" autocomplete="off" placeholder="Send a message..." maxlength="4000" style="width:100%" onkeypress="return pressEnter(event);"/>
+        </div>
 	</div>
 </div>
+
+<script>
+function pressEnter(e) {
+    // window.event has the event for some browsers where it isn't passed (IE)
+    e = e || window.event;
+    if (event.keyCode == 13) {
+    	// press submit button on Enter key press
+        document.getElementById('submitmsg').click();
+        return false;
+    }
+    return true;
+}
+</script>

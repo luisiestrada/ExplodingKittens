@@ -28,6 +28,8 @@ gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
+gem 'config'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -50,8 +52,11 @@ end
 
 group :development do
   gem 'web-console', '~> 2.0'
+  gem 'pry'
 end
 
 gem 'devise'
 #for Heroku logging and static asset serving
 gem 'rails_12factor', group: :production
+
+gem 'phaser-rails'

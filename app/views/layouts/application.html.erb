@@ -6,8 +6,9 @@
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 
-  <link rel="stylesheet"
-		href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
 </head>
 <body>
 
@@ -15,6 +16,24 @@
 <p class="alert"><%= alert %></p>
 
 <%= yield %>
+
+<script>
+   $(document).ready(function () {
+     $('.dropdown-toggle').dropdown();
+   });
+</script>
+
+<script>
+    /* allows closing of navbar once opened */
+    $(document).click(function (event) {
+      var clickover = $(event.target);
+      var $navbar = $(".navbar-collapse");
+      var _opened = $navbar.hasClass("in");
+      if (_opened === true && !clickover.hasClass("navbar-toggle")) {
+        $("button.navbar-toggle").click();
+      }
+  });
+</script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js">
 </script>

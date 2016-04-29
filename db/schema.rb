@@ -11,10 +11,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160410014258) do
+ActiveRecord::Schema.define(version: 20160422030556) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "cards", force: :cascade do |t|
+    t.string   "description"
+    t.string   "card_type"
+    t.string   "card_name"
+    t.integer  "default_quantity"
+    t.integer  "opponent_draw_n",           default: 0
+    t.boolean  "skip_turn",                 default: false
+    t.integer  "view_top_deck_n",           default: 0
+    t.boolean  "skip_draw",                 default: false
+    t.integer  "opponent_turn_n",           default: 0
+    t.boolean  "shuffle_deck",              default: false
+    t.boolean  "peek",                      default: false
+    t.boolean  "pair_required",             default: false
+    t.boolean  "steal_card",                default: false
+    t.boolean  "playable_on_opponent_turn", default: false
+    t.boolean  "cancel",                    default: false
+    t.boolean  "cancel_immunity",           default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer :user_id
+    t.integer :game_id, null: false
+    t.string  :state, null: false, default: 'deck'
+  end
+
+   add_index "cards", ["user_id"], name: "index_cards_on_user_id", using: :btree
+   add_index "cards", ["game_id"], name: "index_cards_on_game_id", using: :btree
 
   create_table "games", force: :cascade do |t|
     t.boolean  "active",     default: false, null: false

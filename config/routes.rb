@@ -1,10 +1,15 @@
 Rails.application.routes.draw do
+  
   get 'chat/message'
   post 'chat/message' => 'chat#message'
   post 'games/play_turn' => 'games#play_turn'
 
   devise_for :users
-  get 'welcome/index'
+  get 'welcome' => 'welcome#index'
+  get 'card_list' => 'welcome#card_list'
+  get 'instructions' => 'welcome#instructions'
+  get 'about_us' => 'welcome#about_us'
+  get 'test' => 'welcome#test'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
