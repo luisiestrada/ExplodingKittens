@@ -1,0 +1,83 @@
+card_templates:
+  attack:
+    description: 'Force the next player to take 2 turns in a row.'
+    card_type: 'attack'
+    skip_turn: true
+    skip_draw: true
+    opponent_draw_n: 2
+    default_quantity: 4
+
+  defuse:
+    description: 'Stops exploding kittens.'
+    card_type: 'defuse'
+    cancel_immunity: true
+    default_quantity: 6
+
+  exploding_kitten:
+    description: "Kills player instantly, unless there's a defuse card."
+    card_type: 'exploding_kitten'
+    cancel_immunity: true
+    default_quantity: 4
+
+  favor:
+    description: 'Force any player to give you any one of their cards of your choice.'
+    card_type: 'favor'
+    steal_card: true
+    default_quantity: 4
+
+  nope:
+    description: 'Cancels any cards except defuse & exploding kittens'
+    card_type: 'nope'
+    cancel: true
+    playable_on_opponent_turn: true
+    default_quantity: 4
+
+  see_the_future:
+    description: 'Look at the top 3 cards and put them back in the same order.'
+    card_type: 'see_the_future'
+    view_top_deck_n: 3
+    default_quantity: 5
+
+  skip:
+    description: "Immediately ends your turn without drawing a card."
+    card_type: 'skip'
+    skip_turn: true
+    skip_draw: true
+    default_quantity: 4
+
+  shuffle:
+    description: 'Shuffle the draw pile without looking at the cards.'
+    card_type: 'shuffle'
+    shuffle_deck: true
+    default_quantity: 4
+
+  pair:
+    - card_type: 'pair'
+      card_name: 'Beard Cat'
+      pair_required: true
+      steal_card: true
+      default_quantity: 4
+
+    - card_type: 'pair'
+      card_name: 'Hairy Potato Cat'
+      pair_required: true
+      steal_card: true
+      default_quantity: 4
+
+    - card_type: 'pair'
+      card_name: 'Rainbow Puking Cat'
+      pair_required: true
+      steal_card: true
+      default_quantity: 4
+
+    - card_type: 'pair'
+      card_name: 'Taco Cat'
+      pair_required: true
+      steal_card: true
+      default_quantity: 4
+
+    - card_type: 'pair'
+      card_name: 'Watermelon Cat'
+      pair_required: true
+      steal_card: true
+      default_quantity: 4
