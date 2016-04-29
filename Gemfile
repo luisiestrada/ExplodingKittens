@@ -54,3 +54,5 @@ end
 gem 'devise'
 #for Heroku logging and static asset serving
 gem 'rails_12factor', group: :production
+
+gem 'phaser-rails'

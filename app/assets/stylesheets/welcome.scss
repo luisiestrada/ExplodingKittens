@@ -6,136 +6,184 @@
 
 /* navbar */
 .navbar.navbar-custom.navbar-fixed-top {
-	background-color: #7C2213;
-	border: none;
+background-color: #7C2213;
+border: none;
 }
 
 /* navbar links */
 .navbar a {
-	color: white;
+color: white;
 }
 
 /* navbar links upon hover */
 .navbar a:hover {
-	color: black;
-	background-color: white !important;
+color: black;
+background-color: white !important;
 }
 
 /* navbar dropdown-menu link upon click */
 .dropdown-toggle:active, .open .dropdown-toggle {
-	color: black !important;
+color: black !important;
 }
 
 /* drop-down menu links */
 #nav .open .dropdown-menu>li>a, .navbar-nav .open .dropdown-menu {
-	color: white;
-	background-color: #7C2213;
+color: white;
+background-color: #7C2213;
 }
 
 /* drop-down menu links upon hover */
 #nav .open .dropdown-menu>li>a:hover, .navbar-nav .open .dropdown-menu {
-	color: black;
+color: black;
 }
 
 /* hamburger icon */
 .icon-bar {
-	background-color: white;
+background-color: white;
 }
 
 /* active links */
-.active a {
-	background-color: #303030;
+.active.link {
+background-color: #303030 !important;
 }
 
 
 /*********** PAGE BODY ***********/
 
 html body {
-	background-color: black;
-	color: white;
+background-color: black;
+color: white;
 }
 
 /* main page header */
 html #content {
-	display: block;
-	border: 2px solid #999;
-	padding: 10px;
-	margin-left: auto;
-	margin-right: auto;
-	color: white;
-	text-align: center;
+display: block;
+border: 2px solid #999;
+padding: 10px;
+margin-left: auto;
+margin-right: auto;
+color: white;
+text-align: center;
 }
 
 /* carousel images */
 .carousel-inner img {
-	max-width: 100%;
-	max-height: 80%;
-	margin-left: auto;
-	margin-right: auto;
-	width: auto\9;
+max-width: 80%;
+max-height: 80%;
+margin-left: auto;
+margin-right: auto;
+width: auto\9;
 }
 
 
 /*********** CHAT BOX ***********/
 
 form, p, span {
-    margin:0;
-    padding:0;
+margin:0;
+padding:0;
 }
 #menu {
-	padding:12.5px 25px 12.5px 25px;
+padding:12.5px 25px 12.5px 25px;
 }
 
 #wrapper {
-    margin:0 auto;
-    padding-bottom:25px;
-    background:#7C2213;
-    max-width: 80%;
-    border:1px solid #7C2213;
+margin:0 auto;
+padding-bottom:25px;
+background:#7C2213;
+max-width: 80%;
+border:1px solid #7C2213;
 }
 
 #chatbox {
-    text-align:left;
-    margin:0 auto;
-    margin-bottom:25px;
-    padding:10px;
-    background:#fff;
-    height:270px;
-    max-width: 80%;
-    border:1px solid #7C2213;
-    overflow:auto;
+text-align:left;
+margin:0 auto;
+margin-bottom:25px;
+padding:10px;
+background:#fff;
+height:270px;
+max-width: 80%;
+border:1px solid #7C2213;
+overflow:auto;
 }
 
 /* chat name */  
 .welcome {
-	float:left;
+float:left;
 }
 
 /* exit link */
 .logout {
-	float:right;
-}
-
-form, p, span {
-	margin: 0;
-	padding: 0;
+float:right;
 }
 
 /* textbox + send button */
 #txtbox {
-	margin-left: auto;
-	margin-right: auto;
-	max-width: 80%;
+margin-left: auto;
+margin-right: auto;
+max-width: 80%;
 }
 
 /* user message */
 #usermsg {
-    max-width: 80%;
-    border:1px solid #7C2213;
-    color: black;
+max-width: 80%;
+border:1px solid #7C2213;
+color: black;
 }
 
 /* send button */
 #submitmsg {
-	color: black;
+color: black;
 }
+
+/*********** CARD LIST ***********/
+
+.card_size {
+width: 100%;
+height: 300px;
+border: 5px #7C2213;
+/*box-shadow: 1px 1px 4px #888;*/
+border-top: 5px #7C2213;
+margin-bottom: 100px;
+float: left;
+margin-right: 100%;
+
+}
+
+.card_size img {
+height: 100%;
+width: 100%;
+display: block;
+margin-left: auto;
+}
+
+.description {
+color: white;
+float: left;
+width: 100%;	
+}
+
+.cardtitle {
+color:#fff;
+background-color: black;
+text-shadow: 0 1px 0 #999999, 0 2px 0 #888888,
+             0 3px 0 #777777, 0 4px 0 #666666,
+             0 5px 0 #555555, 0 6px 0 #444444,
+             #ff0 0 -2px 10px, #ff8000 0 -10px 20px,
+             red 0 -18px 40px;
+font-size: 50px;
+font-family: lato,sans-serif;
+height: auto;
+line-height: 70px;
+text-align: center;
+}
+
+test {
+	color:#fff;
+	background-color: black;
+	text-shadow:#fff 0 -1px 4px, #ff0 0 -2px 10px, #ff8000 0 -10px 20px, red 0 -18px 40px;
+}
+
+
+/************phaser canvas centering************/
+canvas {   display : block;   margin : auto;}
+
