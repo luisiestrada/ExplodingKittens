@@ -7,29 +7,19 @@
 	        window.console.log(message);
 	      }
 	    };
-	
-	    var pusher = new Pusher('78511c9f413a61ee66ee', {
-	      encrypted: true
-	    });
 	     
 	    var channel_name = "<%= @game_push_channel_name %>";
 	    var chat_channel_name = "<%= @game_chat_channel_name %>";
 	
+		pusher.unsubscribe(channel_name);
 	    var channel = pusher.subscribe(channel_name);
+	    pusher.unsubscribe(chat_channel_name);
 	    var chat_channel = pusher.subscribe(chat_channel_name);
 	    channel.bind('next_turn', function(data) {
 	      $( "div#status" ).add( "<span>User " + data.username + 
 	      " played a turn.</span><br/>" ).appendTo( "div#status" );
 	    });
-	    chat_channel.bind('message-sent', function(data) {
-
-	    	var msg = '<div class="message"><span><span id="person">' + data.username + ':</span>  ' 
-	    		+ data.message + "</span></div>";
-
-	      $( "div#chatbox" ).append(msg);
-	      $('div#chatbox').animate({
-  			scrollTop:$('div#chatbox').get(0).scrollHeight}, 'fast');
-	    });
+	    chat_channel.bind('message-sent', display_chat_message);
 	    
 	    
 	    $('button#play_turn').click(function() {
