@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>Exploding Kittens</title>
+
+<script type="text/javascript">
+ 
+$( init );
+
+function init() {
+  $('.draggable-card').draggable( {
+    cursor: 'move',
+    snap: '#droppable',
+    containment: '#content'
+  } );
+
+  $('#droppable').droppable( {
+  	accept: '.draggable-card',
+    hoverClass: 'hovered',
+    drop: handleDropEvent
+  } );
+}
+
+function handleDropEvent( event, ui ) {
+  var draggable = ui.draggable;
+  alert( 'Card "' + draggable.attr('id') + '" was discarded!' );
+}
+
+</script>
+ 
+</head>
+
+<body>
+ 
+<div id="content" style="height: 800px;">
+	<div>
+		<div class="card draggable-card">
+			<%=image_tag("skip.png")%>
+  		</div>
+  		<div class="card draggable-card">
+  			<%=image_tag("future.png")%>
+  		</div>
+  		<div class="card draggable-card">
+  			<%=image_tag("Nope.png")%>
+  		</div>
+	</div>
+
+	<div id="deck" class="card">
+		<%=image_tag("deck.png")%>
+	</div>
+
+    <div id="droppable" class="card">Discard</div>
+</div>
+
+<div id="play_again">
+	<button onclick="init()">Play again</button>
+</div>
+ 
+</body>
+</html>

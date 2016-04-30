@@ -1,3 +1,32 @@
+/***** GAME WINDOW *****/
+
+/* cards in hand */
+.card img, .card {
+height: 300px;
+width: 200px;
+}
+.draggable-card {
+float: left;
+}
+
+/* deck */
+#deck {
+float: right;
+}
+
+/* discard pile */
+#droppable {
+float:right;
+border: 1px solid white;
+}
+#droppable.hovered {
+  background: #aaa;
+}
+
+
+
+/***** CHAT BOX *****/
+
 /* top of chat */
 div#menu { padding: 10px 10px }
 

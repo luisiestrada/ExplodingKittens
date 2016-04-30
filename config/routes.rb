@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   get 'instructions' => 'welcome#instructions'
   get 'about_us' => 'welcome#about_us'
   get 'test' => 'welcome#test'
+  get 'gamewindow' => 'welcome#gamewindow'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
