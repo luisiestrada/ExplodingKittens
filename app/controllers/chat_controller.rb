@@ -10,7 +10,7 @@ skip_before_filter  :verify_authenticity_token
     end
     
     Pusher.trigger(pusher_channel, 'message-sent', {
-    	user_email: 'test',
+      user_email: current_user.nil? ? 'Unknown' : current_user.email,
     	message: params[:message],
     	timestamp: Time.now(),
     	username: params[:username]
