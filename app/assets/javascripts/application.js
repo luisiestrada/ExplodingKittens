@@ -15,3 +15,4 @@
 //= require turbolinks
 //= require phaser
 //= require_tree .
+//= require handlebars.runtime
