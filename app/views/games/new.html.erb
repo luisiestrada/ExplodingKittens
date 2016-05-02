@@ -48,11 +48,75 @@
 	</div>
 </nav>
 
-<div class="container-fluid" align="center" style="">
+<div class="container-fluid">
 	<!-- <%= form_for :game, :html => {:style => "color: black"}, url: games_path do |f| %> -->
 
-	<div><%= f.submit "CREATE NEW GAME", :class => "creategame" %></div>
-	<div><%= image_tag "explosion.png", :class => "creategameimg" %></div>
+	<button type="button" class="btn btn-info btn-lg btn-create" data-toggle="modal" data-target="#newgameform" >Create A New Game</button>
+
+	<!-- Modal -->
+	<div class="modal fade" id="newgameform" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">New Exploding Kittens Game</h4>
+				</div>
+				<div class="modal-body">
+					<form>
+						<fieldset class="form-group">
+							<label for="newgamename">Name</label>
+							<input type="" class="form-control" id="newGameName" placeholder="Enter name for new game">
+						</fieldset>
+
+						<fieldset class="form-group">
+							<label for="numPlayers">Number of Players</label>
+							<select class="form-control" id="numPlayers">
+								<option>1</option>
+								<option>2</option>
+								<option>3</option>
+								<option>4</option>
+							</select>
+						</fieldset>
+
+						<fieldset class="form-group">
+							<label>Game Mode</label>
+							<br>
+							<label>
+								<input type="radio" name="publicOrPrivate" id="public" value="public" onclick="$('#privatepassword').prop('disabled', true); $('#privatepasswordconf').prop('disabled', true);" checked>
+								Public
+							</label>
+							<label>
+								<input type="radio" name="publicOrPrivate" id="private" value="private" onclick="$('#privatepassword').prop('disabled', false); $('#privatepasswordconf').prop('disabled', false);">
+								Private
+							</label>
+						</fieldset>
+
+						<fieldset class="form-group">
+							<label for="password">Password</label>
+							<input type="password" class="form-control" id="privatepassword" placeholder="Password">
+						</fieldset>
+
+						<fieldset class="form-group">
+							<label for="passwordconf">Password</label>
+							<input type="password" class="form-control" id="privatepasswordconf" placeholder="Confirm Password">
+						</fieldset>
+
+						<fieldset class="form-group">
+							<label for="description">Game Description <i>(Optional)</i></label>
+							<textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
+						</fieldset>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<!-- <div><%= f.submit "CREATE NEW GAME", :class => "creategame" %></div> 
+	<div><%= image_tag "explosion.png", :class => "creategameimg" %></div> -->
 	<% end %>
 
 </div>
