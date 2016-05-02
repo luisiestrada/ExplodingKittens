@@ -15,12 +15,13 @@ function init() {
     stack: '.draggable-card'
   });
 
-  $('#droppable').droppable( {
+  $('#discard').droppable( {
   	accept: '.draggable-card',
     hoverClass: 'hovered',
     drop: handleDropEvent
   });
 
+  
 }
 
 function handleDropEvent( event, ui ) {
@@ -35,15 +36,24 @@ function handleDropEvent( event, ui ) {
 </head>
 
 <body>
- 
+
+<% cards =
+  ['attack-1','attack-2','cat-1','cat-2','defuse-1','exploding-kitten-1','exploding-kitten-2','exploding-kitten-3','favor-1','future-1','future-2','nope-1','nope-2','shuffle-1','skip'] %>
+
+
 <div id="content" style="height: 600px;">
 
-  <div id="deck" class="card">
-    <%=image_tag("deck.png")%>
-  </div>
+  <!-- deck and discard pile -->
+  <div id="deck" class="card"><%=image_tag("deck.png")%></div>
+  <div id="discard" class="card">Discard</div>
 
-  <div id="droppable" class="card">Discard</div>
+  <!-- cards in hand -->
+  <% for i in 0..5 %>
+    <%= image_tag(cards.sample, :class => "card draggable-card") %>
+  <% end %>
 
+
+<!--
 	<div>
 		<div class="card draggable-card" id="Skip 1">
 			<%=image_tag("skip-1.png")%>
@@ -86,10 +96,13 @@ function handleDropEvent( event, ui ) {
       </div>
 	</div>
 </div>
+-->
 
+<!-- 
 <div id="play_again">
 	<button onclick="init()">Play again</button>
 </div>
+ -->
  
 </body>
 </html>

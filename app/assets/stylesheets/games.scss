@@ -15,11 +15,11 @@ float: right;
 }
 
 /* discard pile */
-#droppable {
+#discard {
 float:right;
 border: 1px solid white;
 }
-#droppable.hovered {
+#discard.hovered {
   background: #aaa;
 }
 
