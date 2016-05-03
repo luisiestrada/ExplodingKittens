@@ -65,18 +65,22 @@
 				<div class="modal-body">
 					<form>
 						<fieldset class="form-group">
-							<label for="newgamename">Room Name</label>
-							<input type="" class="form-control" id="newGameName" placeholder="Enter name for new game">
+							<%= f.label :room_name %>:<br />
+							<%= f.text_field :room_name %><br />
 						</fieldset>
 
 						<fieldset class="form-group">
-							<label for="numPlayers">Number of Players</label>
-							<select class="form-control" id="numPlayers">
-								<option>2</option>
-								<option>3</option>
-								<option>4</option>
-							</select>
+							<%= f.label :number_of_players %>:<br />
+							<%= f.select(:num_players) do %>
+							<% [['2', 1], ['3', 2], ['4', 3]].each do |c| -%>
+							<%= content_tag(:option, c.first, value: c.last) %>
+							<% end %>
+							<% end %>
 						</fieldset>
+
+						<%= form_for :game, :html => {:style => "color: black"}, url: games_path do |f| %>
+						<%= f.submit "Create New Game" %>
+						<% end %>
 
 						<!-- 
 						<fieldset class="form-group">
@@ -106,18 +110,15 @@
 							<label for="description">Game Description <i>(Optional)</i></label>
 							<textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
 						</fieldset>
-						-->
-					</form>
-				</div>
-				<div class="modal-footer">
-					<!-- <%= form_for :game, :html => {:style => "color: black"}, url: games_path do |f| %> -->
-					<div data-dismiss="modal"><%= f.submit "CREATE NEW GAME", :class => "btn btn-default" %></div>
-					<% end -%>
-				</div>
+					-->
+				</form>
 			</div>
-
+			<div class="modal-footer" >
+			</div>
 		</div>
+
 	</div>
+</div>
 	<!-- <div><%= f.submit "CREATE NEW GAME", :class => "creategame" %></div> 
 	<div><%= image_tag "explosion.png", :class => "creategameimg" %></div> -->
 	<% end %>
