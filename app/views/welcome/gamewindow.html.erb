@@ -38,7 +38,7 @@ function handleDropEvent( event, ui ) {
 <body>
 
 <% cards =
-  ['attack-1','attack-2','cat-1','cat-2','defuse-1','exploding-kitten-1','exploding-kitten-2','exploding-kitten-3','favor-1','future-1','future-2','nope-1','nope-2','shuffle-1','skip'] %>
+  ['attack-1','attack-2','cat-1','cat-2','defuse-1','exploding-kitten-1','exploding-kitten-2','exploding-kitten-3','favor-1','future-1','future-2','nope-1','nope-2','shuffle-1','skip-1'] %>
 
 
 <div id="content" style="height: 600px;">
@@ -51,7 +51,6 @@ function handleDropEvent( event, ui ) {
   <% for i in 0..5 %>
     <%= image_tag(cards.sample, :class => "card draggable-card") %>
   <% end %>
-
 
 <!--
 	<div>
