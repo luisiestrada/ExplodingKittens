@@ -51,31 +51,35 @@
 <div class="container-fluid" align="center">
   <h1>Lobby</h1>
   <div>
-  <% if @games.size == 0 %>
-    <table class="table well games-table">
-      <tr>
-        <th>ID</th>
-        <th>Room Name</th>
-        <th>Host</th>
-        <th>Players</th>
-        <th></th>
-      </tr>
+    <% if @games.size != 0 %>
+    <div class="game-box">
+      <table class="table games-table">
+        <tr style="border-bottom: 5px solid white;">
+          <th>ID</th>
+          <th>ROOM NAME</th>
+          <th>HOST</th>
+          <th>PLAYERS</th>
+          <th></th>
+        </tr>
 
-      <% @games.each do |game| %>
-      <tr>
-        <td><%= game.id %></td>
-        <td><!-- game.name -->Game<%= game.id %></td>
-        <td><!-- game.host -->Host<%= game.id %></td>
-        <td><!-- game.players / game.max_players -->0/<%= game.id + 1 %></td>
-        <td><button><%= link_to 'Join', game_path(game) %></button></td>
-      </tr>
-      <% end %>
-    </table>
+        <% @games.each do |game| %>
+        <tr>
+          <td><%= game.id %></td>
+          <td><!-- game.name -->Game<%= game.id %></td>
+          <td><!-- game.host -->Host<%= game.id %></td>
+          <td><!-- game.players / game.max_players -->0/<%= game.id + 1 %></td>
+          <td><button><%= link_to 'Join', game_path(game) %></button></td>
+        </tr>
+        <% end %>
+      </table>
+    </div>
 
     <% else %>
-    <br />
-    <h2>There are no game rooms yet</h2>
-    <button class="button">Create a game now</button>
+    <br /><br />
+    <h3>There are no game rooms yet</h3>
+    <a href="/games/new">
+      <button type="button" class="btn btn-info btn-lg btn-create" style="margin-top: 0;">Create a new game now</button>
+    </a>
     <% end -%>
   </div>
 </div>
