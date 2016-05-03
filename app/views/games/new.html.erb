@@ -48,10 +48,10 @@
 	</div>
 </nav>
 
-<div class="container-fluid">
+<div class="container-fluid" align="center">
 	<!-- <%= form_for :game, :html => {:style => "color: black"}, url: games_path do |f| %> -->
 
-	<button type="button" class="btn btn-info btn-lg btn-create" data-toggle="modal" data-target="#newgameform" >Create A New Game</button>
+	<button type="button" class="btn btn-info btn-lg btn-create" data-toggle="modal" data-target="#newgameform" style="background-color: #7C2213; border-color: #7C2213;">Create A New Game</button>
 
 	<!-- Modal -->
 	<div class="modal fade" id="newgameform" role="dialog">
@@ -65,20 +65,20 @@
 				<div class="modal-body">
 					<form>
 						<fieldset class="form-group">
-							<label for="newgamename">Name</label>
+							<label for="newgamename">Room Name</label>
 							<input type="" class="form-control" id="newGameName" placeholder="Enter name for new game">
 						</fieldset>
 
 						<fieldset class="form-group">
 							<label for="numPlayers">Number of Players</label>
 							<select class="form-control" id="numPlayers">
-								<option>1</option>
 								<option>2</option>
 								<option>3</option>
 								<option>4</option>
 							</select>
 						</fieldset>
 
+						<!-- 
 						<fieldset class="form-group">
 							<label>Game Mode</label>
 							<br>
@@ -106,10 +106,13 @@
 							<label for="description">Game Description <i>(Optional)</i></label>
 							<textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
 						</fieldset>
+						-->
 					</form>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<!-- <%= form_for :game, :html => {:style => "color: black"}, url: games_path do |f| %> -->
+					<div data-dismiss="modal"><%= f.submit "CREATE NEW GAME", :class => "btn btn-default" %></div>
+					<% end -%>
 				</div>
 			</div>
 
