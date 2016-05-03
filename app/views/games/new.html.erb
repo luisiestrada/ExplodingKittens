@@ -77,10 +77,13 @@
 							<% end %>
 							<% end %>
 						</fieldset>
-
-						<%= form_for :game, :html => {:style => "color: black"}, url: games_path do |f| %>
-						<%= f.submit "Create New Game" %>
-						<% end %>
+						<br />
+						
+							<%= form_for :game, :html => {:style => "color: black"}, url: games_path do |f| %>
+							<p> 
+								<%= f.submit "Create New Game"%>
+							</p>
+							<% end %>
 
 						<!-- 
 						<fieldset class="form-group">
