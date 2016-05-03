@@ -2,8 +2,8 @@
 
 /* cards in hand */
 .card img, .card {
-height: 250px;
-width: 180px;
+height: 200px;
+width: 120px;
 }
 .draggable-card {
 float: left;
@@ -23,7 +23,9 @@ border: 1px solid white;
   background: #aaa;
 }
 
-
+#reset {
+	
+}
 
 /***** CHAT BOX *****/
 

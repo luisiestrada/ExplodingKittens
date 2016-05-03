@@ -21,7 +21,8 @@ function init() {
     drop: handleDropEvent
   });
 
-  
+  $('.draggable-card').click( function() { alert('clicked'); });
+
 }
 
 function handleDropEvent( event, ui ) {
@@ -29,7 +30,10 @@ function handleDropEvent( event, ui ) {
   alert( 'Card "' + draggable.attr('id') + '" was discarded!' );
 }
 
-
+function handleClick( event, ui ) {
+  var draggable = ui.draggable;
+  draggable.fadeOut(300);
+}
 
 </script>
  
@@ -40,68 +44,21 @@ function handleDropEvent( event, ui ) {
 <% cards =
   ['attack-1','attack-2','cat-1','cat-2','defuse-1','exploding-kitten-1','exploding-kitten-2','exploding-kitten-3','favor-1','future-1','future-2','nope-1','nope-2','shuffle-1','skip-1'] %>
 
-
-<div id="content" style="height: 600px;">
+<div id="content" style="height: 630px;">
 
   <!-- deck and discard pile -->
   <div id="deck" class="card"><%=image_tag("deck.png")%></div>
   <div id="discard" class="card">Discard</div>
 
   <!-- cards in hand -->
-  <% for i in 0..5 %>
-    <%= image_tag(cards.sample, :class => "card draggable-card") %>
+  <% for i in 0..20 %>
+    <% card = cards.sample %>
+    <%= image_tag(card, :class => "card draggable-card", :id => card) %>
   <% end %>
 
-<!--
-	<div>
-		<div class="card draggable-card" id="Skip 1">
-			<%=image_tag("skip-1.png")%>
-  		</div>
-  		<div class="card draggable-card" id="Future 1">
-  			<%=image_tag("future-1.png")%>
-  		</div>
-      <div class="card draggable-card" id="Future 2">
-        <%=image_tag("future-2.jpg")%>
-      </div>
-  		<div class="card draggable-card" id="Nope 1">
-  			<%=image_tag("nope-1.png")%>
-  		</div>
-      <div class="card draggable-card" id="Nope 2">
-        <%=image_tag("nope-2.png")%>
-      </div>
-      <div class="card draggable-card" id="Defuse 1">
-        <%=image_tag("defuse-1.jpg")%>
-      </div>
-      <div class="card draggable-card" id="Cat 1">
-        <%=image_tag("cat-1.jpg")%>
-      </div>
-      <div class="card draggable-card" id="Cat 2">
-        <%=image_tag("cat-2.jpg")%>
-      </div>
-      <div class="card draggable-card" id="Attack 1">
-        <%=image_tag("attack-1.jpg")%>
-      </div>
-      <div class="card draggable-card" id="Attack 2">
-        <%=image_tag("attack-2.jpg")%>
-      </div>
-      <div class="card draggable-card" id="Exploding Kitten 1">
-        <%=image_tag("exploding-kitten-1.jpg")%>
-      </div>
-      <div class="card draggable-card" id="Exploding Kitten 2">
-        <%=image_tag("exploding-kitten-2.jpg")%>
-      </div>
-      <div class="card draggable-card" id="Exploding Kitten 3">
-        <%=image_tag("exploding-kitten-3.jpg")%>
-      </div>
-	</div>
+<div id="reset">
+	<button onclick="init()">Reset</button>
 </div>
--->
-
-<!-- 
-<div id="play_again">
-	<button onclick="init()">Play again</button>
-</div>
- -->
  
 </body>
 </html>
