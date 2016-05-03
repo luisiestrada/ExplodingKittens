@@ -63,7 +63,6 @@
 					<h4 class="modal-title">New Exploding Kittens Game</h4>
 				</div>
 				<div class="modal-body">
-					<form>
 						<fieldset class="form-group">
 							<%= f.label :room_name %>:<br />
 							<%= f.text_field :room_name %><br />
@@ -77,7 +76,7 @@
 							<% end %>
 							<% end %>
 						</fieldset>
-						<br />
+						<br></br>
 						
 							<%= form_for :game, :html => {:style => "color: black"}, url: games_path do |f| %>
 							<p> 
@@ -114,7 +113,6 @@
 							<textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
 						</fieldset>
 					-->
-				</form>
 			</div>
 			<div class="modal-footer" >
 			</div>
