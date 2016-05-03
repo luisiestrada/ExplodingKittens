@@ -3,6 +3,7 @@ class Game < ActiveRecord::Base
   has_many :users
   has_many :stats, class_name: GameStat
   has_many :playing_cards
+  has_one :current_turn_player, class_name: User
 
   alias :players :users
 
@@ -44,6 +45,10 @@ class Game < ActiveRecord::Base
       player.save!
     end
 
+    # pick a random player to go first
+    player_id = self.players.pluck(:id).sample
+    self.set_turn(User.find(player_id))
+
     self.active = true
     self.save!
   end
@@ -56,6 +61,11 @@ class Game < ActiveRecord::Base
 
   def remove_user(user)
     self.users.delete(user)
+  end
+
+  def set_turn(player)
+    self.current_turn_player = player
+    self.save!
   end
 
   def end!

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160422030556) do
+ActiveRecord::Schema.define(version: 20160502030714) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,19 +35,20 @@ ActiveRecord::Schema.define(version: 20160422030556) do
     t.boolean  "cancel_immunity",           default: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer :user_id
-    t.integer :game_id, null: false
-    t.string  :state, null: false, default: 'deck'
+    t.integer  "user_id"
+    t.integer  "game_id",                                    null: false
+    t.string   "state",                     default: "deck", null: false
   end
 
-   add_index "cards", ["user_id"], name: "index_cards_on_user_id", using: :btree
-   add_index "cards", ["game_id"], name: "index_cards_on_game_id", using: :btree
+  add_index "cards", ["game_id"], name: "index_cards_on_game_id", using: :btree
+  add_index "cards", ["user_id"], name: "index_cards_on_user_id", using: :btree
 
   create_table "games", force: :cascade do |t|
-    t.boolean  "active",     default: false, null: false
+    t.boolean  "active",                 default: false, null: false
     t.integer  "winner_id"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+    t.integer  "current_turn_player_id"
   end
 
   add_index "games", ["winner_id"], name: "index_games_on_winner_id", using: :btree
