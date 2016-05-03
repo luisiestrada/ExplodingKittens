@@ -49,7 +49,6 @@
 </nav>
 
 <div class="container-fluid" align="center">
-	<!-- <%= form_for :game, :html => {:style => "color: black"}, url: games_path do |f| %> -->
 
 	<button type="button" class="btn btn-info btn-lg btn-create" data-toggle="modal" data-target="#newgameform" style="background-color: #7C2213; border-color: #7C2213;">Create A New Game</button>
 
@@ -63,26 +62,25 @@
 					<h4 class="modal-title">New Exploding Kittens Game</h4>
 				</div>
 				<div class="modal-body">
-						<fieldset class="form-group">
-							<%= f.label :room_name %>:<br />
-							<%= f.text_field :room_name %><br />
-						</fieldset>
+					<%= form_for :game, :html => {:style => "color: black"}, url: games_path do |f| %>
+					<fieldset class="form-group">
+						<%= f.label :room_name %>:<br />
+						<%= f.text_field :room_name %><br />
+					</fieldset>
 
-						<fieldset class="form-group">
-							<%= f.label :number_of_players %>:<br />
-							<%= f.select(:num_players) do %>
-							<% [['2', 1], ['3', 2], ['4', 3]].each do |c| -%>
-							<%= content_tag(:option, c.first, value: c.last) %>
-							<% end %>
-							<% end %>
-						</fieldset>
-						<br></br>
-						
-							<%= form_for :game, :html => {:style => "color: black"}, url: games_path do |f| %>
-							<p> 
-								<%= f.submit "Create New Game"%>
-							</p>
-							<% end %>
+					<fieldset class="form-group">
+						<%= f.label :number_of_players %>:<br />
+						<%= f.select(:num_players) do %>
+						<% [['2', 2], ['3', 3], ['4', 4]].each do |c| -%>
+						<%= content_tag(:option, c.first, value: c.last) %>
+						<% end %>
+						<% end %>
+					</fieldset>
+					<br></br>
+
+					<p> 
+						<%= f.submit "Create New Game"%>
+					</p>
 
 						<!-- 
 						<fieldset class="form-group">
@@ -113,17 +111,13 @@
 							<textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
 						</fieldset>
 					-->
-			</div>
-			<div class="modal-footer" >
+					<% end %>
+				</div>
+				<div class="modal-footer" >
+				</div>
 			</div>
 		</div>
-
 	</div>
-</div>
-	<!-- <div><%= f.submit "CREATE NEW GAME", :class => "creategame" %></div> 
-	<div><%= image_tag "explosion.png", :class => "creategameimg" %></div> -->
-	<% end %>
-
 </div>
 
 </body>

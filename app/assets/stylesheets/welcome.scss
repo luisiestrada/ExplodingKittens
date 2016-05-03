@@ -195,20 +195,15 @@ canvas {   display : block;   margin : auto;}
 margin-top: 200px;
 }
 
-.creategameimg {
-width: 80%;
-opacity: 0.1;
-margin-top: -250px;
-position:relative;
-z-index: 1;
-}
-
-.cr{
-background: image-url('explosion.png');
-width: 100%;
-height: 300px;
-}
-
 .modal-content{
 color: black;
+}
+
+
+/*********** GAME LOBBY ***********/
+
+.games-table {
+width: auto !important; 
+min-width: 50% !important;
+background-color: #7C2213 !important;
 }
