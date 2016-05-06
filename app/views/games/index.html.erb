@@ -53,14 +53,16 @@
   <table class="table">
     <tr>
       <th>ID</th>
-      <th></th>
+      <th>Players</th>
+      <th>Actions</th>
       <th colspan="3"></th>
     </tr>
 
     <% @games.each do |game| %>
     <tr>
       <td><%= game.id %></td>
-      <td><%= link_to 'Show', game_path(game) %></td>
+      <td><%= game.players.length %>/<%= Game::MAX_PLAYERS %></td>
+      <td><%= link_to 'Join', game_join_path(game) %></td>
     </tr>
     <% end %>
   </table>

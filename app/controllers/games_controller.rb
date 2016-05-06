@@ -1,11 +1,8 @@
 class GamesController < ApplicationController
-  before_filter :set_game_context, except: [:new, :create, :index]
+  before_filter :set_game_context, except: [:create, :index]
 
   def index
     @games = Game.all
-  end
-
-  def new
   end
 
   def create
@@ -39,16 +36,24 @@ class GamesController < ApplicationController
     end
   end
 
-  def update
-    @game.add_user(current_user)
-    @game.save!
-    redirect_to @game
+  def join
+    if @game.active?
+      flash[:alert] = 'That game has already started.'
+      index and return
+    else
+      @game.add_user(current_user)
+      flash[:notice] = "You have joined game ##{@game.id}!"
+      redirect_to @game and return
+      # TODO: Use socket to alert everyone that someone has joined the game
+    end
   end
 
   private
 
   def set_game_context
-    @game = Game.find_by_id(params[:id])
-    not_found unless @game
+    raise ActionController::RoutingError.new('Bad Request') unless current_user.present?
+
+    @game = Game.find_by_id(params[:id] || params[:game_id])
+    raise ActionController::RoutingError.new('Not Found') unless @game
   end
 end
