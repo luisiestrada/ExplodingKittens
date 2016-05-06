@@ -16,6 +16,11 @@ div#menu { padding: 10px 10px }
   width: 100%;
 }
 
+.start-game-btn {
+  display: flex;
+  align-items: center;
+}
+
 /* inner chat area */
 #chat {
   text-align: left;

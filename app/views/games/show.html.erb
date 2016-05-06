@@ -6,8 +6,13 @@
 
 <div id="status">
 
-<div class="main-display">
-  <div class="text-center">hello world</div>
+<div class="main-display text-center">
+
+  <% if current_user.is_game_host? %>
+    <div class="text-center">
+      <div class="btn btn-lg btn-success start-game-btn">Start Game!</div>
+    </div>
+  <% end %>
 </div>
 
 <!-- display the button only after the scripts have loaded -->
@@ -52,6 +57,8 @@
         var channelName = "<%= @pusher_channel %>";
         var channel = pusher.subscribe(channelName);
 
+
+         // listen for pusher events from server
         channel.bind('user.joined', function(data) {
           alert('User '+ data.username + ' joined the game!');
         });
@@ -60,6 +67,19 @@
           console.log(data);
         });
 
+        // DOM events
+        <% if current_user.is_game_host? %>
+          $('.start-game-btn').click(function() {
+            var headers = {};
+            headers['X-CSRF-Token'] = AUTH_TOKEN;
+
+            $.ajax({
+              method: 'POST',
+              url: '<%= game_start_path(@game) %>',
+              headers: headers
+            });
+          });
+        <% end %>
 
         $('button#play_turn').click(function() {
       	var URI = '/games/play_turn';

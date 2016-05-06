@@ -43,6 +43,7 @@ class GamesController < ApplicationController
     end
 
     @pusher_client.trigger(@pusher_channel, 'game.start', data)
+    render json: {}
   end
 
   def join
