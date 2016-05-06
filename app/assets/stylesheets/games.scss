@@ -51,7 +51,7 @@
 /* top of chat */
 div#menu { padding: 10px 10px }
 
-/* chat name */  
+/* chat name */
 .welcome { float:left }
 
 /* exit link */
@@ -59,20 +59,28 @@ div#menu { padding: 10px 10px }
 
 /* entire chatbox */
 #chat-wrapper {
-background:#7C2213;
-border: 2px solid #7C2213;
+  background:#7C2213;
+  border: 2px solid #7C2213;
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+}
+
+.start-game-btn {
+  display: flex;
+  align-items: center;
 }
 
 /* inner chat area */
 #chat {
-text-align: left;
-background: black;
-color: white;
-height: 250px;
-border: 1px solid #7C2213;
-overflow-y: scroll;
-white-space: normal;
-word-wrap: break-word;
+  text-align: left;
+  background: black;
+  color: white;
+  height: 250px;
+  border: 1px solid #7C2213;
+  overflow-y: scroll;
+  white-space: normal;
+  word-wrap: break-word;
 }
 
 /* chatbox usernames */

@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  
+
   get 'chat/message'
   post 'chat/message' => 'chat#message'
   post 'games/play_turn' => 'games#play_turn'
@@ -26,7 +26,11 @@ Rails.application.routes.draw do
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
-  resources :games
+  resources :games do
+    get 'join'
+    post 'start'
+  end
+  
   resources :users
   resources :chat
 

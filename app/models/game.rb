@@ -3,6 +3,7 @@ class Game < ActiveRecord::Base
   has_many :users
   has_many :stats, class_name: GameStat
   has_many :playing_cards
+  has_one :current_turn_player, class_name: User
 
   alias :players :users
 
@@ -17,7 +18,7 @@ class Game < ActiveRecord::Base
   scope :inactive, -> { where(active: false) }
   scope :by_winner, -> (user) { where(winner_id: user.id) }
 
-  def start_game
+  def start_game!
     # init the deck
     (VALID_CARD_TYPES - ['exploding_kitten', 'defuse']).each do |card_type|
       init_card_by_type(card_type)
@@ -44,18 +45,33 @@ class Game < ActiveRecord::Base
       player.save!
     end
 
+    # pick a random player to go first
+    player_id = self.players.pluck(:id).sample
+    self.set_turn(User.find(player_id))
+
     self.active = true
     self.save!
   end
 
   def add_user(user)
     return false unless self.users.count < MAX_PLAYERS
+    user.is_playing = true
     self.users << user
     self.save!
   end
 
   def remove_user(user)
+    user.is_playing = false
     self.users.delete(user)
+  end
+
+  def active_players
+    self.players.where(is_playing: true)
+  end
+
+  def set_turn(player)
+    self.current_turn_player = player
+    self.save!
   end
 
   def end!
@@ -64,6 +80,11 @@ class Game < ActiveRecord::Base
 
   def deck
     self.playing_cards.where(state: 'deck')
+  end
+
+  def draw(player, n=1)
+    return [] unless can_draw?(player)
+    self.deck.first(n)
   end
 
   def shuffle_deck!
@@ -82,7 +103,25 @@ class Game < ActiveRecord::Base
     self.users.count == MAX_PLAYERS
   end
 
+  def as_json
+    data = {}
+
+    data[:players] = self.players.map do |player|
+      {
+        id: player.id,
+        username: player.username,
+        hand: player.hand.each { |card| card.as_json }
+      }
+    end
+  end
+
   private
+
+  # Rule validations
+
+  def can_draw?(player)
+    self.current_turn_player.id == player.id && !player.has_drawn?
+  end
 
   def init_card_by_type(type, qty:nil)
     template = Settings.card_templates[type]

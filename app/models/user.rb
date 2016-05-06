@@ -18,6 +18,38 @@ class User < ActiveRecord::Base
   before_create :generate_anon_username
   after_create :init_stats
 
+  def start_turn
+    self.has_drawn = false
+  end
+
+  def draw(n=1)
+    cards = self.game.draw(self, n)
+    self.hand = self.hand + cards
+    self.has_drawn = true
+    self.save!
+  end
+
+  def is_game_host?
+    self.id == self.game.players.last.id
+  end
+
+  def has_card?(card_type)
+    self.hand.where(card_type: card_type).length > 0
+  end
+
+  def has_exploding_kitten?
+    self.hand.where(card_type: 'exploding_kitten').length > 0
+  end
+
+  def has_defuse?
+    self.hand.where(card_type: 'defuse').length > 0
+  end
+
+  def lose!
+    self.losses += 1
+    self.is_playing = false
+    self.save!
+  end
 
   def games_played
     self.wins + self.losses
