@@ -1,7 +1,7 @@
 /***** GAME WINDOW *****/
 
 /* main page header */
-html #content {
+#game-window {
   display: block;
   border: 2px solid #999;
   padding: 10px;
@@ -17,6 +17,10 @@ html #content {
   width: 120px;
 }
 
+.cascade {
+  background: linear-gradient(to right, #ccc 0%, #444 100%);
+}
+
 /* each card in hand */
 .draggable-card {
   
@@ -24,7 +28,32 @@ html #content {
 /* hand as a whole */
 #hand {
   position: absolute;
-  top: 300px;
+  bottom: 0px;
+}
+
+.cards {
+  display: table;
+  table-layout: fixed;
+  width: 50%;
+  max-width: 700px;
+}
+
+.cards > div {
+  display: table-cell;
+  width: 100px;
+}
+
+.cards > div > img {
+  display: block;
+}
+
+.card-container {
+  flex: 1 0 0;
+  overflow-x: hidden;
+}
+
+.card-container:last-child {
+  flex: 0 0 auto;
 }
 
 #deck-discard {

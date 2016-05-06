@@ -51,7 +51,7 @@ function refresh() {
   $('.draggable-card').draggable( {
     cursor: 'move',
     snap: '#discard',
-    containment: '#content',
+    containment: '#game-window',
     stack: '.draggable-card'
   });
 
@@ -59,8 +59,7 @@ function refresh() {
   $(".draggable-card").click(function () {
     $(this).animate({
       height: ($(this).height() == 400) ? 200 : 400,
-      width: ($(this).width() == 240) ? 120 : 240,
-      containment: '#content'
+      width: ($(this).width() == 240) ? 120 : 240
     }, 200);
   });
 }
@@ -108,10 +107,12 @@ function resizeHand() {
     <div id="discard" class="card">Discard</div>
   </div>
 
-  <div id="hand">
+  <div id="hand" class="cards">
     <% for i in 0...5 %>
       <% card = cards[i] %>
-      <%= image_tag(card, :class => "card draggable-card", :id => card) %>
+      <div>
+        <%= image_tag(card, :class => "card draggable-card", :id => card) %>
+      </div>
     <% end %>
   </div>
 
