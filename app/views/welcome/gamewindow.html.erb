@@ -11,7 +11,7 @@ var cards =
 $(document).ready(function() {
   // cards can be drawn from deck
   $('#deck').click( function() {
-    spawn();
+    spawn_card();
   });
 
   // discard pile is droppable
@@ -45,6 +45,9 @@ $(document).ready(function() {
 $( refresh );
 function refresh() {
   // make cards in hand draggable
+
+  resizeHand();
+
   $('.draggable-card').draggable( {
     cursor: 'move',
     snap: '#discard',
@@ -56,7 +59,8 @@ function refresh() {
   $(".draggable-card").click(function () {
     $(this).animate({
       height: ($(this).height() == 400) ? 200 : 400,
-      width: ($(this).width() == 240) ? 120 : 240
+      width: ($(this).width() == 240) ? 120 : 240,
+      containment: '#content'
     }, 200);
   });
 }
@@ -67,7 +71,7 @@ function handleDropEvent( event, ui ) {
   draggable.remove();
 }
 
-function spawn() { 
+function spawn_card() { 
   var img = document.createElement("img");
   var card = cards[Math.floor(Math.random()*cards.length)];
   img.src = "assets/" + card;
@@ -78,13 +82,23 @@ function spawn() {
   //document.body.appendChild(img);
 }
 
+function resizeHand() {
+  var max_num_of_cards = $('.draggable-card').length;
+  if (max_num_of_cards > 6) {
+    //document.getElementById('hand').innerHTML = "<br>";
+    //$('#hand').append('<br>');
+
+  }
+  
+}
+
 </script>
  
 </head>
 
 <body>
 
-<div id="content" style="height: 650px;">
+<div id="game-window" style="height: 650px; min-width: 960px; margin: 0 auto">
 
   <% cards =
   ['attack-1','attack-2','cat-1','cat-2','defuse-1','exploding-kitten-1','exploding-kitten-2','exploding-kitten-3','favor-1','future-1','future-2','nope-1','nope-2','shuffle-1', 'shuffle-2', 'skip-1'] %>

@@ -1,5 +1,16 @@
 /***** GAME WINDOW *****/
 
+/* main page header */
+html #content {
+  display: block;
+  border: 2px solid #999;
+  padding: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  color: white;
+  text-align: center;
+}
+
 /* every card */
 .card img, .card {
   height: 200px;
@@ -13,7 +24,7 @@
 /* hand as a whole */
 #hand {
   position: absolute;
-  top: 40%;
+  top: 300px;
 }
 
 #deck-discard {
