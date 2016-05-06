@@ -1,30 +1,35 @@
 /***** GAME WINDOW *****/
 
-/* cards in hand */
+/* every card */
 .card img, .card {
-height: 200px;
-width: 120px;
+  height: 200px;
+  width: 120px;
 }
+
+/* each card in hand */
 .draggable-card {
-float: left;
+  
+}
+/* hand as a whole */
+#hand {
+  position: absolute;
+  top: 40%;
 }
 
-/* deck */
+#deck-discard {
+  float: right;
+  left: 42%;
+  position: absolute;
+}
 #deck {
-float: right;
+  float: right;
 }
-
-/* discard pile */
 #discard {
-float:right;
-border: 1px solid white;
+  float: right;
+  border: 1px solid white;
 }
 #discard.hovered {
   background: #aaa;
-}
-
-#reset {
-	
 }
 
 /***** CHAT BOX *****/

@@ -4,35 +4,78 @@
 <title>Exploding Kittens</title>
 
 <script type="text/javascript">
- 
-$( init );
 
-function init() {
-  $('.draggable-card').draggable( {
-    cursor: 'move',
-    snap: '#droppable',
-    containment: '#content',
-    stack: '.draggable-card'
+var cards =
+  ['attack-1','attack-2','cat-1','cat-2','defuse-1','exploding-kitten-1','exploding-kitten-2','exploding-kitten-3','favor-1','future-1','future-2','nope-1','nope-2','shuffle-1', 'shuffle-2', 'skip-1'];
+
+$(document).ready(function() {
+  // cards can be drawn from deck
+  $('#deck').click( function() {
+    spawn();
   });
 
+  // discard pile is droppable
   $('#discard').droppable( {
-  	accept: '.draggable-card',
+    accept: '.draggable-card',
     hoverClass: 'hovered',
     drop: handleDropEvent
   });
 
-  $('.draggable-card').click( function() { alert('clicked'); });
+/*
+  // resize images on hover
+  $(".draggable-card").on( {
+    mouseenter: function()
+    {
+      $(this).animate({
+        height: '400px',
+        width: '240px'
+      });
+    },
+    mouseleave: function()
+    {
+      $(this).animate({
+        height: '200px',
+        width: '120px'
+      });
+    }
+  });
+*/
+});
 
+$( refresh );
+function refresh() {
+  // make cards in hand draggable
+  $('.draggable-card').draggable( {
+    cursor: 'move',
+    snap: '#discard',
+    containment: '#content',
+    stack: '.draggable-card'
+  });
+
+  // make cards resizable on click
+  $(".draggable-card").click(function () {
+    $(this).animate({
+      height: ($(this).height() == 400) ? 200 : 400,
+      width: ($(this).width() == 240) ? 120 : 240
+    }, 200);
+  });
 }
 
 function handleDropEvent( event, ui ) {
   var draggable = ui.draggable;
   alert( 'Card "' + draggable.attr('id') + '" was discarded!' );
+  draggable.remove();
 }
 
-function handleClick( event, ui ) {
-  var draggable = ui.draggable;
-  draggable.fadeOut(300);
+function spawn() { 
+  var img = document.createElement("img");
+  var card = cards[Math.floor(Math.random()*cards.length)];
+  img.src = "assets/" + card;
+  img.setAttribute("class", "card draggable-card");
+  img.setAttribute("id", card);
+  document.getElementById('hand').appendChild(img);
+  refresh();
+  //document.body.appendChild(img);
 }
 
 </script>
@@ -41,24 +84,26 @@ function handleClick( event, ui ) {
 
 <body>
 
-<% cards =
-  ['attack-1','attack-2','cat-1','cat-2','defuse-1','exploding-kitten-1','exploding-kitten-2','exploding-kitten-3','favor-1','future-1','future-2','nope-1','nope-2','shuffle-1','skip-1'] %>
+<div id="content" style="height: 650px;">
 
-<div id="content" style="height: 630px;">
+  <% cards =
+  ['attack-1','attack-2','cat-1','cat-2','defuse-1','exploding-kitten-1','exploding-kitten-2','exploding-kitten-3','favor-1','future-1','future-2','nope-1','nope-2','shuffle-1', 'shuffle-2', 'skip-1'] %>
 
-  <!-- deck and discard pile -->
-  <div id="deck" class="card"><%=image_tag("deck.png")%></div>
-  <div id="discard" class="card">Discard</div>
+  <div id="deck-discard">
+    <div id="deck" class="card"><%=image_tag("deck.png")%></div>
+    <div id="discard" class="card">Discard</div>
+  </div>
 
-  <!-- cards in hand -->
-  <% for i in 0..20 %>
-    <% card = cards.sample %>
-    <%= image_tag(card, :class => "card draggable-card", :id => card) %>
-  <% end %>
+  <div id="hand">
+    <% for i in 0...5 %>
+      <% card = cards[i] %>
+      <%= image_tag(card, :class => "card draggable-card", :id => card) %>
+    <% end %>
+  </div>
 
-<div id="reset">
-	<button onclick="init()">Reset</button>
 </div>
- 
+
+<br>
+
 </body>
 </html>
