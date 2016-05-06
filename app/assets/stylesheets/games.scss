@@ -17,10 +17,6 @@
   width: 120px;
 }
 
-.cascade {
-  background: linear-gradient(to right, #ccc 0%, #444 100%);
-}
-
 /* each card in hand */
 .draggable-card {
   
@@ -28,34 +24,12 @@
 /* hand as a whole */
 #hand {
   position: absolute;
-  bottom: 0px;
+  top: 300px;
 }
 
-.cards {
-  display: table;
-  table-layout: fixed;
-  width: 50%;
-  max-width: 700px;
-}
 
-.cards > div {
-  display: table-cell;
-  width: 100px;
-}
 
-.cards > div > img {
-  display: block;
-}
-
-.card-container {
-  flex: 1 0 0;
-  overflow-x: hidden;
-}
-
-.card-container:last-child {
-  flex: 0 0 auto;
-}
-
+/* deck + discard pile */
 #deck-discard {
   float: right;
   left: 42%;
