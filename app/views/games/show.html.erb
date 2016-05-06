@@ -8,18 +8,16 @@
 	      }
 	    };
 
-	    var channel_name = "<%= @game_push_channel_name %>";
-	    var chat_channel_name = "<%= @game_chat_channel_name %>";
+	    var channelName = "<%= @pusher_channel %>";
+	    var channel = pusher.subscribe(channelName);
 
-		pusher.unsubscribe(channel_name);
-	    var channel = pusher.subscribe(channel_name);
-	    pusher.unsubscribe(chat_channel_name);
-	    var chat_channel = pusher.subscribe(chat_channel_name);
-	    channel.bind('next_turn', function(data) {
-	      $( "div#status" ).add( "<span>User " + data.username +
-	      " played a turn.</span><br/>" ).appendTo( "div#status" );
+	    channel.bind('user.joined', function(data) {
+        alert('User '+data.username + ' joined the game!');
 	    });
-	    chat_channel.bind('message-sent', display_chat_message);
+
+      channel.bind('game.start', function(data) {
+        console.log(data);
+      });
 
 
 	    $('button#play_turn').click(function() {
