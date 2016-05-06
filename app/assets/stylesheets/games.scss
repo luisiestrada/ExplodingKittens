@@ -1,0 +1,34 @@
+/* top of chat */
+div#menu { padding: 10px 10px }
+
+/* chat name */  
+.welcome { float:left }
+
+/* exit link */
+.logout { float:right }
+
+/* entire chatbox */
+#chat-wrapper {
+background:#7C2213;
+border: 2px solid #7C2213;
+}
+
+/* inner chat area */
+#chat {
+text-align: left;
+background: black;
+color: white;
+height: 250px;
+border: 1px solid #7C2213;
+overflow-y: scroll;
+white-space: normal;
+word-wrap: break-word;
+}
+
+/* chatbox usernames */
+span#person { color: grey }
+
+/* user input + button */
+#txtbox {
+color: black;
+}

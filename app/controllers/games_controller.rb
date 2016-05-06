@@ -21,6 +21,17 @@ class GamesController < ApplicationController
   end
 
   def show
+    @game_push_channel_name = "game_" + @game.id.to_s + "_notifications_channel"
+    @game_chat_channel_name = "game_" + @game.id.to_s + "_chat"
+  end
+
+  def play_turn
+    game_channel = "game_" + @game.id.to_s + "_notifications_channel"
+    Pusher.trigger(game_channel, 'next_turn', {
+      user_id: params[:user_id],
+      username: params[:username]
+    });
+    render json: {}, status: :ok
   end
 
   def start

@@ -97,20 +97,25 @@
 <br />
 
 <!-- chat -->
-<div id="wrapper">
+<div id="chat-wrapper">
     <div id="menu">
         <p class="welcome">Kitten's World Chat <b></b></p>
         <p class="logout"><a id="exit" href="#">Exit Chat</a></p>
         <div style="clear:both"></div>
     </div>
 
-    <div id="chatbox"></div>
+    <!-- chat text -->
+    <div id = "chat">
+    	<div id="chatbox"></div>
+    </div>
 
-    <div id="txtbox">
-    <form name="message" action="">
-        <input name="usermsg" type="text" id="usermsg" size="100" />
-        <input name="submitmsg" type="submit" id="submitmsg" value="Send" />
-    </form>
+	<div id="txtbox">
+    	<!-- send -->
+    	<input name="submitmsg" type="submit" id="submitmsg" value="Send" style="float:right"/>
+		<!-- user input -->
+    	<div style="overflow: hidden; padding-right: .5em">
+        	<input name="usermsg" type="text" id="chatbox" autocomplete="off" placeholder="Send a message..." maxlength="4000" style="width:100%" onkeypress="return pressEnter(event);"/>
+        </div>
 	</div>
 </div>
 <br />

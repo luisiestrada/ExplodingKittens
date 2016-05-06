@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  
+  get 'chat/message'
+  post 'chat/message' => 'chat#message'
+  post 'games/play_turn' => 'games#play_turn'
 
   devise_for :users
   get 'welcome' => 'welcome#index'
@@ -25,6 +29,7 @@ Rails.application.routes.draw do
     get 'join'
   end
   resources :users
+  resources :chat
 
   # Example resource route with options:
   #   resources :products do
