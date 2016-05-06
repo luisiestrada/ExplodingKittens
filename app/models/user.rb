@@ -32,7 +32,9 @@ class User < ActiveRecord::Base
   private
 
   def generate_anon_username
-    self.username = "Anon-#{self.object_id}"
+    if self.username.blank?
+      self.username = "Anon-#{self.object_id}"
+    end
   end
 
   def init_stats
