@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160502030714) do
+ActiveRecord::Schema.define(version: 20160503033943) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(version: 20160502030714) do
     t.string   "card_type"
     t.string   "card_name"
     t.integer  "default_quantity"
-    t.integer  "opponent_draw_n",           default: 0
+    t.integer  "opponent_skip_turn_n",      default: 0
     t.boolean  "skip_turn",                 default: false
     t.integer  "view_top_deck_n",           default: 0
     t.boolean  "skip_draw",                 default: false
@@ -44,11 +44,12 @@ ActiveRecord::Schema.define(version: 20160502030714) do
   add_index "cards", ["user_id"], name: "index_cards_on_user_id", using: :btree
 
   create_table "games", force: :cascade do |t|
-    t.boolean  "active",                 default: false, null: false
+    t.boolean  "active",                    default: false, null: false
     t.integer  "winner_id"
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
     t.integer  "current_turn_player_id"
+    t.integer  "current_turn_player_index"
   end
 
   add_index "games", ["winner_id"], name: "index_games_on_winner_id", using: :btree
@@ -69,21 +70,24 @@ ActiveRecord::Schema.define(version: 20160502030714) do
   create_table "users", force: :cascade do |t|
     t.string   "username"
     t.string   "avatar_url"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
-    t.string   "email",                  default: "", null: false
-    t.string   "encrypted_password",     default: "", null: false
-    t.integer  "wins",                   default: 0,  null: false
-    t.integer  "losses",                 default: 0,  null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+    t.string   "email",                  default: "",    null: false
+    t.string   "encrypted_password",     default: "",    null: false
+    t.integer  "wins",                   default: 0,     null: false
+    t.integer  "losses",                 default: 0,     null: false
     t.integer  "game_id"
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
+    t.integer  "sign_in_count",          default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
+    t.boolean  "is_playing",             default: false, null: false
+    t.boolean  "has_drawn",              default: false
+    t.integer  "turns_to_take",          default: 1
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

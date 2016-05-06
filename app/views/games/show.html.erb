@@ -7,21 +7,21 @@
 	        window.console.log(message);
 	      }
 	    };
-	     
+
 	    var channel_name = "<%= @game_push_channel_name %>";
 	    var chat_channel_name = "<%= @game_chat_channel_name %>";
-	
+
 		pusher.unsubscribe(channel_name);
 	    var channel = pusher.subscribe(channel_name);
 	    pusher.unsubscribe(chat_channel_name);
 	    var chat_channel = pusher.subscribe(chat_channel_name);
 	    channel.bind('next_turn', function(data) {
-	      $( "div#status" ).add( "<span>User " + data.username + 
+	      $( "div#status" ).add( "<span>User " + data.username +
 	      " played a turn.</span><br/>" ).appendTo( "div#status" );
 	    });
 	    chat_channel.bind('message-sent', display_chat_message);
-	    
-	    
+
+
 	    $('button#play_turn').click(function() {
 			var URI = '/games/play_turn';
 			var payload = {
@@ -33,9 +33,9 @@
 				console.log(response);
 			});
 		});
-		
+
 		$('button#play_turn').show();
-		
+
 		$('input#submitmsg').click(function() {
 			console.log("clicked");
 			if(!input_is_empty()) {
@@ -54,7 +54,7 @@
 			}
 		});
 	});
-    
+
   </script>
 
 <p><a href="/games">Back</a></p>
@@ -62,7 +62,9 @@
   <strong>Game id:</strong>
   <%= @game.id %>
 </p>
+
 <div id="status">
+
 <p>
   <strong>Players:</strong>
   <table>
@@ -71,7 +73,7 @@
     <th>Email</th>
     <th colspan="3"></th>
   </tr>
- 
+
   <% @game.users.each do |user| %>
     <tr>
       <td><%= user.id %></td>
@@ -81,7 +83,7 @@
 </table>
 
 <!-- display the button only after the scripts have loaded -->
-<button id="play_turn" class="btn btn-primary" 
+<button id="play_turn" class="btn btn-primary"
 	style="display: none">Play a turn</button>
 </p>
 
@@ -92,7 +94,7 @@
         <p class="logout"><a id="exit" href="#">Exit Chat</a></p>
         <div style="clear:both"></div>
     </div>
-     
+
     <!-- chat text -->
     <div id = "chat">
     	<div id="chatbox"></div>

@@ -4,7 +4,7 @@ card_templates:
     card_type: 'attack'
     skip_turn: true
     skip_draw: true
-    opponent_draw_n: 2
+    opponent_skip_turn_n: 2
     default_quantity: 4
 
   defuse:

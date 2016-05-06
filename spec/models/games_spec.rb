@@ -29,7 +29,7 @@ RSpec.describe Game, type: :model do
     end
 
     before(:each) do
-      game_with_players.start_game
+      game_with_players.start_game!
 
       expect(game_with_players.active?).to be_truthy
     end
