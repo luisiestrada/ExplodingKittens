@@ -1,0 +1,5 @@
+pusher:
+  app_id: '200598'
+  key: '78511c9f413a61ee66ee'
+  secret: '27eebd95d42a57bf55a4'
+  encrypted: true
