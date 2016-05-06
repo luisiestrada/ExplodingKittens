@@ -1,5 +1,6 @@
 class GamesController < ApplicationController
   before_filter :set_game_context, except: [:create, :index]
+  before_filter :set_pusher_context, except: [:create, :index]
 
   def index
     @games = Game.all
@@ -21,8 +22,7 @@ class GamesController < ApplicationController
   end
 
   def show
-    @game_push_channel_name = "game_" + @game.id.to_s + "_notifications_channel"
-    @game_chat_channel_name = "game_" + @game.id.to_s + "_chat"
+
   end
 
   def play_turn
@@ -35,16 +35,15 @@ class GamesController < ApplicationController
   end
 
   def start
-    respond_to do |format|
-      format.json do
-        if @game.valid_player_count?
-          @game.start_game!
-          render json: @game.as_json
-        else
-          render json: { error: 'You need at least 2 players to start the game.' }
-        end
-      end
+    if @game.valid_player_count? && !@game.active?
+      @game.start_game!
+      data = @game.as_json
+    else
+      data = { error: 'Not enough players or game has already started.' }
     end
+
+    @pusher_client.trigger(@pusher_channel, 'game.start', data)
+    render json: {}
   end
 
   def join
@@ -54,8 +53,13 @@ class GamesController < ApplicationController
     else
       @game.add_user(current_user)
       flash[:notice] = "You have joined game ##{@game.id}!"
+      @pusher_client.trigger(
+        @pusher_channel,
+        'user.joined',
+        username: current_user.username
+      )
+
       redirect_to @game and return
-      # TODO: Use socket to alert everyone that someone has joined the game
     end
   end
 
@@ -66,5 +70,10 @@ class GamesController < ApplicationController
 
     @game = Game.find_by_id(params[:id] || params[:game_id])
     raise ActionController::RoutingError.new('Not Found') unless @game
+  end
+
+  def set_pusher_context
+    @pusher_client = Pusher.default_client
+    @pusher_channel = "game_#{@game.id}_notifications_channel"
   end
 end

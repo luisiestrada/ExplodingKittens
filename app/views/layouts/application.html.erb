@@ -8,30 +8,34 @@
 
 <link rel="stylesheet"
 	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-
+  <%= csrf_meta_tag %>
 </head>
 <body>
 
-<p class="notice"><%= notice %></p>
-<p class="alert"><%= alert %></p>
+<% if notice.present? %><p class="notice"><%= notice %></p><% end %>
+<% if alert.present? %><p class="alert"><%= alert %></p><% end %>
 
 <%= yield %>
+</body>
+
+<%= yield :javascript %>
 
 <script>
    $(document).ready(function () {
      $('.dropdown-toggle').dropdown();
+     AUTH_TOKEN = $('meta[name=csrf-token]').attr('content');
    });
 </script>
 
 <script>
     /* allows closing of navbar once opened */
-    $(document).click(function (event) {
-      var clickover = $(event.target);
-      var $navbar = $(".navbar-collapse");
-      var _opened = $navbar.hasClass("in");
-      if (_opened === true && !clickover.hasClass("navbar-toggle")) {
-        $("button.navbar-toggle").click();
-      }
+  $(document).click(function (event) {
+    var clickover = $(event.target);
+    var $navbar = $(".navbar-collapse");
+    var _opened = $navbar.hasClass("in");
+    if (_opened === true && !clickover.hasClass("navbar-toggle")) {
+      $("button.navbar-toggle").click();
+    }
   });
 </script>
 
@@ -40,5 +44,4 @@
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
 </script>
 
-</body>
 </html>

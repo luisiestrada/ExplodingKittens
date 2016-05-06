@@ -29,6 +29,10 @@ class User < ActiveRecord::Base
     self.save!
   end
 
+  def is_game_host?
+    self.id == self.game.players.last.id
+  end
+
   def has_card?(card_type)
     self.hand.where(card_type: card_type).length > 0
   end

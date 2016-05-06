@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  
+
   get 'chat/message'
   post 'chat/message' => 'chat#message'
   post 'games/play_turn' => 'games#play_turn'
@@ -27,7 +27,9 @@ Rails.application.routes.draw do
   #   resources :products
   resources :games do
     get 'join'
+    post 'start'
   end
+  
   resources :users
   resources :chat
 
