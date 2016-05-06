@@ -1,60 +1,3 @@
-
-  <script>
-  	$(document).ready(function(){
-		// Enable pusher logging - don't include this in production
-	    Pusher.log = function(message) {
-	      if (window.console && window.console.log) {
-	        window.console.log(message);
-	      }
-	    };
-
-	    var channelName = "<%= @pusher_channel %>";
-	    var channel = pusher.subscribe(channelName);
-
-	    channel.bind('user.joined', function(data) {
-        alert('User '+data.username + ' joined the game!');
-	    });
-
-      channel.bind('game.start', function(data) {
-        console.log(data);
-      });
-
-
-	    $('button#play_turn').click(function() {
-			var URI = '/games/play_turn';
-			var payload = {
-				game_id: "<%= @game.id %>",
-				user_id: <%= current_user.id %>,
-				username: "<%= current_user.username %>"
-			}
-			$.post(URI,payload,function(response) {
-				console.log(response);
-			});
-		});
-
-		$('button#play_turn').show();
-
-		$('input#submitmsg').click(function() {
-			console.log("clicked");
-			if(!input_is_empty()) {
-				console.log("not empty");
-				var URI = '/chat/message';
-				var message = $('input#chatbox').val();
-				var payload = {
-					message: message,
-					game_id: <%= @game.id %>,
-					username: "<%= current_user.username %>"
-				}
-				$.post(URI,payload,function(response) {
-					console.log(response);
-				});
-				$('input#chatbox').val("");
-			}
-		});
-	});
-
-  </script>
-
 <p><a href="/games">Back</a></p>
 <p>
   <strong>Game id:</strong>
@@ -63,22 +6,9 @@
 
 <div id="status">
 
-<p>
-  <strong>Players:</strong>
-  <table>
-  <tr>
-    <th>ID</th>
-    <th>Email</th>
-    <th colspan="3"></th>
-  </tr>
-
-  <% @game.users.each do |user| %>
-    <tr>
-      <td><%= user.id %></td>
-      <td><%= user.email %></td>
-    </tr>
-  <% end %>
-</table>
+<div class="main-display">
+  <div class="text-center">hello world</div>
+</div>
 
 <!-- display the button only after the scripts have loaded -->
 <button id="play_turn" class="btn btn-primary"
@@ -87,36 +17,94 @@
 
 <!-- chat box -->
 <div id="chat-wrapper">
-    <div id="menu">
-        <p class="welcome">Game #<%= @game.id %> Chat <b></b></p>
-        <p class="logout"><a id="exit" href="#">Exit Chat</a></p>
-        <div style="clear:both"></div>
-    </div>
+  <div id="menu">
+    <p class="welcome">Game #<%= @game.id %> Chat <b></b></p>
+    <p class="logout"><a id="exit" href="#">Exit Chat</a></p>
+    <div style="clear:both"></div>
+  </div>
 
-    <!-- chat text -->
-    <div id = "chat">
-    	<div id="chatbox"></div>
-    </div>
+  <!-- chat text -->
+  <div id = "chat">
+  	<div id="chatbox"></div>
+  </div>
 
-    <div id="txtbox">
-    	<!-- send -->
-    	<input name="submitmsg" type="submit" id="submitmsg" value="Send" style="float:right"/>
-		<!-- user input -->
-    	<div style="overflow: hidden; padding-right: .5em">
-        	<input name="usermsg" type="text" id="chatbox" autocomplete="off" placeholder="Send a message..." maxlength="4000" style="width:100%" onkeypress="return pressEnter(event);"/>
-        </div>
-	</div>
+  <div id="txtbox">
+  	<!-- send -->
+  	<input name="submitmsg" type="submit" id="submitmsg" value="Send" style="float:right"/>
+
+	   <!-- user input -->
+  	<div style="overflow: hidden; padding-right: .5em">
+      <input name="usermsg" type="text" id="chatbox" autocomplete="off" placeholder="Send a message..." maxlength="4000" style="width:100%" onkeypress="return pressEnter(event);"/>
+    </div>
+  </div>
 </div>
 
-<script>
-function pressEnter(e) {
-    // window.event has the event for some browsers where it isn't passed (IE)
-    e = e || window.event;
-    if (event.keyCode == 13) {
-    	// press submit button on Enter key press
-        document.getElementById('submitmsg').click();
-        return false;
+<% content_for :javascript do %>
+  <script>
+    $(function(){
+      // Enable pusher logging - don't include this in production
+        Pusher.log = function(message) {
+          if (window.console && window.console.log) {
+            window.console.log(message);
+          }
+        };
+
+        var channelName = "<%= @pusher_channel %>";
+        var channel = pusher.subscribe(channelName);
+
+        channel.bind('user.joined', function(data) {
+          alert('User '+ data.username + ' joined the game!');
+        });
+
+        channel.bind('game.start', function(data) {
+          console.log(data);
+        });
+
+
+        $('button#play_turn').click(function() {
+      	var URI = '/games/play_turn';
+      	var payload = {
+      		game_id: "<%= @game.id %>",
+      		user_id: <%= current_user.id %>,
+      		username: "<%= current_user.username %>"
+      	}
+      	$.post(URI,payload,function(response) {
+      		console.log(response);
+      	});
+      });
+
+      $('button#play_turn').show();
+
+      $('input#submitmsg').click(function() {
+      	console.log("clicked");
+      	if(!input_is_empty()) {
+      		console.log("not empty");
+      		var URI = '/chat/message';
+      		var message = $('input#chatbox').val();
+      		var payload = {
+      			message: message,
+      			game_id: <%= @game.id %>,
+      			username: "<%= current_user.username %>"
+      		}
+      		$.post(URI,payload,function(response) {
+      			console.log(response);
+      		});
+      		$('input#chatbox').val("");
+      	}
+      });
+    });
+  </script>
+
+  <script>
+    function pressEnter(e) {
+        // window.event has the event for some browsers where it isn't passed (IE)
+        e = e || window.event;
+        if (event.keyCode == 13) {
+        	// press submit button on Enter key press
+            document.getElementById('submitmsg').click();
+            return false;
+        }
+        return true;
     }
-    return true;
-}
-</script>
+  </script>
+<% end %>
