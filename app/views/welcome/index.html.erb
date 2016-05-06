@@ -56,7 +56,7 @@
 	<p>The time is now: <%= Time.now %></p>
 
 	<%= link_to 'List of games', games_path %><br/>
-	<%= link_to 'Create a new game', new_game_path %><br/>
+	<%= link_to 'Create a new game', games_path, method: :post %><br/>
 	<%= link_to 'List of players', users_path %><br/>
 
 	<p>Testing</p>
@@ -103,9 +103,9 @@
         <p class="logout"><a id="exit" href="#">Exit Chat</a></p>
         <div style="clear:both"></div>
     </div>
-     
+
     <div id="chatbox"></div>
-     
+
     <div id="txtbox">
     <form name="message" action="">
         <input name="usermsg" type="text" id="usermsg" size="100" />
