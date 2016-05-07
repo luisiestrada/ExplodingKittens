@@ -4,6 +4,7 @@ class GamesController < ApplicationController
 
   def index
     @games = Game.all
+    return
   end
 
   def create
@@ -37,24 +38,37 @@ class GamesController < ApplicationController
   def start
     if @game.valid_player_count? && !@game.active?
       @game.start_game!
-      data = @game.as_json
+
+      @pusher_client.trigger(@main_channel, 'game.start', @game.as_json)
+
+      # tell each player what hand they have
+      @game.players.each do |player|
+        @pusher_client.trigger(
+          @game.channel_for_player(player),
+          'player.hand.updated',
+          { hand: player.hand.to_json }
+        )
+      end
     else
-      data = { error: 'Not enough players or game has already started.' }
+      @pusher_client.trigger(
+        @main_channel,
+        'game.start',
+        { error: 'Not enough players or game has already started.' }
+      )
     end
 
-    @pusher_client.trigger(@pusher_channel, 'game.start', data)
     render json: {}
   end
 
   def join
     if @game.active?
       flash[:alert] = 'That game has already started.'
-      index and return
+      redirect_to games_path and return
     else
       @game.add_user(current_user)
       flash[:notice] = "You have joined game ##{@game.id}!"
       @pusher_client.trigger(
-        @pusher_channel,
+        @main_channel,
         'user.joined',
         username: current_user.username
       )
@@ -74,6 +88,7 @@ class GamesController < ApplicationController
 
   def set_pusher_context
     @pusher_client = Pusher.default_client
-    @pusher_channel = "game_#{@game.id}_notifications_channel"
+    @main_channel = "game_#{@game.id}_notifications_channel"
+    @user_channel = @game.channel_for_player(current_user) if current_user
   end
 end
