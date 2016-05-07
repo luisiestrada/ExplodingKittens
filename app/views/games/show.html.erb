@@ -39,7 +39,9 @@
 
 	   <!-- user input -->
   	<div style="overflow: hidden; padding-right: .5em">
-      <input name="usermsg" type="text" id="chatbox" autocomplete="off" placeholder="Send a message..." maxlength="4000" style="width:100%" onkeypress="return pressEnter(event);"/>
+      <input name="usermsg" type="text" id="chatbox" autocomplete="off"
+             placeholder="Send a message..." maxlength="4000" style="width:100%"
+             onkeypress="return pressEnter(event);"/>
     </div>
   </div>
 </div>
@@ -48,17 +50,18 @@
   <script>
     $(function(){
       // Enable pusher logging - don't include this in production
-        Pusher.log = function(message) {
-          if (window.console && window.console.log) {
-            window.console.log(message);
-          }
-        };
+      Pusher.log = function(message) {
+        if (window.console && window.console.log) {
+          window.console.log(message);
+        }
+      };
 
-        var channelName = "<%= @pusher_channel %>";
-        var channel = pusher.subscribe(channelName);
+      var channelName = "<%= @pusher_channel %>";
 
+      pusher.unsubscribe(channelNname); // clears duplicate msgs
+      var channel = pusher.subscribe(channelName);
 
-         // listen for pusher events from server
+        // listen for pusher events from server
         channel.bind('user.joined', function(data) {
           alert('User '+ data.username + ' joined the game!');
         });
