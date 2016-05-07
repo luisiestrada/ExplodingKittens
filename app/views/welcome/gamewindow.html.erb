@@ -57,12 +57,11 @@ function spawn_card() {
     stack: '.draggable-card'
   });
   resizeHand();
-  //document.body.appendChild(img);
 }
 
 function resizeHand() {
-  var max_num_of_cards = $('.draggable-card').length;
-  if (max_num_of_cards > 6) {
+  var num_cards = $('.draggable-card').length;
+  if (num_cards > 7) {
     //document.getElementById('hand').innerHTML = "<br>";
     //$('#hand').append('<br>');
 
@@ -76,7 +75,7 @@ function resizeHand() {
 
 <body>
 
-<div id="game-window" style="height: 650px; min-width: 960px; margin: 0 auto">
+<div id="game-window" style="height: 750px;">
 
   <% cards =
   ['attack-1','attack-2','attack-3','attack-4','cat-1','cat-2','cat-3','cat-4','cat-5','cat-6','defuse-1','defuse-2','defuse-3','defuse-4','defuse-5','exploding-kitten-1','exploding-kitten-2','exploding-kitten-3','favor-1','favor-2','future-1','future-2','future-3','nope-1','nope-2','shuffle-1','shuffle-2','shuffle-3','skip-1','skip-2'] %>
@@ -94,8 +93,6 @@ function resizeHand() {
   </div>
 
 </div>
-
-<br>
 
 </body>
 </html>
