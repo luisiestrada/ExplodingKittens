@@ -4,6 +4,7 @@ class Game < ActiveRecord::Base
   has_many :stats, class_name: GameStat
   has_many :playing_cards
   has_one :current_turn_player, class_name: User
+  has_one :host, class_name: User
 
   alias :players :users
 
@@ -55,6 +56,9 @@ class Game < ActiveRecord::Base
 
   def add_user(user)
     return false unless self.users.count < MAX_PLAYERS
+
+    user.clear_hand! if user.game_id.present?
+    self.host_id = user.id if self.host_id.nil?
     user.is_playing = true
     self.users << user
     self.save!
@@ -103,16 +107,30 @@ class Game < ActiveRecord::Base
     self.users.count == MAX_PLAYERS
   end
 
+  def channel_for_player(player)
+    # obfuscate the individual channel names by using a combination
+    # of the user's id & the host's join date
+    # obfuscation is not security but...who cares here
+
+    if self.host.present?
+      "#{player.id}#{self.host.created_at.to_i}"
+    else
+      "#{player.id}#{player.created_at.to_i}"
+    end
+  end
+
   def as_json
     data = {}
 
+    data[:current_turn_id] = self.current_turn_player.id
     data[:players] = self.players.map do |player|
       {
         id: player.id,
-        username: player.username,
-        hand: player.hand.each { |card| card.as_json }
+        username: player.username
       }
     end
+
+    data
   end
 
   private
