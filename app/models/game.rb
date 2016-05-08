@@ -4,6 +4,7 @@ class Game < ActiveRecord::Base
   has_many :stats, class_name: GameStat
   has_many :playing_cards
   has_one :current_turn_player, class_name: User
+  has_one :host, class_name: User
 
   alias :players :users
 
@@ -55,6 +56,9 @@ class Game < ActiveRecord::Base
 
   def add_user(user)
     return false unless self.users.count < MAX_PLAYERS
+
+    user.clear_hand! if user.game_id.present?
+    self.host_id = user.id if self.host_id.nil?
     user.is_playing = true
     self.users << user
     self.save!
@@ -67,10 +71,6 @@ class Game < ActiveRecord::Base
 
   def active_players
     self.players.where(is_playing: true)
-  end
-
-  def host
-    self.players.last
   end
 
   def set_turn(player)
@@ -129,6 +129,8 @@ class Game < ActiveRecord::Base
         username: player.username
       }
     end
+
+    data
   end
 
   private
