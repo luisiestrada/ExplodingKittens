@@ -73,7 +73,8 @@
         });
 
         userChannel.bind('player.hand.updated', function(data) {
-          alert('your new hand: ' + data.hand)
+          console.log('Hand updated!');
+          console.log(data);
         });
 
 

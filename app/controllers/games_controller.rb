@@ -14,6 +14,7 @@ class GamesController < ApplicationController
 
       @game.save!
 
+      set_pusher_context
       flash[:notice] = 'New game!'
       redirect_to @game and return
     else
@@ -39,16 +40,27 @@ class GamesController < ApplicationController
     if @game.valid_player_count? && !@game.active?
       @game.start_game!
 
+      # send basic info about all players in game, (ids, usernames)
       @pusher_client.trigger(@main_channel, 'game.start', @game.as_json)
 
-      # tell each player what hand they have
+      # tell each player what hand they have...1 card at a time
+      # Pusher limits the size of data sent at one time to 10kB
       @game.players.each do |player|
-        @pusher_client.trigger(
-          @game.channel_for_player(player),
-          'player.hand.updated',
-          { hand: player.hand.to_json }
-        )
+        player.hand.each do |card|
+          @pusher_client.trigger(
+            @game.channel_for_player(player),
+            'player.hand.updated',
+            { card: card.as_json, action: 'add' }
+          )
+        end
       end
+
+      # tell whoever is going first that it's their turn
+      @pusher_client.trigger(
+        @game.channel_for_player(@game.current_turn_player),
+        'player.turn.start',
+        {}
+      )
     else
       @pusher_client.trigger(
         @main_channel,
