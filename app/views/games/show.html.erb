@@ -58,7 +58,7 @@
 
       var channelName = "<%= @pusher_channel %>";
 
-      pusher.unsubscribe(channelNname); // clears duplicate msgs
+      pusher.unsubscribe(channelName); // clears duplicate msgs
       var channel = pusher.subscribe(channelName);
 
         // listen for pusher events from server
