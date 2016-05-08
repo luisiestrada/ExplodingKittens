@@ -29,8 +29,9 @@ Rails.application.routes.draw do
   resources :games do
     get 'join'
     post 'start'
+    get 'leave'
   end
-  
+
   resources :users
   resources :chat
 

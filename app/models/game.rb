@@ -65,8 +65,7 @@ class Game < ActiveRecord::Base
   end
 
   def remove_user(user)
-    user.is_playing = false
-    self.users.delete(user)
+    user.leave_game!
   end
 
   def active_players

@@ -7,12 +7,10 @@
 <div id="status">
 
 <div class="main-display text-center">
-
   <% if current_user.is_game_host? %>
-    <div class="text-center">
-      <div class="btn btn-lg btn-success start-game-btn">Start Game!</div>
-    </div>
+    <div class="btn btn-lg btn-success start-game-btn">Start Game!</div>
   <% end %>
+  <%= link_to 'Leave Game!', game_leave_path(@game), class: 'btn btn-lg btn-primary leave-game-btn"' %>
 </div>
 
 <!-- display the button only after the scripts have loaded -->
@@ -60,7 +58,7 @@
         var userChannel = pusher.subscribe('<%= @user_channel %>');
 
          // listen for pusher events from server
-        gameChannel.bind('user.joined', function(data) {
+        gameChannel.bind('player.joined', function(data) {
           alert('User '+ data.username + ' joined the game!');
         });
 
