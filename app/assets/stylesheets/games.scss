@@ -13,8 +13,8 @@
 
 /* every card */
 .card img, .card {
-  height: 200px;
-  width: 120px;
+  height: 150px;
+  width: 90px;
 }
 
 /* each card in hand */
@@ -23,8 +23,8 @@
 }
 /* hand as a whole */
 #hand {
-  position: absolute;
-  top: 300px;
+  position: relative;
+  top: 200px;
 }
 
 
@@ -32,7 +32,7 @@
 /* deck + discard pile */
 #deck-discard {
   float: right;
-  left: 42%;
+  left: 44%;
   position: absolute;
 }
 #deck {
