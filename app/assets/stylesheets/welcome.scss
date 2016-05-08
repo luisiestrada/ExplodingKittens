@@ -2,51 +2,6 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-/*********** NAVBAR ***********/
-
-/* navbar */
-.navbar.navbar-custom.navbar-fixed-top {
-background-color: #7C2213;
-border: none;
-}
-
-/* navbar links */
-.navbar a {
-color: white;
-}
-
-/* navbar links upon hover */
-.navbar a:hover {
-color: black;
-background-color: white !important;
-}
-
-/* navbar dropdown-menu link upon click */
-.dropdown-toggle:active, .open .dropdown-toggle {
-color: black !important;
-}
-
-/* drop-down menu links */
-#nav .open .dropdown-menu>li>a, .navbar-nav .open .dropdown-menu {
-color: white;
-background-color: #7C2213;
-}
-
-/* drop-down menu links upon hover */
-#nav .open .dropdown-menu>li>a:hover, .navbar-nav .open .dropdown-menu {
-color: black;
-}
-
-/* hamburger icon */
-.icon-bar {
-background-color: white;
-}
-
-/* active links */
-.active.link {
-background-color: #303030 !important;
-}
-
 
 /*********** PAGE BODY ***********/
 

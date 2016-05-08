@@ -67,15 +67,17 @@
 
         <!-- chat text -->
         <div id = "chat">
-        	<div id="chatbox"></div>
+          <div id="chatbox"></div>
         </div>
 
     	<div id="txtbox">
-        	<!-- send -->
-        	<input name="submitmsg" type="submit" id="submitmsg" value="Send" style="float:right"/>
-    		<!-- user input -->
-        	<div style="overflow: hidden; padding-right: .5em">
-            	<input name="usermsg" type="text" id="chatbox" autocomplete="off" placeholder="Send a message..." maxlength="4000" style="width:100%" onkeypress="return pressEnter(event);"/>
+          <!-- send -->
+          <input name="submitmsg" type="submit" id="submitmsg" value="Send" style="float:right"/>
+          <!-- user input -->
+          <div style="overflow: hidden; padding-right: .5em">
+            <input name="usermsg" type="text" id="chatbox" autocomplete="off"
+                   placeholder="Send a message..." maxlength="4000" style="width:100%"
+                   onkeypress="return pressEnter(event);"/>
             </div>
     	</div>
     </div>

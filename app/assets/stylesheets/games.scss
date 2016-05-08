@@ -1,3 +1,53 @@
+/***** GAME WINDOW *****/
+
+/* main page header */
+#game-window {
+  display: block;
+  border: 2px solid #999;
+  padding: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  color: white;
+  text-align: center;
+}
+
+/* every card */
+.card img, .card {
+  height: 150px;
+  width: 90px;
+}
+
+/* each card in hand */
+.draggable-card {
+  
+}
+/* hand as a whole */
+#hand {
+  position: relative;
+  top: 200px;
+}
+
+
+
+/* deck + discard pile */
+#deck-discard {
+  float: right;
+  left: 44%;
+  position: absolute;
+}
+#deck {
+  float: right;
+}
+#discard {
+  float: right;
+  border: 1px solid white;
+}
+#discard.hovered {
+  background: #aaa;
+}
+
+/***** CHAT BOX *****/
+
 /* top of chat */
 div#menu { padding: 10px 10px }
 
@@ -11,9 +61,11 @@ div#menu { padding: 10px 10px }
 #chat-wrapper {
   background:#7C2213;
   border: 2px solid #7C2213;
+  /*
   position: fixed;
   bottom: 0px;
   width: 100%;
+  */
 }
 
 .start-game-btn {
