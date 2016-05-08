@@ -21,21 +21,13 @@
 
 <!-- game window -->
 <div id="game-window" style="height: 550px;">
-  <% cards =
-  ['attack-1','attack-2','attack-3','attack-4','cat-1','cat-2','cat-3','cat-4',
-   'cat-5','cat-6','defuse-1','defuse-2','defuse-3','defuse-4','defuse-5',
-   'exploding-kitten-1','exploding-kitten-2','exploding-kitten-3','favor-1',
-   'favor-2','future-1','future-2','future-3','nope-1','nope-2','shuffle-1',
-   'shuffle-2','shuffle-3','skip-1','skip-2'] %>
 
   <div id="deck-discard">
     <div id="deck" class="card"><%=image_tag("deck.jpg")%></div>
     <div id="discard" class="card">Discard</div>
   </div>
 
-  <div id="hand" class="cards">
-    
-  </div>
+  <div id="hand"></div>
 </div>
 
 
@@ -67,22 +59,29 @@
 
 <% content_for :javascript do %>
 
-<script type="text/javascript">
+<script>
 
-var cards =
-  ['attack-1','attack-2','attack-3','attack-4','cat-1','cat-2','cat-3','cat-4',
-   'cat-5','cat-6','defuse-1','defuse-2','defuse-3','defuse-4','defuse-5',
-   'exploding-kitten-1','exploding-kitten-2','exploding-kitten-3','favor-1',
-   'favor-2','future-1','future-2','future-3','nope-1','nope-2','shuffle-1',
-   'shuffle-2','shuffle-3','skip-1','skip-2'];
+var cards = new Array();
+cards['attack'] = ['attack-1','attack-2','attack-3','attack-4'];
+cards['Beard Cat'] = ['cat-3'];
+cards['Hairy Potato Cat'] = ['cat-6'];
+cards['Rainbow Puking Cat'] = ['cat-5'];
+cards['Taco Cat'] = ['cat-2'];
+cards['Watermelon Cat'] = ['cat-4'];
+cards['defuse'] = ['defuse-1','defuse-2','defuse-3','defuse-4','defuse-5'];
+cards['exploding_kitten'] = ['exploding-kitten-1','exploding-kitten-2','exploding-kitten-3'];
+cards['favor'] = ['favor-1','favor-2'];
+cards['future'] = ['future-1','future-2','future-3'];
+cards['nope'] = ['nope-1','nope-2'];
+cards['shuffle'] = ['shuffle-1','shuffle-2','shuffle-3'];
+cards['skip'] = ['skip-1','skip-2'];
 
 $(document).ready(function() {
-  // cards can be drawn from deck
+
   $('#deck').click( function() {
     spawn_card();
   });
 
-  // discard pile is droppable
   $('#discard').droppable( {
     accept: '.draggable-card',
     hoverClass: 'hovered',
@@ -112,7 +111,8 @@ function handleDropEvent( event, ui ) {
 
 function spawn_card(card_name) {
   var img = document.createElement('img');
-  img.src = '/assets/' + card_name + '-1.jpg';
+  img.src = '/assets/' + _.sample(cards[card_name]) + '.jpg'
+  console.log(img.src);
   img.setAttribute("class", "card draggable-card");
   img.setAttribute("id", card_name);
   document.getElementById('hand').appendChild(img);
@@ -124,7 +124,6 @@ function spawn_card(card_name) {
     stack: '.draggable-card'
   });
 }
-
 </script>
 
   <script>
