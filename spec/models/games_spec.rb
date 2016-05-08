@@ -14,6 +14,7 @@ RSpec.describe Game, type: :model do
       game.add_user(user)
       game.remove_user(user)
       expect(game.players.count).to eql(0)
+      expect(user.game_id).to eql(nil)
     end
 
     it 'kicks all players when the game ends' do

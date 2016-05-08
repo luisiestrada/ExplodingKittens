@@ -81,12 +81,18 @@ class GamesController < ApplicationController
       flash[:notice] = "You have joined game ##{@game.id}!"
       @pusher_client.trigger(
         @main_channel,
-        'user.joined',
+        'player.joined',
         username: current_user.username
       )
 
       redirect_to @game and return
     end
+  end
+
+  def leave
+    @game.remove_user(current_user)
+    flash[:notice] = 'You have left the game.'
+    redirect_to games_path and return
   end
 
   private
