@@ -35,7 +35,7 @@ $(document).ready(function() {
   $('#game-window').on('click', '.draggable-card', function() {
     $(this).animate({
       height: ($(this).height() == 400) ? 200 : 400,
-      width: ($(this).width() == 240) ? 120 : 240,
+      width: ($(this).width() == 240) ? 120 : 240
     }, 200);
   });
 });
@@ -60,17 +60,6 @@ function spawn_card() {
     containment: '#game-window',
     stack: '.draggable-card'
   });
-  resizeHand();
-}
-
-function resizeHand() {
-  var num_cards = $('.draggable-card').length;
-  if (num_cards > 7) {
-    //document.getElementById('hand').innerHTML = "<br>";
-    //$('#hand').append('<br>');
-
-  }
-  
 }
 
 </script>
