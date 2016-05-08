@@ -56,19 +56,28 @@
         }
       };
 
-      var channelName = "<%= @pusher_channel %>";
+        var gameChannel = pusher.subscribe('<%= @main_channel %>');
+        var userChannel = pusher.subscribe('<%= @user_channel %>');
 
-      pusher.unsubscribe(channelName); // clears duplicate msgs
-      var channel = pusher.subscribe(channelName);
-
-        // listen for pusher events from server
-        channel.bind('user.joined', function(data) {
+         // listen for pusher events from server
+        gameChannel.bind('user.joined', function(data) {
           alert('User '+ data.username + ' joined the game!');
         });
 
-        channel.bind('game.start', function(data) {
+        gameChannel.bind('game.start', function(data) {
+          if (data.error) alert(data.error);
           console.log(data);
         });
+
+        userChannel.bind('player.turn.start', function() {
+          alert('your turn!');
+        });
+
+        userChannel.bind('player.hand.updated', function(data) {
+          console.log('Hand updated!');
+          console.log(data);
+        });
+
 
         // DOM events
         <% if current_user.is_game_host? %>

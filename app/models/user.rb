@@ -30,7 +30,7 @@ class User < ActiveRecord::Base
   end
 
   def is_game_host?
-    self.id == self.game.players.last.id
+    self.id == self.game.host.id
   end
 
   def has_card?(card_type)
@@ -45,9 +45,14 @@ class User < ActiveRecord::Base
     self.hand.where(card_type: 'defuse').length > 0
   end
 
+  def clear_hand!
+    self.playing_cards.delete_all
+  end
+
   def lose!
     self.losses += 1
     self.is_playing = false
+    self.clear_hand!
     self.save!
   end
 
