@@ -34,10 +34,7 @@
   </div>
 
   <div id="hand" class="cards">
-    <% for i in 0...5 %>
-      <% card = cards[i] %>
-      <%= image_tag(card, :class => "card draggable-card", :id => card) %>
-    <% end %>
+    
   </div>
 </div>
 
@@ -113,10 +110,9 @@ function handleDropEvent( event, ui ) {
   draggable.remove();
 }
 
-function spawn_card() { 
-  var img = document.createElement("img");
-  var card_name = cards[Math.floor(Math.random()*cards.length)];
-  img.src = "/assets/" + card_name + '.jpg';
+function spawn_card(card_name) {
+  var img = document.createElement('img');
+  img.src = '/assets/' + card_name + '-1.jpg';
   img.setAttribute("class", "card draggable-card");
   img.setAttribute("id", card_name);
   document.getElementById('hand').appendChild(img);
@@ -159,7 +155,9 @@ function spawn_card() {
 
         userChannel.bind('player.hand.updated', function(data) {
           console.log('Hand updated!');
-          console.log(data);
+          //console.log(data);
+          console.log(data.card.card_name);
+          spawn_card(data.card.card_name);
         });
 
 
