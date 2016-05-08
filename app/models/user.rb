@@ -56,6 +56,12 @@ class User < ActiveRecord::Base
     self.save!
   end
 
+  def leave_game!
+    self.game_id = nil
+    self.is_playing = false
+    self.save!
+  end
+
   def games_played
     self.wins + self.losses
   end
