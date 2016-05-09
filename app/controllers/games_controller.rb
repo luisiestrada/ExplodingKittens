@@ -23,9 +23,7 @@ class GamesController < ApplicationController
     end
   end
 
-  def show
-
-  end
+  def show; end
 
   def play_turn
     game_channel = "game_" + @game.id.to_s + "_notifications_channel"
@@ -38,7 +36,7 @@ class GamesController < ApplicationController
 
   def draw
     if @game.can_draw?(current_user)
-      card = @game.draw
+      card = @game.draw.first
       current_user.hand << card
       current_user.has_drawn = true
       current_user.save!

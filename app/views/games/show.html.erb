@@ -93,30 +93,33 @@
 
      // listen for pusher events for the whole game
     gameChannel.bind('game.player.joined', function(data) {
-      console.log('User '+ data.username + ' joined the game!');
+      printToChat('User '+ data.username + ' joined the game!', {
+        isGameMessage: true
+      });
     });
 
     gameChannel.bind('game.start', function(data) {
+      printToChat('The game has started.', { isGameMessage: true });
       console.log(data);
     });
 
     // pusher events for the player
     userChannel.bind('player.errors', function(data) {
-      alert(data.error);
+      printToChat(data.error, {
+        isGameMessage: true,
+        isError: true
+      });
     });
 
-    userChannel.bind('player.turn.start', function(data) {
-      alert('TURN START: <%= current_user.id %>');
-      console.log(data);
+    userChannel.bind('player.turn.start', function() {
+      printToChat("It's your turn!", { isGameMessage: true });
     });
 
     userChannel.bind('player.turn.end', function() {
-      console.log('TURN OVER');
+      printToChat('You ended your turn.', { isGameMessage: true });
     });
 
     userChannel.bind('player.hand.updated', function(data) {
-      console.log('Hand updated!');
-      console.log(data.card.card_name);
       spawnCard(data.card.card_name);
     });
 
@@ -193,6 +196,33 @@
     });
 
     // helper functions
+
+    var printToChat = function(message, options) {
+      var messageContainer = $('<div class="msg"></div>');
+      var timestamp = $('<span class="timestamp">');
+
+      if (options) {
+        if (options.isGameMessage) messageContainer.addClass('game-msg');
+        if (options.isError) messageContainer.addClass('err-msg');
+      }
+
+      var date = new Date();
+      var rawHours = date.getHours();
+      var timeOfDay = rawHours > 12 ? 'PM' : 'AM';
+      var hours = rawHours - 12; // getHours returns military time
+      var minutes = date.getMinutes();
+      var seconds = date.getSeconds();
+
+      timestamp.text(
+        '[ ' + hours + ':' + minutes + ':' + seconds + ' ' + timeOfDay + ' ]'
+      );
+
+      messageContainer
+        .text(message)
+        .prepend(timestamp)
+
+      $('#chatbox').append(messageContainer)
+    };
 
     function pressEnter(e) {
         // window.event has the event for some browsers where it isn't passed (IE)
