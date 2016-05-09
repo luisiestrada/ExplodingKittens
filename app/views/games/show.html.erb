@@ -39,15 +39,15 @@
   	<div id="chatbox"></div>
   </div>
 
-  <div id="txtbox">
+  <form id="txtbox">
   	<!-- send -->
   	<input name="submitmsg" type="submit" id="submitmsg" value="Send" style="float:right"/>
 
 	   <!-- user input -->
   	<div style="overflow: hidden; padding-right: .5em">
-      <input name="usermsg" type="text" id="chatbox" autocomplete="off"
+      <input id="usermsg" type="text" autocomplete="off"
              placeholder="Send a message..." maxlength="4000" style="width:100%"
-             onkeypress="return pressEnter(event);"/>
+       />
     </div>
   </div>
 </div>
@@ -118,6 +118,11 @@
       spawnCard(data.card.card_name);
     });
 
+    userChannel.bind('player.chat', function(data) {
+      var msg = data.username + ': ' + data.message;
+      printToChat(msg, { isUserMessage: true });
+    });
+
 
     // DOM events
     <% if current_user.is_game_host? %>
@@ -157,21 +162,22 @@
       }, 200);
     });
 
-    $('input#submitmsg').click(function() {
-    	console.log("clicked");
-    	if(!input_is_empty()) {
-    		console.log("not empty");
-    		var URI = '/chat/message';
-    		var message = $('input#chatbox').val();
-    		var payload = {
-    			message: message,
-    			game_id: <%= @game.id %>,
-    			username: "<%= current_user.username %>"
-    		}
-    		$.post(URI,payload,function(response) {
-    			console.log(response);
-    		});
-    		$('input#chatbox').val("");
+    // send chat
+
+    $('#txtbox').submit(function(e) {
+      e.preventDefault();
+
+      var message = $('#usermsg').val();
+
+    	if (message !== '') {
+    		$.ajax({
+          url: '<%= game_send_chat_path(@game) %>',
+          method: 'POST',
+          data: { message: message },
+          headers: headers,
+        });
+
+    		$('input#usermsg').val("");
     	}
     });
 
@@ -184,6 +190,7 @@
       if (options) {
         if (options.isGameMessage) messageContainer.addClass('game-msg');
         if (options.isError) messageContainer.addClass('err-msg');
+        if (options.isUserMessage) messageContainer.addClass('user');
       }
 
       var date = new Date();
@@ -199,21 +206,10 @@
 
       messageContainer
         .text(message)
-        .prepend(timestamp)
+        .prepend(timestamp);
 
-      $('#chatbox').append(messageContainer)
+      $('#chatbox').append(messageContainer);
     };
-
-    function pressEnter(e) {
-        // window.event has the event for some browsers where it isn't passed (IE)
-        e = e || window.event;
-        if (event.keyCode == 13) {
-        	// press submit button on Enter key press
-            document.getElementById('submitmsg').click();
-            return false;
-        }
-        return true;
-    }
 
     function handleDropEvent( event, ui ) {
       var draggable = ui.draggable;

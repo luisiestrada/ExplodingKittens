@@ -103,8 +103,9 @@ div#menu { padding: 10px 10px }
   color: red;
 }
 
-/* chatbox usernames */
-span#person { color: grey }
+#chatbox .user {
+  color: grey;
+}
 
 /* user input + button */
 #txtbox {

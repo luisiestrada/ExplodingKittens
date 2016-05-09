@@ -118,6 +118,20 @@ class GamesController < ApplicationController
     redirect_to games_path and return
   end
 
+  def send_chat
+    @game.players.each do |player|
+      @pusher_client.trigger(
+        @game.channel_for_player(player),
+        'player.chat', {
+          message: ActionController::Base.helpers.strip_tags(params[:message]),
+          username: player.id == current_user.id ? 'You' : current_user.username
+        }
+      )
+    end
+
+    render json: {}
+  end
+
   private
 
   def set_game_context
