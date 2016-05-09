@@ -136,9 +136,9 @@ class Game < ActiveRecord::Base
     # obfuscation is not security but...who cares here
 
     if self.host.present?
-      "#{player.id}#{self.host.created_at.to_i}"
+      "#{player.id}#{self.host.created_at.to_i}#{self.id}"
     else
-      "#{player.id}#{player.created_at.to_i}"
+      "#{player.id}#{player.created_at.to_i}#{self.id}"
     end
   end
 

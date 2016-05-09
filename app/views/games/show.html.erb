@@ -93,6 +93,12 @@
       });
     });
 
+    gameChannel.bind('game.player.left', function(data) {
+      printToChat('User '+ data.username + ' left the game. :(', {
+        isGameMessage: true
+      });
+    });
+
     gameChannel.bind('game.start', function(data) {
       printToChat('The game has started.', { isGameMessage: true });
       console.log(data);
