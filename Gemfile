@@ -62,3 +62,5 @@ gem 'rails_12factor', group: :production
 gem 'phaser-rails'
 
 gem 'handlebars_assets'
+
+ruby "2.3.0"
