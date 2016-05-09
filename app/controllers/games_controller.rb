@@ -32,8 +32,42 @@ class GamesController < ApplicationController
     Pusher.trigger(game_channel, 'next_turn', {
       user_id: params[:user_id],
       username: params[:username]
-    });
+    })
     render json: {}, status: :ok
+  end
+
+  def draw
+    if @game.can_draw?(current_user)
+      card = @game.draw
+      current_user.hand << card
+      current_user.has_drawn = true
+      current_user.save!
+
+      @pusher_client.trigger(
+        @user_channel,
+        'player.hand.updated',
+        { card: card.as_json, action: 'add' }
+      )
+
+      @game.end_current_turn!
+      @pusher_client.trigger(@user_channel, 'player.turn.end', {})
+
+
+      # tell the next player that it's their turn
+      @pusher_client.trigger(
+        @game.channel_for_player(@game.current_turn_player),
+        'player.turn.start',
+        {}
+      )
+    else
+      @pusher_client.trigger(
+        @user_channel,
+        'player.errors', {
+          error: "You can't do that right now."
+      })
+    end
+
+    render json: {}
   end
 
   def start
@@ -63,8 +97,8 @@ class GamesController < ApplicationController
       )
     else
       @pusher_client.trigger(
-        @main_channel,
-        'game.start',
+        @user_channel,
+        'player.errors',
         { error: 'Not enough players or game has already started.' }
       )
     end
@@ -81,7 +115,7 @@ class GamesController < ApplicationController
       flash[:notice] = "You have joined game ##{@game.id}!"
       @pusher_client.trigger(
         @main_channel,
-        'player.joined',
+        'game.player.joined',
         username: current_user.username
       )
 

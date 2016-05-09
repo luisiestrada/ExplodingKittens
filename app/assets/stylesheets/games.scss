@@ -19,7 +19,7 @@
 
 /* each card in hand */
 .draggable-card {
-  
+
 }
 /* hand as a whole */
 #hand {
@@ -37,6 +37,7 @@
 }
 #deck {
   float: right;
+  cursor: pointer;
 }
 #discard {
   float: right;

@@ -61,154 +61,139 @@
 
 <script>
 
-var cards = new Array();
-cards['attack'] = ['attack-1','attack-2','attack-3','attack-4'];
-cards['Beard Cat'] = ['cat-3'];
-cards['Hairy Potato Cat'] = ['cat-6'];
-cards['Rainbow Puking Cat'] = ['cat-5'];
-cards['Taco Cat'] = ['cat-2'];
-cards['Watermelon Cat'] = ['cat-4'];
-cards['defuse'] = ['defuse-1','defuse-2','defuse-3','defuse-4','defuse-5'];
-cards['exploding_kitten'] = ['exploding-kitten-1','exploding-kitten-2','exploding-kitten-3'];
-cards['favor'] = ['favor-1','favor-2'];
-cards['future'] = ['future-1','future-2','future-3'];
-cards['nope'] = ['nope-1','nope-2'];
-cards['shuffle'] = ['shuffle-1','shuffle-2','shuffle-3'];
-cards['skip'] = ['skip-1','skip-2'];
+  var cards = new Array();
+  cards['attack'] = ['attack-1','attack-2','attack-3','attack-4'];
+  cards['Beard Cat'] = ['cat-3'];
+  cards['Hairy Potato Cat'] = ['cat-6'];
+  cards['Rainbow Puking Cat'] = ['cat-5'];
+  cards['Taco Cat'] = ['cat-2'];
+  cards['Watermelon Cat'] = ['cat-4'];
+  cards['defuse'] = ['defuse-1','defuse-2','defuse-3','defuse-4','defuse-5'];
+  cards['exploding_kitten'] = ['exploding-kitten-1','exploding-kitten-2','exploding-kitten-3'];
+  cards['favor'] = ['favor-1','favor-2'];
+  cards['future'] = ['future-1','future-2','future-3'];
+  cards['nope'] = ['nope-1','nope-2'];
+  cards['shuffle'] = ['shuffle-1','shuffle-2','shuffle-3'];
+  cards['skip'] = ['skip-1','skip-2'];
 
-$(document).ready(function() {
+  $(function() {
+    // for authenticating AJAX requests
+    var headers = {};
+    headers['X-CSRF-Token'] = AUTH_TOKEN;
 
-  $('#deck').click( function() {
-    spawn_card();
-  });
+    // Enable pusher logging - don't include this in production
+    Pusher.log = function(message) {
+      if (window.console && window.console.log) {
+        window.console.log(message);
+      }
+    };
 
-  $('#discard').droppable( {
-    accept: '.draggable-card',
-    hoverClass: 'hovered',
-    drop: handleDropEvent
-  });
+    var gameChannel = pusher.subscribe('<%= @main_channel %>');
+    var userChannel = pusher.subscribe('<%= @user_channel %>');
 
-  $('.draggable-card').draggable( {
-    cursor: 'move',
-    snap: '#discard',
-    containment: '#game-window',
-    stack: '.draggable-card'
-  });
+     // listen for pusher events for the whole game
+    gameChannel.bind('game.player.joined', function(data) {
+      console.log('User '+ data.username + ' joined the game!');
+    });
 
-  $('#game-window').on('click', '.draggable-card', function() {
-    $(this).animate({
-      height: ($(this).height() == 300) ? 150 : 300,
-      width: ($(this).width() == 180) ? 90 : 180
-    }, 200);
-  });
-});
+    gameChannel.bind('game.start', function(data) {
+      console.log(data);
+    });
 
-function handleDropEvent( event, ui ) {
-  var draggable = ui.draggable;
-  alert( 'Card "' + draggable.attr('id') + '" was discarded!' );
-  draggable.remove();
-}
+    // pusher events for the player
+    userChannel.bind('player.errors', function(data) {
+      alert(data.error);
+    });
 
-function spawn_card(card_name) {
-  var img = document.createElement('img');
-  img.src = '/assets/' + _.sample(cards[card_name]) + '.jpg'
-  console.log(img.src);
-  img.setAttribute("class", "card draggable-card");
-  img.setAttribute("id", card_name);
-  document.getElementById('hand').appendChild(img);
+    userChannel.bind('player.turn.start', function(data) {
+      alert('TURN START: <%= current_user.id %>');
+      console.log(data);
+    });
 
-  $(img).draggable( {
-    cursor: 'move',
-    snap: '#discard',
-    containment: '#game-window',
-    stack: '.draggable-card'
-  });
-}
-</script>
+    userChannel.bind('player.turn.end', function() {
+      console.log('TURN OVER');
+    });
 
-  <script>
-    $(function(){
-      // Enable pusher logging - don't include this in production
-      Pusher.log = function(message) {
-        if (window.console && window.console.log) {
-          window.console.log(message);
-        }
-      };
+    userChannel.bind('player.hand.updated', function(data) {
+      console.log('Hand updated!');
+      console.log(data.card.card_name);
+      spawnCard(data.card.card_name);
+    });
 
-        var gameChannel = pusher.subscribe('<%= @main_channel %>');
-        var userChannel = pusher.subscribe('<%= @user_channel %>');
 
-         // listen for pusher events from server
-        gameChannel.bind('player.joined', function(data) {
-          alert('User '+ data.username + ' joined the game!');
+    // DOM events
+    <% if current_user.is_game_host? %>
+      $('.start-game-btn').click(function() {
+        $.ajax({
+          method: 'POST',
+          url: '<%= game_start_path(@game) %>',
+          headers: headers
         });
-
-        gameChannel.bind('game.start', function(data) {
-          if (data.error) alert(data.error);
-          console.log(data);
-        });
-
-        userChannel.bind('player.turn.start', function() {
-          alert('your turn!');
-        });
-
-        userChannel.bind('player.hand.updated', function(data) {
-          console.log('Hand updated!');
-          //console.log(data);
-          console.log(data.card.card_name);
-          spawn_card(data.card.card_name);
-        });
-
-
-        // DOM events
-        <% if current_user.is_game_host? %>
-          $('.start-game-btn').click(function() {
-            var headers = {};
-            headers['X-CSRF-Token'] = AUTH_TOKEN;
-
-            $.ajax({
-              method: 'POST',
-              url: '<%= game_start_path(@game) %>',
-              headers: headers
-            });
-          });
-        <% end %>
-
-        $('button#play_turn').click(function() {
-      	var URI = '/games/play_turn';
-      	var payload = {
-      		game_id: "<%= @game.id %>",
-      		user_id: <%= current_user.id %>,
-      		username: "<%= current_user.username %>"
-      	}
-      	$.post(URI,payload,function(response) {
-      		console.log(response);
-      	});
       });
+    <% end %>
 
-      $('button#play_turn').show();
+    $('button#play_turn').click(function() {
+    	var URI = '/games/play_turn';
+    	var payload = {
+    		game_id: "<%= @game.id %>",
+    		user_id: <%= current_user.id %>,
+    		username: "<%= current_user.username %>"
+    	};
 
-      $('input#submitmsg').click(function() {
-      	console.log("clicked");
-      	if(!input_is_empty()) {
-      		console.log("not empty");
-      		var URI = '/chat/message';
-      		var message = $('input#chatbox').val();
-      		var payload = {
-      			message: message,
-      			game_id: <%= @game.id %>,
-      			username: "<%= current_user.username %>"
-      		}
-      		$.post(URI,payload,function(response) {
-      			console.log(response);
-      		});
-      		$('input#chatbox').val("");
-      	}
+    	$.post(URI,payload,function(response) {
+    		console.log(response);
+    	});
+    });
+
+    $('#deck').click(function() {
+      $.ajax({
+        url: '<%= game_draw_path(@game) %>',
+        headers: headers
       });
     });
-  </script>
 
-  <script>
+    $('#discard').droppable({
+      accept: '.draggable-card',
+      hoverClass: 'hovered',
+      drop: handleDropEvent
+    });
+
+    $('.draggable-card').draggable({
+      cursor: 'move',
+      snap: '#discard',
+      containment: '#game-window',
+      stack: '.draggable-card'
+    });
+
+    $('#game-window').on('click', '.draggable-card', function() {
+      $(this).animate({
+        height: ($(this).height() == 300) ? 150 : 300,
+        width: ($(this).width() == 180) ? 90 : 180
+      }, 200);
+    });
+
+    $('button#play_turn').show();
+
+    $('input#submitmsg').click(function() {
+    	console.log("clicked");
+    	if(!input_is_empty()) {
+    		console.log("not empty");
+    		var URI = '/chat/message';
+    		var message = $('input#chatbox').val();
+    		var payload = {
+    			message: message,
+    			game_id: <%= @game.id %>,
+    			username: "<%= current_user.username %>"
+    		}
+    		$.post(URI,payload,function(response) {
+    			console.log(response);
+    		});
+    		$('input#chatbox').val("");
+    	}
+    });
+
+    // helper functions
+
     function pressEnter(e) {
         // window.event has the event for some browsers where it isn't passed (IE)
         e = e || window.event;
@@ -219,5 +204,28 @@ function spawn_card(card_name) {
         }
         return true;
     }
-  </script>
+
+    function handleDropEvent( event, ui ) {
+      var draggable = ui.draggable;
+      alert( 'Card "' + draggable.attr('id') + '" was discarded!' );
+      draggable.remove();
+    }
+
+    function spawnCard(card_name) {
+      var img = document.createElement('img');
+      img.src = '/assets/' + _.sample(cards[card_name]) + '.jpg'
+      console.log(img.src);
+      img.setAttribute("class", "card draggable-card");
+      img.setAttribute("id", card_name);
+      document.getElementById('hand').appendChild(img);
+
+      $(img).draggable({
+        cursor: 'move',
+        snap: '#discard',
+        containment: '#game-window',
+        stack: '.draggable-card'
+      });
+    };
+  });
+</script>
 <% end %>

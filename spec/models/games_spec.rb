@@ -37,6 +37,8 @@ RSpec.describe Game, type: :model do
 
     it 'a player should be chosen to go first' do
       expect(game_with_players.current_turn_player).to be_truthy
+      expect(game_with_players.turn_orders[0]).to eql(game_with_players.current_turn_player_id)
+      expect(game_with_players.turn_orders.keys.length).to eql(3)
     end
 
     it 'each player should have 5 cards' do
