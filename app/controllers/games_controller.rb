@@ -23,22 +23,11 @@ class GamesController < ApplicationController
     end
   end
 
-  def show
-
-  end
-
-  def play_turn
-    game_channel = "game_" + @game.id.to_s + "_notifications_channel"
-    Pusher.trigger(game_channel, 'next_turn', {
-      user_id: params[:user_id],
-      username: params[:username]
-    })
-    render json: {}, status: :ok
-  end
+  def show; end
 
   def draw
     if @game.can_draw?(current_user)
-      card = @game.draw
+      card = @game.draw.first
       current_user.hand << card
       current_user.has_drawn = true
       current_user.save!
@@ -127,6 +116,20 @@ class GamesController < ApplicationController
     @game.remove_user(current_user)
     flash[:notice] = 'You have left the game.'
     redirect_to games_path and return
+  end
+
+  def send_chat
+    @game.players.each do |player|
+      @pusher_client.trigger(
+        @game.channel_for_player(player),
+        'player.chat', {
+          message: ActionController::Base.helpers.strip_tags(params[:message]),
+          username: player.id == current_user.id ? 'You' : current_user.username
+        }
+      )
+    end
+
+    render json: {}
   end
 
   private

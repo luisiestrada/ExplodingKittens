@@ -84,10 +84,28 @@ div#menu { padding: 10px 10px }
   overflow-y: scroll;
   white-space: normal;
   word-wrap: break-word;
+  padding: 0.5em 1em;
 }
 
-/* chatbox usernames */
-span#person { color: grey }
+#chatbox .timestamp {
+  margin-right: 5px;
+}
+
+#chatbox .msg {
+  clear: both;
+}
+
+#chatbox .game-msg {
+  font-weight: 900;
+}
+
+#chatbox .err-msg {
+  color: red;
+}
+
+#chatbox .user {
+  color: grey;
+}
 
 /* user input + button */
 #txtbox {

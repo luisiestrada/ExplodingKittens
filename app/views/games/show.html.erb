@@ -13,11 +13,6 @@
   <%= link_to 'Leave Game!', game_leave_path(@game), class: 'btn btn-lg btn-primary leave-game-btn"' %>
 </div>
 
-<!-- display the button only after the scripts have loaded -->
-<button id="play_turn" class="btn btn-primary"
-	style="display: none">Play a turn</button>
-</p>
-
 
 <!-- game window -->
 <div id="game-window" style="height: 550px;">
@@ -44,15 +39,15 @@
   	<div id="chatbox"></div>
   </div>
 
-  <div id="txtbox">
+  <form id="txtbox">
   	<!-- send -->
   	<input name="submitmsg" type="submit" id="submitmsg" value="Send" style="float:right"/>
 
 	   <!-- user input -->
   	<div style="overflow: hidden; padding-right: .5em">
-      <input name="usermsg" type="text" id="chatbox" autocomplete="off"
+      <input id="usermsg" type="text" autocomplete="off"
              placeholder="Send a message..." maxlength="4000" style="width:100%"
-             onkeypress="return pressEnter(event);"/>
+       />
     </div>
   </div>
 </div>
@@ -93,31 +88,39 @@
 
      // listen for pusher events for the whole game
     gameChannel.bind('game.player.joined', function(data) {
-      console.log('User '+ data.username + ' joined the game!');
+      printToChat('User '+ data.username + ' joined the game!', {
+        isGameMessage: true
+      });
     });
 
     gameChannel.bind('game.start', function(data) {
+      printToChat('The game has started.', { isGameMessage: true });
       console.log(data);
     });
 
     // pusher events for the player
     userChannel.bind('player.errors', function(data) {
-      alert(data.error);
+      printToChat(data.error, {
+        isGameMessage: true,
+        isError: true
+      });
     });
 
-    userChannel.bind('player.turn.start', function(data) {
-      alert('TURN START: <%= current_user.id %>');
-      console.log(data);
+    userChannel.bind('player.turn.start', function() {
+      printToChat("It's your turn!", { isGameMessage: true });
     });
 
     userChannel.bind('player.turn.end', function() {
-      console.log('TURN OVER');
+      printToChat('You ended your turn.', { isGameMessage: true });
     });
 
     userChannel.bind('player.hand.updated', function(data) {
-      console.log('Hand updated!');
-      console.log(data.card.card_name);
       spawnCard(data.card.card_name);
+    });
+
+    userChannel.bind('player.chat', function(data) {
+      var msg = data.username + ': ' + data.message;
+      printToChat(msg, { isUserMessage: true });
     });
 
 
@@ -131,19 +134,6 @@
         });
       });
     <% end %>
-
-    $('button#play_turn').click(function() {
-    	var URI = '/games/play_turn';
-    	var payload = {
-    		game_id: "<%= @game.id %>",
-    		user_id: <%= current_user.id %>,
-    		username: "<%= current_user.username %>"
-    	};
-
-    	$.post(URI,payload,function(response) {
-    		console.log(response);
-    	});
-    });
 
     $('#deck').click(function() {
       $.ajax({
@@ -172,38 +162,54 @@
       }, 200);
     });
 
-    $('button#play_turn').show();
+    // send chat
 
-    $('input#submitmsg').click(function() {
-    	console.log("clicked");
-    	if(!input_is_empty()) {
-    		console.log("not empty");
-    		var URI = '/chat/message';
-    		var message = $('input#chatbox').val();
-    		var payload = {
-    			message: message,
-    			game_id: <%= @game.id %>,
-    			username: "<%= current_user.username %>"
-    		}
-    		$.post(URI,payload,function(response) {
-    			console.log(response);
-    		});
-    		$('input#chatbox').val("");
+    $('#txtbox').submit(function(e) {
+      e.preventDefault();
+
+      var message = $('#usermsg').val();
+
+    	if (message !== '') {
+    		$.ajax({
+          url: '<%= game_send_chat_path(@game) %>',
+          method: 'POST',
+          data: { message: message },
+          headers: headers,
+        });
+
+    		$('input#usermsg').val("");
     	}
     });
 
     // helper functions
 
-    function pressEnter(e) {
-        // window.event has the event for some browsers where it isn't passed (IE)
-        e = e || window.event;
-        if (event.keyCode == 13) {
-        	// press submit button on Enter key press
-            document.getElementById('submitmsg').click();
-            return false;
-        }
-        return true;
-    }
+    var printToChat = function(message, options) {
+      var messageContainer = $('<div class="msg"></div>');
+      var timestamp = $('<span class="timestamp">');
+
+      if (options) {
+        if (options.isGameMessage) messageContainer.addClass('game-msg');
+        if (options.isError) messageContainer.addClass('err-msg');
+        if (options.isUserMessage) messageContainer.addClass('user');
+      }
+
+      var date = new Date();
+      var rawHours = date.getHours();
+      var timeOfDay = rawHours > 12 ? 'PM' : 'AM';
+      var hours = rawHours - 12; // getHours returns military time
+      var minutes = date.getMinutes();
+      var seconds = date.getSeconds();
+
+      timestamp.text(
+        '[ ' + hours + ':' + minutes + ':' + seconds + ' ' + timeOfDay + ' ]'
+      );
+
+      messageContainer
+        .text(message)
+        .prepend(timestamp);
+
+      $('#chatbox').append(messageContainer);
+    };
 
     function handleDropEvent( event, ui ) {
       var draggable = ui.draggable;

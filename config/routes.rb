@@ -31,6 +31,7 @@ Rails.application.routes.draw do
     post 'start'
     get 'leave'
     get 'draw'
+    post 'send_chat'
   end
 
   resources :users
