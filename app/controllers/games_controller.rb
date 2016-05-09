@@ -40,6 +40,7 @@ class GamesController < ApplicationController
     if @game.can_draw?(current_user)
       card = @game.draw
       current_user.hand << card
+      current_user.has_drawn = true
       current_user.save!
 
       @pusher_client.trigger(
@@ -48,7 +49,16 @@ class GamesController < ApplicationController
         { card: card.as_json, action: 'add' }
       )
 
+      @game.end_current_turn!
       @pusher_client.trigger(@user_channel, 'player.turn.end', {})
+
+
+      # tell the next player that it's their turn
+      @pusher_client.trigger(
+        @game.channel_for_player(@game.current_turn_player),
+        'player.turn.start',
+        {}
+      )
     else
       @pusher_client.trigger(
         @user_channel,
@@ -105,7 +115,7 @@ class GamesController < ApplicationController
       flash[:notice] = "You have joined game ##{@game.id}!"
       @pusher_client.trigger(
         @main_channel,
-        'player.joined',
+        'game.player.joined',
         username: current_user.username
       )
 

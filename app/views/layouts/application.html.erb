@@ -22,10 +22,10 @@
 <%= yield :javascript %>
 
 <script>
+  AUTH_TOKEN = $('meta[name=csrf-token]').attr('content');
   /* allows clicking of navbar dropdowns */
   $(document).ready(function () {
     $('.dropdown-toggle').dropdown();
-    AUTH_TOKEN = $('meta[name=csrf-token]').attr('content');
   });
 
   /* allows closing of navbar once opened */

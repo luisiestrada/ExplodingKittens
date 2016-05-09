@@ -22,13 +22,6 @@ class User < ActiveRecord::Base
     self.has_drawn = false
   end
 
-  def draw(n=1)
-    cards = self.game.draw(self, n)
-    self.hand = self.hand + cards
-    self.has_drawn = true
-    self.save!
-  end
-
   def is_game_host?
     self.id == self.game.host.id
   end
@@ -50,17 +43,22 @@ class User < ActiveRecord::Base
   end
 
   def lose!
+    self.reset_game_state!
     self.losses += 1
-    self.is_playing = false
-    self.clear_hand!
     self.save!
   end
 
   def leave_game!
+    self.reset_game_state!
     self.game_id = nil
-    self.is_playing = false
-    self.clear_hand!
     self.save!
+  end
+
+  def reset_game_state!
+    # clears all attributes relevant to gameplay, except game_id
+    self.is_playing = false
+    self.has_drawn = false
+    self.clear_hand!
   end
 
   def games_played

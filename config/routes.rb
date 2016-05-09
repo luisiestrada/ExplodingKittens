@@ -30,6 +30,7 @@ Rails.application.routes.draw do
     get 'join'
     post 'start'
     get 'leave'
+    get 'draw'
   end
 
   resources :users

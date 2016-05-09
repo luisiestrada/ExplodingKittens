@@ -8,6 +8,7 @@ class Game < ActiveRecord::Base
 
   alias :players :users
   serialize :draw_pile_ids, Array
+  serialize :turn_orders, Hash
 
   MIN_PLAYERS = 2
   MAX_PLAYERS = 5
@@ -36,21 +37,29 @@ class Game < ActiveRecord::Base
     # pass out 1 defuse card & 4 other cards to each player
 
     self.players.each do |player|
-      player.hand << self.playing_cards.where(card_type: 'defuse').first
+      player.hand << self.playing_cards
+        .where(state: 'deck')
+        .where(card_type: 'defuse')
+        .first
 
       4.times do
         player.hand << self.deck
-          .reject { |card|
-            card.card_type == 'defuse' || card.card_type == 'exploding_kitten'
-          }.first
+          .reject { |card| ['defuse', 'exploding_kitten'].include?(card.card_type) }
+          .first
       end
 
       player.save!
     end
 
-    # pick a random player to go first
-    player_id = self.players.pluck(:id).sample
-    self.set_turn(User.find(player_id))
+    # pick a random player to go first,
+    # setup the hash that keeps track of turn order
+    player_id = self.players.sample.id
+    self.turn_orders = { 0 => player_id }
+    self.current_turn_player_index = 0
+
+    self.players
+      .where.not(id: player_id)
+      .each_with_index { |player, i| self.turn_orders[i + 1] = player.id }
 
     self.active = true
     self.save!
@@ -74,13 +83,24 @@ class Game < ActiveRecord::Base
     self.players.where(is_playing: true)
   end
 
-  def set_turn(player)
-    self.current_turn_player = player
+  def end_current_turn!
+    current_player = self.current_turn_player
+    if current_player.has_drawn?
+      current_player.has_drawn = false
+      current_player.save!
+    end
+
+    new_index = self.current_turn_player_index + 1
+    new_index = 0 if new_index > self.players.length - 1
+
+    self.current_turn_player_index = new_index
     self.save!
   end
 
   def end!
-    self.users.delete_all
+    self.players.map(&:leave_game!)
+    self.active = false
+    self.save!
   end
 
   def deck
@@ -89,7 +109,7 @@ class Game < ActiveRecord::Base
     .select { |card| card.state == 'deck'}
   end
 
-  def draw(player, n=1)
+  def draw(n=1)
     self.deck.first(n)
   end
 
@@ -138,6 +158,10 @@ class Game < ActiveRecord::Base
 
   def can_draw?(player)
     self.current_turn_player.id == player.id && !player.has_drawn?
+  end
+
+  def current_turn_player
+    User.find(self.turn_orders[self.current_turn_player_index])
   end
 
   private
