@@ -25,15 +25,6 @@ class GamesController < ApplicationController
 
   def show; end
 
-  def play_turn
-    game_channel = "game_" + @game.id.to_s + "_notifications_channel"
-    Pusher.trigger(game_channel, 'next_turn', {
-      user_id: params[:user_id],
-      username: params[:username]
-    })
-    render json: {}, status: :ok
-  end
-
   def draw
     if @game.can_draw?(current_user)
       card = @game.draw.first
