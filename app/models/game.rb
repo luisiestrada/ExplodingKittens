@@ -90,7 +90,6 @@ class Game < ActiveRecord::Base
   end
 
   def draw(player, n=1)
-    return [] unless can_draw?(player)
     self.deck.first(n)
   end
 
@@ -137,13 +136,11 @@ class Game < ActiveRecord::Base
     data
   end
 
-  private
-
-  # Rule validations
-
   def can_draw?(player)
     self.current_turn_player.id == player.id && !player.has_drawn?
   end
+
+  private
 
   def init_card_by_type(type, qty:nil)
     template = Settings.card_templates[type]

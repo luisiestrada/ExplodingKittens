@@ -32,8 +32,32 @@ class GamesController < ApplicationController
     Pusher.trigger(game_channel, 'next_turn', {
       user_id: params[:user_id],
       username: params[:username]
-    });
+    })
     render json: {}, status: :ok
+  end
+
+  def draw
+    if @game.can_draw?(current_user)
+      card = @game.draw
+      current_user.hand << card
+      current_user.save!
+
+      @pusher_client.trigger(
+        @user_channel,
+        'player.hand.updated',
+        { card: card.as_json, action: 'add' }
+      )
+
+      @pusher_client.trigger(@user_channel, 'player.turn.end', {})
+    else
+      @pusher_client.trigger(
+        @user_channel,
+        'player.errors', {
+          error: "You can't do that right now."
+      })
+    end
+
+    render json: {}
   end
 
   def start
@@ -63,8 +87,8 @@ class GamesController < ApplicationController
       )
     else
       @pusher_client.trigger(
-        @main_channel,
-        'game.start',
+        @user_channel,
+        'player.errors',
         { error: 'Not enough players or game has already started.' }
       )
     end
