@@ -67,7 +67,7 @@
           <td><%= game.id %></td>
           <td><!-- game.name -->Game<%= game.id %></td>
           <td><!-- game.host -->Host<%= game.id %></td>
-          <td><!-- game.players / game.max_players -->0/<%= game.id + 1 %></td>
+          <td><%= game.players.length %>/<%= Game::MAX_PLAYERS %></td>
           <td><button><%= link_to 'Join', game_path(game) %></button></td>
         </tr>
         <% end %>
