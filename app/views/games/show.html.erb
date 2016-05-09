@@ -209,6 +209,7 @@
         .prepend(timestamp);
 
       $('#chatbox').append(messageContainer);
+      $('#chat')[0].scrollTop = $('#chat').height();
     };
 
     function handleDropEvent( event, ui ) {
