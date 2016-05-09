@@ -59,6 +59,7 @@ class User < ActiveRecord::Base
   def leave_game!
     self.game_id = nil
     self.is_playing = false
+    self.clear_hand!
     self.save!
   end
 
