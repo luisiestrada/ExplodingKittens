@@ -7,6 +7,7 @@ class Game < ActiveRecord::Base
   has_one :host, class_name: User
 
   alias :players :users
+  serialize :draw_pile_ids, Array
 
   MIN_PLAYERS = 2
   MAX_PLAYERS = 5
@@ -26,21 +27,22 @@ class Game < ActiveRecord::Base
     end
 
     # game setup: https://www.explodingkittens.com/explodingkittensrules.pdf
-    self.shuffle_deck!
-
     # Rules say that there should be 1 less bomb than the player count
     init_card_by_type('exploding_kitten', qty: self.players.count - 1)
     init_card_by_type('defuse')
 
+    self.shuffle_deck!
+
     # pass out 1 defuse card & 4 other cards to each player
+
     self.players.each do |player|
-      player.hand << self.deck.where(card_type: 'defuse').first
+      player.hand << self.playing_cards.where(card_type: 'defuse').first
 
       4.times do
         player.hand << self.deck
-          .where.not(card_type: 'defuse')
-          .where.not(card_type: 'exploding_kitten')
-          .first
+          .reject { |card|
+            card.card_type == 'defuse' || card.card_type == 'exploding_kitten'
+          }.first
       end
 
       player.save!
@@ -82,7 +84,9 @@ class Game < ActiveRecord::Base
   end
 
   def deck
-    self.playing_cards.where(state: 'deck')
+    self.draw_pile_ids
+    .map { |id| PlayingCard.find(id) }
+    .select { |card| card.state == 'deck'}
   end
 
   def draw(player, n=1)
@@ -91,7 +95,8 @@ class Game < ActiveRecord::Base
   end
 
   def shuffle_deck!
-    self.playing_cards.shuffle
+    self.draw_pile_ids = self.playing_cards.map(&:id).shuffle
+    self.save!
   end
 
   def discard_pile
