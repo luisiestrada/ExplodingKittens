@@ -117,9 +117,9 @@ class GamesController < ApplicationController
     @pusher_client.trigger(
       @main_channel,
       'game.player.left',
-      username: current_user.uesrname
+      username: current_user.username
     )
-    
+
     flash[:notice] = 'You have left the game.'
     redirect_to games_path and return
   end
