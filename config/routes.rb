@@ -1,12 +1,16 @@
 Rails.application.routes.draw do
-  get 'game/index'
+
+  get 'chat/message'
+  post 'chat/message' => 'chat#message'
+  post 'games/play_turn' => 'games#play_turn'
 
   devise_for :users
   get 'welcome' => 'welcome#index'
   get 'card_list' => 'welcome#card_list'
   get 'instructions' => 'welcome#instructions'
   get 'about_us' => 'welcome#about_us'
-  get 'game' => 'games#game'
+  get 'test' => 'welcome#test'
+  get 'gamewindow' => 'welcome#gamewindow'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
@@ -22,46 +26,15 @@ Rails.application.routes.draw do
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
-  resources :games
+  resources :games do
+    get 'join'
+    post 'start'
+    get 'leave'
+    get 'draw'
+    post 'send_chat'
+  end
+
   resources :users
+  resources :chat
 
-  # Example resource route with options:
-  #   resources :products do
-  #     member do
-  #       get 'short'
-  #       post 'toggle'
-  #     end
-  #
-  #     collection do
-  #       get 'sold'
-  #     end
-  #   end
-
-  # Example resource route with sub-resources:
-  #   resources :products do
-  #     resources :comments, :sales
-  #     resource :seller
-  #   end
-
-  # Example resource route with more complex sub-resources:
-  #   resources :products do
-  #     resources :comments
-  #     resources :sales do
-  #       get 'recent', on: :collection
-  #     end
-  #   end
-
-  # Example resource route with concerns:
-  #   concern :toggleable do
-  #     post 'toggle'
-  #   end
-  #   resources :posts, concerns: :toggleable
-  #   resources :photos, concerns: :toggleable
-
-  # Example resource route within a namespace:
-  #   namespace :admin do
-  #     # Directs /admin/products/* to Admin::ProductsController
-  #     # (app/controllers/admin/products_controller.rb)
-  #     resources :products
-  #   end
 end
