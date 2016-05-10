@@ -12,6 +12,15 @@
 
 <div class="container-fluid" align="center">
   <h1>Lobby</h1>
+  <span>
+    <%= link_to(
+        'Create Game',
+        '',
+        class: 'btn btn-info btn-lg btn-create',
+        style: 'margin-top: 0;',
+        data: { toggle: 'modal', target: '#new_game_form' }
+      ) %>
+  </span>
   <div>
     <% if @games.size != 0 %>
     <div class="game-box">
@@ -27,8 +36,8 @@
         <% @games.each do |game| %>
         <tr>
           <td><%= game.id %></td>
-          <td>Game<%= game.id %></td>
-          <td>Host<%= game.id %></td>
+          <td><%= game.room_name %></td>
+          <td><%= game.host.try(:username) || 'Abandoned' %></td>
           <td><%= "#{game.players.length}/#{Game::MAX_PLAYERS}" %></td>
           <td><button><%= link_to 'Join', game_join_path(game) %></button></td>
         </tr>
@@ -40,14 +49,6 @@
       <br /><br />
       <h3>There are no game rooms yet</h3>
     <% end -%>
-
-    <%= link_to(
-      'Create Game',
-      '',
-      class: 'btn btn-info btn-lg btn-create',
-      style: 'margin-top: 0',
-      data: { toggle: 'modal', target: '#new_game_form' }
-    ) %>
   </div>
 
   <!-- Create Game Modal -->

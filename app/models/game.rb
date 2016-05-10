@@ -5,6 +5,8 @@ class Game < ActiveRecord::Base
   has_many :playing_cards
   has_one :host, class_name: User
 
+  after_save :set_room_name
+
   alias :players :users
   serialize :draw_pile_ids, Array
   serialize :turn_orders, Hash
@@ -167,6 +169,13 @@ class Game < ActiveRecord::Base
   end
 
   private
+
+  def set_room_name
+    if self.room_name.blank?
+      self.room_name = "Game #{self.id}"
+      self.save!
+    end
+  end
 
   def init_card_by_type(type, qty:nil)
     template = Settings.card_templates[type]

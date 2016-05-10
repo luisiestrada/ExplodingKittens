@@ -10,6 +10,7 @@ class GamesController < ApplicationController
   def create
     if current_user
       @game = Game.new
+      @game.room_name = params[:game][:room_name] if params[:game][:room_name].present?
       @game.add_user(current_user)
 
       @game.save!
