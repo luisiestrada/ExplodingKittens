@@ -3,7 +3,6 @@ class Game < ActiveRecord::Base
   has_many :users
   has_many :stats, class_name: GameStat
   has_many :playing_cards
-  has_one :current_turn_player, class_name: User
   has_one :host, class_name: User
 
   alias :players :users
@@ -85,6 +84,7 @@ class Game < ActiveRecord::Base
 
   def end_current_turn!
     current_player = self.current_turn_player
+
     if current_player.has_drawn?
       current_player.has_drawn = false
       current_player.save!
@@ -157,11 +157,13 @@ class Game < ActiveRecord::Base
   end
 
   def can_draw?(player)
-    self.current_turn_player.id == player.id && !player.has_drawn?
+    self.current_turn_player.id == player.id
   end
 
   def current_turn_player
-    User.find(self.turn_orders[self.current_turn_player_index])
+    self.players
+      .where(id: self.turn_orders[self.current_turn_player_index])
+      .first
   end
 
   private

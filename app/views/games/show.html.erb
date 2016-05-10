@@ -53,9 +53,8 @@
 </div>
 
 <% content_for :javascript do %>
-
+  <%= javascript_include_tag 'chat' %>
 <script>
-
   var cards = new Array();
   cards['attack'] = ['attack-1','attack-2','attack-3','attack-4'];
   cards['Beard Cat'] = ['cat-3'];
@@ -215,7 +214,9 @@
         .prepend(timestamp);
 
       $('#chatbox').append(messageContainer);
-      $('#chat')[0].scrollTop = $('#chat').height();
+      $('#chat').animate({
+           scrollTop: $('#chat').height()
+      }, 'fast');
     };
 
     function handleDropEvent( event, ui ) {
