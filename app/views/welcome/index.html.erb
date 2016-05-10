@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  	<title>Exploding Kittens</title>
+  	<meta charset="utf-8">
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+
+  <body>
+    <%= render 'nav/navbar' %>
+
+    <!-- main page header -->
+    <div class="container-fluid">
+
+    	<div id="content" class="well" style="background: black">
+    	<h2>Welcome to Exploding Kittens</h2>
+    	<p>The time is now: <%= Time.now %></p>
+
+    	<%= link_to 'List of games', games_path %><br/>
+    	<%= link_to 'Create a new game', games_path, method: :post %><br/>
+    	<%= link_to 'List of players', users_path %><br/>
+
+    	<p>Testing</p>
+    	</div>
+    </div>
+
+    <br />
+
+    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+      </ol>
+
+      <!-- Wrapper for slides -->
+      <div class="carousel-inner" role="listbox">
+        <div class="item active">
+          <%= image_tag("exploding-kitten.jpg", class: "img-responsive") %>
+        </div>
+
+        <div class="item">
+        	<%= image_tag("kaboom.png", class: "img-responsive") %>
+        </div>
+      </div>
+
+      <!-- Left and right controls -->
+      <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div>
+
+    <br />
+
+    <!-- chat -->
+    <div id="chat-wrapper">
+        <div id="menu">
+            <p class="welcome">Kitten's World Chat <b></b></p>
+            <p class="logout"><a id="exit" href="#">Exit Chat</a></p>
+            <div style="clear:both"></div>
+        </div>
+
+        <!-- chat text -->
+        <div id = "chat">
+          <div id="chatbox"></div>
+        </div>
+
+    	<div id="txtbox">
+          <!-- send -->
+          <input name="submitmsg" type="submit" id="submitmsg" value="Send" style="float:right"/>
+          <!-- user input -->
+          <div style="overflow: hidden; padding-right: .5em">
+            <input name="usermsg" type="text" id="chatbox" autocomplete="off"
+                   placeholder="Send a message..." maxlength="4000" style="width:100%"
+                   onkeypress="return pressEnter(event);"/>
+            </div>
+    	</div>
+    </div>
+    <br />
+
+  </body>
+</html>

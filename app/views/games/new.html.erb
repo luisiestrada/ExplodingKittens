@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Exploding Kittens</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+  <body>
+  	<%= render 'nav/navbar' %>
+    <div class="container-fluid" align="center" style="margin-top: 200px;">
+    	<%= form_for :game, :html => {:style => "color: black"}, url: games_path do |f| %>
+    	<p>
+    		<%= f.submit "Create New Game"%>
+    	</p>
+    	<% end %>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Exploding Kittens</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+
+<%= render 'nav/navbar' %>
+
+<div class="container-fluid">
+  <h1>Card Definitions</h1>
+  
+  <table class="table" style="border: none;">
+    <tr>
+      <td>
+        <div class="card_size">
+          <%=image_tag("defuse.png")%>
+        </div>
+      </td>
+      
+      <td>
+        <div class="description">
+          <div class="cardtitle">
+            Defuse(6)
+          </div>
+          <p>
+            If you drew an Exploding Kitten, you can play this
+            card instead of dying. Place your Defuse card in the Discard Pile.
+          </p>
+          <p>
+            Then take the Exploding Kitten, and without
+            reordering or viewing the other cards, secretly put
+            it back in the Draw Pile anywhere you'd like.
+          </p>
+          <p>
+            Want to screw over the player right after you? Put
+            the Kitten right on top of the deck. If you'd like,
+            hold the deck under the table so that no one else
+            can see where you put it. Now the next player
+            goes (unless you must take multiple turns).
+          </p>
+        </div>
+      </td>
+      
+      <td>
+        <div class="card_size">
+          <%=image_tag("explodingkitten.png")%>
+        </div>
+      </td>
+      
+      <td>
+        <div class="description">
+          <div class="cardtitle">
+            Exploding Kitten(4)
+          </div>
+          <p>
+            You must show this card immediately. Unless you
+            have a Defuse card, you're dead. Discard all of
+            your cards, including the Exploding Kitten.
+          </p>
+        </div>
+      </td>
+    </tr>
+    
+    <tr>
+      <td>
+        <div class="card_size">
+          <%=image_tag("nope-1.png")%>
+        </div>
+      </td>
+      
+      <td>
+        <div class="description">
+          <div class="cardtitle">
+            Nope (5)
+          </div>
+          <p>
+            Stop any action except for an Exploding Kitten or a
+            Defuse card. Imagine that any card (or Pair or
+            Special Combo) beneath a Nope card no longer exists.
+          </p>
+          <p>
+            You can also play a Nope on another Nope to
+            negate it and create a Yup, and so on.
+          </p>
+          <p>
+            You can play a Nope card at any time before an
+            action has begun, even if it's not your turn.
+          </p>
+        </div>
+      </td>
+      
+      <td>
+        <div class="card_size">
+          <%=image_tag("attack.png")%>
+        </div>
+      </td>
+      
+      <td>
+        <div class="description">
+          <div class="cardtitle">
+            Attack (4)
+          </div>
+          <p>
+            End your turn(s) without drawing and force the
+            next player to take 2 turns in a row. The victim of
+            this card takes a turn as normal (play cards, then
+            draw). Then, when their first turn is over, it's their
+            turn again. (If the victim of an Attack card plays
+            an Attack card, their turns are immediately over,
+            and the next player must take 2 turns.)
+          </p>
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <div class="card_size">
+          <%=image_tag("skip-1.png")%>
+        </div>
+      </td>
+
+      <td>
+        <div class="description">
+          <div class="cardtitle">
+            Skip(6)
+          </div>
+          <p>
+            Immediately end your turn without drawing a
+            card. (If you play a Skip card as a defense to an
+            Attack card, it only ends 1 of the 2 turns. 2 Skip
+            cards would end both turns.)
+          </p>
+        </div>
+      </td>
+
+      <td>
+        <div class="card_size">
+          <%=image_tag("shuffle.png")%>
+        </div>
+      </td>
+
+      <td>
+        <div class="description">
+          <div class="cardtitle">
+            Shuffle(4)
+          </div>
+          <p>
+            Shuffle the Draw Pile thoroughly and randomly
+            without viewing the cards. (Useful when you
+            know there's an Exploding Kitten coming.)
+          </p>
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <div class="card_size">
+          <%=image_tag("future-1.png")%>
+        </div>
+      </td>
+
+      <td>
+        <div class="description">
+          <div class="cardtitle">
+            See The Future(6)
+          </div>
+          <p>
+            Peek at the top 3 cards from the Draw Pile and
+            put them back in the same order. Don't show the
+            cards to the other players.
+        </div>
+      </td>
+
+      <td>
+        <div class="card_size">
+          <%=image_tag("favor-1.png")%>
+        </div>
+      </td>
+
+      <td>
+        <div class="description">
+          <div class="cardtitle">
+            Favor(4)
+          </div>
+          <p>
+            Force any other player to give you 1 card from
+            their hand. They choose which card to give you.
+          </p>
+        </div>
+      </td>
+    </tr>
+</table>
+
+</body>
+
+</html>

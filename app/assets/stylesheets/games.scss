@@ -1,0 +1,113 @@
+/***** GAME WINDOW *****/
+
+/* main page header */
+#game-window {
+  display: block;
+  border: 2px solid #999;
+  padding: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  color: white;
+  text-align: center;
+}
+
+/* every card */
+.card img, .card {
+  height: 150px;
+  width: 90px;
+}
+
+/* each card in hand */
+.draggable-card {
+
+}
+/* hand as a whole */
+#hand {
+  position: relative;
+  top: 200px;
+}
+
+
+
+/* deck + discard pile */
+#deck-discard {
+  float: right;
+  left: 44%;
+  position: absolute;
+}
+#deck {
+  float: right;
+  cursor: pointer;
+}
+#discard {
+  float: right;
+  border: 1px solid white;
+}
+#discard.hovered {
+  background: #aaa;
+}
+
+/***** CHAT BOX *****/
+
+/* top of chat */
+div#menu { padding: 10px 10px }
+
+/* chat name */
+.welcome { float:left }
+
+/* exit link */
+.logout { float:right }
+
+/* entire chatbox */
+#chat-wrapper {
+  background:#7C2213;
+  border: 2px solid #7C2213;
+  /*
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  */
+}
+
+.start-game-btn {
+  display: flex;
+  align-items: center;
+}
+
+/* inner chat area */
+#chat {
+  text-align: left;
+  background: black;
+  color: white;
+  height: 250px;
+  border: 1px solid #7C2213;
+  overflow-y: scroll;
+  white-space: normal;
+  word-wrap: break-word;
+  padding: 0.5em 1em;
+}
+
+#chatbox .timestamp {
+  margin-right: 5px;
+}
+
+#chatbox .msg {
+  clear: both;
+}
+
+#chatbox .game-msg {
+  font-weight: 900;
+}
+
+#chatbox .err-msg {
+  color: red;
+}
+
+#chatbox .user {
+  color: grey;
+}
+
+/* user input + button */
+#txtbox {
+color: black;
+}

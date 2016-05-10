@@ -13,4 +13,8 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
+//= require phaser
 //= require_tree .
+//= require lodash
+//= require pusher.min.js
+//= require handlebars.runtime

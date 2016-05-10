@@ -1,0 +1,245 @@
+<p><a href="/games">Back</a></p>
+<p>
+  <strong>Game id:</strong>
+  <%= @game.id %>
+</p>
+
+<div id="status">
+
+<div class="main-display text-center">
+  <% if current_user.is_game_host? %>
+    <div class="btn btn-lg btn-success start-game-btn">Start Game!</div>
+  <% end %>
+  <%= link_to 'Leave Game!', game_leave_path(@game), class: 'btn btn-lg btn-primary leave-game-btn"' %>
+</div>
+
+
+<!-- game window -->
+<div id="game-window" style="height: 550px;">
+
+  <div id="deck-discard">
+    <div id="deck" class="card"><%=image_tag("deck.jpg")%></div>
+    <div id="discard" class="card">Discard</div>
+  </div>
+
+  <div id="hand"></div>
+</div>
+
+
+<!-- chat box -->
+<div id="chat-wrapper">
+  <div id="menu">
+    <p class="welcome">Game #<%= @game.id %> Chat <b></b></p>
+    <p class="logout"><a id="exit" href="#">Exit Chat</a></p>
+    <div style="clear:both"></div>
+  </div>
+
+  <!-- chat text -->
+  <div id = "chat">
+  	<div id="chatbox"></div>
+  </div>
+
+  <form id="txtbox">
+  	<!-- send -->
+  	<input name="submitmsg" type="submit" id="submitmsg" value="Send" style="float:right"/>
+
+	   <!-- user input -->
+  	<div style="overflow: hidden; padding-right: .5em">
+      <input id="usermsg" type="text" autocomplete="off"
+             placeholder="Send a message..." maxlength="4000" style="width:100%"
+       />
+    </div>
+  </div>
+</div>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'chat' %>
+<script>
+  var cards = new Array();
+  cards['attack'] = ['attack-1','attack-2','attack-3','attack-4'];
+  cards['Beard Cat'] = ['cat-3'];
+  cards['Hairy Potato Cat'] = ['cat-6'];
+  cards['Rainbow Puking Cat'] = ['cat-5'];
+  cards['Taco Cat'] = ['cat-2'];
+  cards['Watermelon Cat'] = ['cat-4'];
+  cards['defuse'] = ['defuse-1','defuse-2','defuse-3','defuse-4','defuse-5'];
+  cards['exploding_kitten'] = ['exploding-kitten-1','exploding-kitten-2','exploding-kitten-3'];
+  cards['favor'] = ['favor-1','favor-2'];
+  cards['see_the_future'] = ['future-1','future-2','future-3'];
+  cards['nope'] = ['nope-1','nope-2'];
+  cards['shuffle'] = ['shuffle-1','shuffle-2','shuffle-3'];
+  cards['skip'] = ['skip-1','skip-2'];
+
+  $(function() {
+    // for authenticating AJAX requests
+    var headers = {};
+    headers['X-CSRF-Token'] = AUTH_TOKEN;
+
+    // Enable pusher logging - don't include this in production
+    Pusher.log = function(message) {
+      if (window.console && window.console.log) {
+        window.console.log(message);
+      }
+    };
+
+    var gameChannel = pusher.subscribe('<%= @main_channel %>');
+    var userChannel = pusher.subscribe('<%= @user_channel %>');
+
+     // listen for pusher events for the whole game
+    gameChannel.bind('game.player.joined', function(data) {
+      printToChat('User '+ data.username + ' joined the game!', {
+        isGameMessage: true
+      });
+    });
+
+    gameChannel.bind('game.player.left', function(data) {
+      printToChat('User '+ data.username + ' left the game. :(', {
+        isGameMessage: true
+      });
+    });
+
+    gameChannel.bind('game.start', function(data) {
+      printToChat('The game has started.', { isGameMessage: true });
+      console.log(data);
+    });
+
+    // pusher events for the player
+    userChannel.bind('player.errors', function(data) {
+      printToChat(data.error, {
+        isGameMessage: true,
+        isError: true
+      });
+    });
+
+    userChannel.bind('player.turn.start', function() {
+      printToChat("It's your turn!", { isGameMessage: true });
+    });
+
+    userChannel.bind('player.turn.end', function() {
+      printToChat('You ended your turn.', { isGameMessage: true });
+    });
+
+    userChannel.bind('player.hand.updated', function(data) {
+      spawnCard(data.card.card_name);
+    });
+
+    userChannel.bind('player.chat', function(data) {
+      var msg = data.username + ': ' + data.message;
+      printToChat(msg, { isUserMessage: true });
+    });
+
+
+    // DOM events
+    <% if current_user.is_game_host? %>
+      $('.start-game-btn').click(function() {
+        $.ajax({
+          method: 'POST',
+          url: '<%= game_start_path(@game) %>',
+          headers: headers
+        });
+      });
+    <% end %>
+
+    $('#deck').click(function() {
+      $.ajax({
+        url: '<%= game_draw_path(@game) %>',
+        headers: headers
+      });
+    });
+
+    $('#discard').droppable({
+      accept: '.draggable-card',
+      hoverClass: 'hovered',
+      drop: handleDropEvent
+    });
+
+    $('.draggable-card').draggable({
+      cursor: 'move',
+      snap: '#discard',
+      containment: '#game-window',
+      stack: '.draggable-card'
+    });
+
+    $('#game-window').on('click', '.draggable-card', function() {
+      $(this).animate({
+        height: ($(this).height() == 300) ? 150 : 300,
+        width: ($(this).width() == 180) ? 90 : 180
+      }, 200);
+    });
+
+    // send chat
+
+    $('#txtbox').submit(function(e) {
+      e.preventDefault();
+
+      var message = $('#usermsg').val();
+
+    	if (message !== '') {
+    		$.ajax({
+          url: '<%= game_send_chat_path(@game) %>',
+          method: 'POST',
+          data: { message: message },
+          headers: headers,
+        });
+
+    		$('input#usermsg').val("");
+    	}
+    });
+
+    // helper functions
+
+    var printToChat = function(message, options) {
+      var messageContainer = $('<div class="msg"></div>');
+      var timestamp = $('<span class="timestamp">');
+
+      if (options) {
+        if (options.isGameMessage) messageContainer.addClass('game-msg');
+        if (options.isError) messageContainer.addClass('err-msg');
+        if (options.isUserMessage) messageContainer.addClass('user');
+      }
+
+      var date = new Date();
+      var rawHours = date.getHours();
+      var timeOfDay = rawHours > 12 ? 'PM' : 'AM';
+      var hours = rawHours - 12; // getHours returns military time
+      var minutes = date.getMinutes();
+      var seconds = date.getSeconds();
+
+      timestamp.text(
+        '[ ' + hours + ':' + minutes + ':' + seconds + ' ' + timeOfDay + ' ]'
+      );
+
+      messageContainer
+        .text(message)
+        .prepend(timestamp);
+
+      $('#chatbox').append(messageContainer);
+      $('#chat').animate({
+           scrollTop: $('#chat').height()
+      }, 'fast');
+    };
+
+    function handleDropEvent( event, ui ) {
+      var draggable = ui.draggable;
+      alert( 'Card "' + draggable.attr('id') + '" was discarded!' );
+      draggable.remove();
+    }
+
+    function spawnCard(card_name) {
+      var img = document.createElement('img');
+      img.src = '/assets/' + _.sample(cards[card_name]) + '.jpg'
+      console.log(img.src);
+      img.setAttribute("class", "card draggable-card");
+      img.setAttribute("id", card_name);
+      document.getElementById('hand').appendChild(img);
+
+      $(img).draggable({
+        cursor: 'move',
+        snap: '#discard',
+        containment: '#game-window',
+        stack: '.draggable-card'
+      });
+    };
+  });
+</script>
+<% end %>
