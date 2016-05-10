@@ -50,34 +50,6 @@
       <h3>There are no game rooms yet</h3>
     <% end -%>
   </div>
-
-  <!-- Create Game Modal -->
-  <div class="modal fade" id="new_game_form" role="dialog">
-    <div class="modal-dialog">
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">New Exploding Kittens Game</h4>
-        </div>
-        <div class="modal-body">
-          <%= form_for :game, :html => {:style => "color: black"}, url: games_path do |f| %>
-          <fieldset class="form-group">
-            <%= f.label :room_name %>:<br />
-            <%= f.text_field :room_name %><br />
-          </fieldset>
-          <br></br>
-
-          <p>
-            <%= f.submit "Create New Game"%>
-          </p>
-          <% end %>
-        </div>
-        <div class="modal-footer" >
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 
 </body>
