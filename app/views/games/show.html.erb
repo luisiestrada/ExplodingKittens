@@ -1,7 +1,7 @@
-<p><a href="/games">Back</a></p>
+<p><%= link_to 'Back', games_path %></p>
+
 <p>
-  <strong>Game id:</strong>
-  <%= @game.id %>
+  <strong>Playing in room: <%= @game.room_name %></strong>
 </p>
 
 <div id="status">
@@ -29,7 +29,7 @@
 <!-- chat box -->
 <div id="chat-wrapper">
   <div id="menu">
-    <p class="welcome">Game #<%= @game.id %> Chat <b></b></p>
+    <p class="welcome"><%= @game.room_name %> Chat <b></b></p>
     <p class="logout"><a id="exit" href="#">Exit Chat</a></p>
     <div style="clear:both"></div>
   </div>

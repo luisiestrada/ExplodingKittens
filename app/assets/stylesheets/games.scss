@@ -111,3 +111,58 @@ div#menu { padding: 10px 10px }
 #txtbox {
 color: black;
 }
+
+/*********** CREATE NEW GAME ***********/
+
+.btn-create {
+margin-top: 50px;
+background-color: #7C2213 !important;
+border-color: #7C2213 !important;
+}
+
+.black-content{
+color: black;
+}
+
+.modal-content {
+color: black !important;
+}
+
+
+/*********** GAME LOBBY ***********/
+
+.game-box{
+background-color: white;
+padding: 15px;
+width: 50%;
+border-radius: 10px;
+margin-top: 25px;
+margin-bottom: 25px;
+}
+
+.games-table {
+width: auto !important;
+min-width: 100% !important;
+background-color: #7C2213 !important;
+margin-bottom: 0 !important;
+table-layout: fixed;
+}
+
+.games-table th, .games-table td {
+vertical-align: middle !important;
+word-wrap: break-word;
+}
+
+.games-table th {
+background-color: #42130a;
+font-size: 16px;
+padding-top: 20px !important;
+padding-bottom: 20px !important;
+border-bottom: 25px solid white !important;
+}
+
+.games-table td {
+border-top: 10px solid white !important;
+padding-top: 10px !important;
+padding-bottom: 10px !important;
+}

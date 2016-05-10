@@ -59,17 +59,17 @@ margin-left: auto;
 .description {
 color: white;
 float: left;
-width: 100%;	
+width: 100%;
 }
 
 .cardtitle {
 color:#fff;
 background-color: black;
 text-shadow: 0 1px 0 #999999, 0 2px 0 #888888,
-             0 3px 0 #777777, 0 4px 0 #666666,
-             0 5px 0 #555555, 0 6px 0 #444444,
-             #ff0 0 -2px 10px, #ff8000 0 -10px 20px,
-             red 0 -18px 40px;
+0 3px 0 #777777, 0 4px 0 #666666,
+0 5px 0 #555555, 0 6px 0 #444444,
+#ff0 0 -2px 10px, #ff8000 0 -10px 20px,
+red 0 -18px 40px;
 font-size: 50px;
 font-family: lato,sans-serif;
 height: auto;
@@ -78,12 +78,11 @@ text-align: center;
 }
 
 test {
-	color:#fff;
-	background-color: black;
-	text-shadow:#fff 0 -1px 4px, #ff0 0 -2px 10px, #ff8000 0 -10px 20px, red 0 -18px 40px;
+color:#fff;
+background-color: black;
+text-shadow:#fff 0 -1px 4px, #ff0 0 -2px 10px, #ff8000 0 -10px 20px, red 0 -18px 40px;
 }
 
 
 /************phaser canvas centering************/
 canvas {   display : block;   margin : auto;}
-
