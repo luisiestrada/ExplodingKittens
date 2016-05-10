@@ -53,9 +53,8 @@
 </div>
 
 <% content_for :javascript do %>
-
+  <%= javascript_include_tag 'chat' %>
 <script>
-
   var cards = new Array();
   cards['attack'] = ['attack-1','attack-2','attack-3','attack-4'];
   cards['Beard Cat'] = ['cat-3'];
@@ -89,6 +88,12 @@
      // listen for pusher events for the whole game
     gameChannel.bind('game.player.joined', function(data) {
       printToChat('User '+ data.username + ' joined the game!', {
+        isGameMessage: true
+      });
+    });
+
+    gameChannel.bind('game.player.left', function(data) {
+      printToChat('User '+ data.username + ' left the game. :(', {
         isGameMessage: true
       });
     });
@@ -209,6 +214,9 @@
         .prepend(timestamp);
 
       $('#chatbox').append(messageContainer);
+      $('#chat').animate({
+           scrollTop: $('#chat').height()
+      }, 'fast');
     };
 
     function handleDropEvent( event, ui ) {
