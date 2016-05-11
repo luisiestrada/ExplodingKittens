@@ -248,11 +248,21 @@ padding-bottom: 10px !important;
 /*********** INSTRUCTIONS ***********/
 
 .instructions-table {
-text-align:center; 
-vertical-align:middle;
-margin-top: 30px;
+text-align: left; 
+max-width: 50% !important;
+width: auto !important; 
+table-layout: fixed;
+margin-top: 50px;
+}
+
+.instructions-table h1 {
+text-align: center;
 }
 
 .instructions-table tr {
 margin-top: 300px !important;
+}
+
+.instructions-table td {
+border: none !important;
 }
