@@ -165,7 +165,6 @@ width: 100%;
 
 .cardtitle {
 color:#fff;
-background-color: black;
 text-shadow: 0 1px 0 #999999, 0 2px 0 #888888,
 0 3px 0 #777777, 0 4px 0 #666666,
 0 5px 0 #555555, 0 6px 0 #444444,
@@ -198,7 +197,7 @@ background-color: #7C2213 !important;
 border-color: #7C2213 !important;
 }
 
-.black-content{
+.black-content {
 color: black;
 }
 
@@ -209,7 +208,7 @@ color: black !important;
 
 /*********** GAME LOBBY ***********/
 
-.game-box{
+.game-box {
 background-color: white;
 padding: 15px;
 width: 50%;	
@@ -243,4 +242,17 @@ border-bottom: 25px solid white !important;
 border-top: 10px solid white !important;
 padding-top: 10px !important;
 padding-bottom: 10px !important;
+}
+
+
+/*********** INSTRUCTIONS ***********/
+
+.instructions-table {
+text-align:center; 
+vertical-align:middle;
+margin-top: 30px;
+}
+
+.instructions-table tr {
+margin-top: 300px !important;
 }
