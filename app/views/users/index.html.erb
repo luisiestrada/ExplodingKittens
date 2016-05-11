@@ -14,14 +14,24 @@
   <table class="table">
     <tr>
       <th>ID</th>
+      <th>Username</th>
       <th>Email</th>
+      <th>Wins</th>
+      <th>Cards played</th>
+      <th>Card combos played</th>
+      <th>Players killed</th>
       <th colspan="3"></th>
     </tr>
 
     <% @users.each do |user| %>
       <tr>
         <td><%= user.id %></td>
+        <td><%= user.username %></td>
         <td><%= user.email %></td>
+        <td><%= user.games_won.count %></td>
+        <td><%= user.stats.cards_played %></td>
+        <td><%= user.stats.card_combos_played %></td>
+        <td><%= user.stats.players_killed %></td>
       </tr>
     <% end %>
   </table>
