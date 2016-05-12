@@ -3,15 +3,15 @@ class GamesController < ApplicationController
   before_filter :set_pusher_context, except: [:create, :index]
 
   def index
-    @games = Game.all
-    return
+    @games = Game.with_players
   end
 
   def create
     if current_user
       @game = Game.new
       if params[:game].present?
-        @game.room_name = params[:game][:room_name] if params[:game][:room_name].present?
+        room_name = params[:game][:room_name]
+        @game.room_name = room_name if room_name.present?
       end
 
       @game.add_user(current_user)
@@ -117,12 +117,22 @@ class GamesController < ApplicationController
   end
 
   def leave
+    # change the host if necessary
+    if @game.host.id == current_user.id && @game.players.length > 1
+      @game.host_id = @game.players.where.not(id: @game.host_id).first
+    end
+
     @game.remove_user(current_user)
-    @pusher_client.trigger(
-      @main_channel,
-      'game.player.left',
-      username: current_user.username
-    )
+
+    if @game.players.empty?
+      @game.end!
+    else
+      @pusher_client.trigger(
+        @main_channel,
+        'game.player.left',
+        username: current_user.username
+      )
+    end
 
     flash[:notice] = 'You have left the game.'
     redirect_to games_path and return
@@ -145,7 +155,7 @@ class GamesController < ApplicationController
   private
 
   def set_game_context
-    raise ActionController::RoutingError.new('Bad Request') unless current_user.present?
+    raise ActionController::RoutingError.new('Bad Request') unless current_user
 
     @game = Game.find_by_id(params[:id] || params[:game_id])
     raise ActionController::RoutingError.new('Not Found') unless @game
