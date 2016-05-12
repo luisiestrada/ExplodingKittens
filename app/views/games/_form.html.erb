@@ -12,7 +12,7 @@
         <%= form_for :game, :html => {:style => "color: black"}, url: games_path do |f| %>
         <fieldset class="form-group">
           <%= f.label :room_name %>:<br />
-          <%= f.text_field :room_name %><br />
+          <%= f.text_field :room_name, autofocus: true %><br />
         </fieldset>
         <br></br>
 
