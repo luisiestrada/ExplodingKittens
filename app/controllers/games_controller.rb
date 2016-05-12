@@ -11,7 +11,8 @@ class GamesController < ApplicationController
     if current_user
       @game = Game.new
       if params[:game].present?
-        @game.room_name = params[:game][:room_name] if params[:game][:room_name].present?
+        room_name = params[:game][:room_name]
+        @game.room_name = room_name if room_name.present?
       end
 
       @game.add_user(current_user)
@@ -145,7 +146,7 @@ class GamesController < ApplicationController
   private
 
   def set_game_context
-    raise ActionController::RoutingError.new('Bad Request') unless current_user.present?
+    raise ActionController::RoutingError.new('Bad Request') unless current_user
 
     @game = Game.find_by_id(params[:id] || params[:game_id])
     raise ActionController::RoutingError.new('Not Found') unless @game
