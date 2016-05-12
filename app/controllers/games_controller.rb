@@ -27,7 +27,33 @@ class GamesController < ApplicationController
     end
   end
 
-  def show; end
+  def show
+    # get image tags for all the card assets
+    i_tag = -> (str) { ActionController::Base.helpers.image_tag(str) }
+
+    @attack_cards =
+      ['attack-1','attack-2','attack-3','attack-4'].map { |c| i_tag.call(c) }
+
+    @beard_cat = [i_tag.call('cat-3')]
+    @hairy_potato_cat = [i_tag.call('cat-6')]
+    @rainbow_puking_cat = [i_tag.call('cat-5')]
+    @taco_cat = [i_tag.call('cat-2')]
+    @watermelon_cat = [i_tag.call('cat-4')]
+    @defuse_cards =
+      ['defuse-1','defuse-2','defuse-3','defuse-4','defuse-5']
+        .map { |c| i_tag.call(c) }
+    @exploding_kitten_cards =
+      ['exploding-kitten-1','exploding-kitten-2','exploding-kitten-3']
+        .map { |c| i_tag.call(c) }
+    @favor_cards = ['favor-1','favor-2'].map { |c| i_tag.call(c) }
+    @see_the_future_cards = ['future-1','future-2','future-3']
+      .map { |c| i_tag.call(c) }
+    @nope_cards = ['nope-1','nope-2'].map { |c| i_tag.call(c) }
+    @shuffle_cards = ['shuffle-1','shuffle-2','shuffle-3']
+      .map { |c| i_tag.call(c) }
+    @skip_cards = ['skip-1','skip-2'].map { |c| i_tag.call(c) }
+
+  end
 
   def draw
     if @game.can_draw?(current_user)
