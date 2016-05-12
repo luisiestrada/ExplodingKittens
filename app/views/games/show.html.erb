@@ -55,20 +55,20 @@
 <% content_for :javascript do %>
   <%= javascript_include_tag 'chat' %>
 <script>
-  var cards = new Array();
-  cards['attack'] = ['attack-1','attack-2','attack-3','attack-4'];
-  cards['Beard Cat'] = ['cat-3'];
-  cards['Hairy Potato Cat'] = ['cat-6'];
-  cards['Rainbow Puking Cat'] = ['cat-5'];
-  cards['Taco Cat'] = ['cat-2'];
-  cards['Watermelon Cat'] = ['cat-4'];
-  cards['defuse'] = ['defuse-1','defuse-2','defuse-3','defuse-4','defuse-5'];
-  cards['exploding_kitten'] = ['exploding-kitten-1','exploding-kitten-2','exploding-kitten-3'];
-  cards['favor'] = ['favor-1','favor-2'];
-  cards['see_the_future'] = ['future-1','future-2','future-3'];
-  cards['nope'] = ['nope-1','nope-2'];
-  cards['shuffle'] = ['shuffle-1','shuffle-2','shuffle-3'];
-  cards['skip'] = ['skip-1','skip-2'];
+  var cards = {};
+  cards['attack'] = <%= raw @attack_cards %>;
+  cards['Beard Cat'] = <%= raw @beard_cat %>;
+  cards['Hairy Potato Cat'] = <%= raw @hairy_potato_cat %>;
+  cards['Rainbow Puking Cat'] = <%= raw @rainbow_puking_cat %>;
+  cards['Taco Cat'] = <%= raw @taco_cat %>;
+  cards['Watermelon Cat'] = <%= raw @watermelon_cat %>;
+  cards['defuse'] = <%= raw @defuse_cards %>;
+  cards['exploding_kitten'] = <%= raw @exploding_kitten_cards %>;
+  cards['favor'] = <%= raw @favor_cards %>;
+  cards['see_the_future'] = <%= raw @see_the_future_cards %>;
+  cards['nope'] = <%= raw @nope_cards %>;
+  cards['shuffle'] = <%= raw @shuffle_cards %>;
+  cards['skip'] = <%= raw @skip_cards %>;
 
   $(function() {
     // for authenticating AJAX requests
@@ -199,14 +199,9 @@
       }
 
       var date = new Date();
-      var hours = date.getHours();
-      var timeOfDay = 'AM';
-      if (hours > 12) {
-        // getHours returns military time
-        hours -= 12;
-        timeOfDay = 'PM';
-      }
-
+      var rawHours = date.getHours();
+      var timeOfDay = rawHours > 12 ? 'PM' : 'AM';
+      var hours = rawHours - 12; // getHours returns military time
       var minutes = date.getMinutes();
       var seconds = date.getSeconds();
 
@@ -220,7 +215,7 @@
 
       $('#chatbox').append(messageContainer);
       $('#chat').animate({
-           scrollTop: $('#chat').height()
+           scrollTop: $('#chatbox').height()
       }, 'fast');
     };
 
@@ -231,14 +226,13 @@
     }
 
     function spawnCard(card_name) {
-      var img = document.createElement('img');
-      img.src = '/assets/' + _.sample(cards[card_name]) + '.jpg'
-      console.log(img.src);
-      img.setAttribute("class", "card draggable-card");
-      img.setAttribute("id", card_name);
-      document.getElementById('hand').appendChild(img);
+      var img = $(_.sample(cards[card_name]));
+      img
+        .addClass('card draggable-card')
+        .attr('id', card_name)
+        .appendTo('#hand');
 
-      $(img).draggable({
+      img.draggable({
         cursor: 'move',
         snap: '#discard',
         containment: '#game-window',
