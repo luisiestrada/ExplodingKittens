@@ -3,8 +3,7 @@ class GamesController < ApplicationController
   before_filter :set_pusher_context, except: [:create, :index]
 
   def index
-    @games = Game.all
-    return
+    @games = Game.with_players
   end
 
   def create
@@ -118,12 +117,22 @@ class GamesController < ApplicationController
   end
 
   def leave
+    # change the host if necessary
+    if @game.host.id == current_user.id && @game.players.length > 1
+      @game.host_id = @game.players.where.not(id: @game.host_id).first
+    end
+
     @game.remove_user(current_user)
-    @pusher_client.trigger(
-      @main_channel,
-      'game.player.left',
-      username: current_user.username
-    )
+
+    if @game.players.empty?
+      @game.end!
+    else
+      @pusher_client.trigger(
+        @main_channel,
+        'game.player.left',
+        username: current_user.username
+      )
+    end
 
     flash[:notice] = 'You have left the game.'
     redirect_to games_path and return
