@@ -90,4 +90,13 @@ class User < ActiveRecord::Base
   def init_stats
     UserStat.create(user_id: self.id)
   end
+  
+  def self.search(search)
+    if search
+      where('username LIKE ?', "%#{search}%")
+    else
+      where(nil)
+    end
+  end
+
 end
