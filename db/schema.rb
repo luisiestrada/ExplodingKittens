@@ -11,16 +11,48 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160410014258) do
+ActiveRecord::Schema.define(version: 20160510040800) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "cards", force: :cascade do |t|
+    t.string   "description"
+    t.string   "card_type"
+    t.string   "card_name"
+    t.integer  "default_quantity"
+    t.integer  "opponent_skip_turn_n",      default: 0
+    t.boolean  "skip_turn",                 default: false
+    t.integer  "view_top_deck_n",           default: 0
+    t.boolean  "skip_draw",                 default: false
+    t.integer  "opponent_turn_n",           default: 0
+    t.boolean  "shuffle_deck",              default: false
+    t.boolean  "peek",                      default: false
+    t.boolean  "pair_required",             default: false
+    t.boolean  "steal_card",                default: false
+    t.boolean  "playable_on_opponent_turn", default: false
+    t.boolean  "cancel",                    default: false
+    t.boolean  "cancel_immunity",           default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "user_id"
+    t.integer  "game_id",                                    null: false
+    t.string   "state",                     default: "deck", null: false
+  end
+
+  add_index "cards", ["game_id"], name: "index_cards_on_game_id", using: :btree
+  add_index "cards", ["user_id"], name: "index_cards_on_user_id", using: :btree
+
   create_table "games", force: :cascade do |t|
-    t.boolean  "active",     default: false, null: false
+    t.boolean  "active",                    default: false, null: false
     t.integer  "winner_id"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
+    t.integer  "current_turn_player_index"
+    t.integer  "host_id"
+    t.string   "draw_pile_ids"
+    t.string   "turn_orders"
+    t.string   "room_name"
   end
 
   add_index "games", ["winner_id"], name: "index_games_on_winner_id", using: :btree
@@ -41,21 +73,24 @@ ActiveRecord::Schema.define(version: 20160410014258) do
   create_table "users", force: :cascade do |t|
     t.string   "username"
     t.string   "avatar_url"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
-    t.string   "email",                  default: "", null: false
-    t.string   "encrypted_password",     default: "", null: false
-    t.integer  "wins",                   default: 0,  null: false
-    t.integer  "losses",                 default: 0,  null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+    t.string   "email",                  default: "",    null: false
+    t.string   "encrypted_password",     default: "",    null: false
+    t.integer  "wins",                   default: 0,     null: false
+    t.integer  "losses",                 default: 0,     null: false
     t.integer  "game_id"
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
+    t.integer  "sign_in_count",          default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
+    t.boolean  "is_playing",             default: false, null: false
+    t.boolean  "has_drawn",              default: false
+    t.integer  "turns_to_take",          default: 1
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

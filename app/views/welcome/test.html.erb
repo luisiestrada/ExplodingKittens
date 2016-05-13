@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Exploding Kittens</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+  <body style="background-image: url('/assets/nuclear.jpg'); background-repeat: no-repeat; background-size: 100% AUTO">
+  	<%= render 'nav/navbar' %>
+  </body>
+
+  <script>
+    var game = new Phaser.Game(1000, 700, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+
+    function preload() {
+      game.load.image('bgtable', '/assets/table.png');
+      game.load.image('deck', '/assets/deck.png')
+    }
+
+    function create() {
+
+      var table = game.add.sprite(275,100, 'bgtable');
+      var deck = game.add.sprite(435,220, 'deck');
+
+      table.scale.setTo(2.5,2.5);
+      deck.scale.setTo(1,1);
+    }
+
+    function update() {
+    }
+
+  </script>
+
+</html>

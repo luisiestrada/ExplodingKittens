@@ -1,0 +1,168 @@
+/***** GAME WINDOW *****/
+
+/* main page header */
+#game-window {
+  display: block;
+  border: 2px solid #999;
+  padding: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  color: white;
+  text-align: center;
+}
+
+/* every card */
+.card img, .card {
+  height: 150px;
+  width: 90px;
+}
+
+/* each card in hand */
+.draggable-card {
+
+}
+/* hand as a whole */
+#hand {
+  position: relative;
+  top: 200px;
+}
+
+
+
+/* deck + discard pile */
+#deck-discard {
+  float: right;
+  left: 44%;
+  position: absolute;
+}
+#deck {
+  float: right;
+  cursor: pointer;
+}
+#discard {
+  float: right;
+  border: 1px solid white;
+}
+#discard.hovered {
+  background: #aaa;
+}
+
+/***** CHAT BOX *****/
+
+/* top of chat */
+div#menu { padding: 10px 10px }
+
+/* chat name */
+.welcome { float:left }
+
+/* exit link */
+.logout { float:right }
+
+/* entire chatbox */
+#chat-wrapper {
+  background:#7C2213;
+  border: 2px solid #7C2213;
+  /*
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  */
+}
+
+.start-game-btn {
+  display: flex;
+  align-items: center;
+}
+
+/* inner chat area */
+#chat {
+  text-align: left;
+  background: black;
+  color: white;
+  height: 250px;
+  border: 1px solid #7C2213;
+  overflow-y: scroll;
+  white-space: normal;
+  word-wrap: break-word;
+  padding: 0.5em 1em;
+}
+
+#chatbox .timestamp {
+  margin-right: 5px;
+}
+
+#chatbox .msg {
+  clear: both;
+}
+
+#chatbox .game-msg {
+  font-weight: 900;
+}
+
+#chatbox .err-msg {
+  color: red;
+}
+
+#chatbox .user {
+  color: grey;
+}
+
+/* user input + button */
+#txtbox {
+color: black;
+}
+
+/*********** CREATE NEW GAME ***********/
+
+.btn-create {
+margin-top: 50px;
+background-color: #7C2213 !important;
+border-color: #7C2213 !important;
+}
+
+.black-content{
+color: black;
+}
+
+.modal-content {
+color: black !important;
+}
+
+
+/*********** GAME LOBBY ***********/
+
+.game-box{
+background-color: white;
+padding: 15px;
+width: 50%;
+border-radius: 10px;
+margin-top: 25px;
+margin-bottom: 25px;
+}
+
+.games-table {
+width: auto !important;
+min-width: 100% !important;
+background-color: #7C2213 !important;
+margin-bottom: 0 !important;
+table-layout: fixed;
+}
+
+.games-table th, .games-table td {
+vertical-align: middle !important;
+word-wrap: break-word;
+}
+
+.games-table th {
+background-color: #42130a;
+font-size: 16px;
+padding-top: 20px !important;
+padding-bottom: 20px !important;
+border-bottom: 25px solid white !important;
+}
+
+.games-table td {
+border-top: 10px solid white !important;
+padding-top: 10px !important;
+padding-bottom: 10px !important;
+}

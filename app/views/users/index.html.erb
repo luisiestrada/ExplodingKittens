@@ -7,64 +7,35 @@
 </head>
 
 <body>
-<nav class="navbar navbar-custom navbar-fixed-top" role="navigation" id ="nav">
+  <%= render 'nav/navbar' %>
+
   <div class="container-fluid">
-    <div class="navbar-header">
-    <button type="button" class="navbar-toggle" data-toggle="collapse"
-        data-target="#myNavbar">
-      <!-- ≡ button -->
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </button>
-        <a class="navbar-brand" href="#">Exploding Kittens</a>
-    </div>
-  <div class="collapse navbar-collapse" id="myNavbar">
-    <ul class="nav navbar-nav navbar-right"> <!-- Links to the right -->
-      <li class="active"><a href="/">Home</a></li>
-      <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown"
-        href="#">Play Game<span class="caret"></span></a>
-        <ul class="dropdown-menu">
-          <li><%= link_to 'Create a new game', new_game_path %></li>
-          <li><%= link_to 'List of games', games_path %></li>
-        </ul>
-      </li>
-      <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown"
-        href="#">How to Play<span class="caret"></span></a>
-        <ul class="dropdown-menu">
-          <li><a href="#">Instructions</a></li>
-          <li><a href="#">Card list</a></li>
-        </ul>
-      </li>
-      <li><a href="#">About Us</a></li>
-      <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown"
-        href="#">Settings<span class="caret"></span></a>
-        <ul class="dropdown-menu">
-          <li><%= link_to('Log out', destroy_user_session_path, :method => :delete) %></li>
-        </ul>
-      </li>
-    </ul>
-  </div>
-  </div>
-</nav>
-
-<div class="container-fluid">
-<h1>Players:</h1>
-<table class="table">
-  <tr>
-    <th>ID</th>
-    <th>Email</th>
-    <th colspan="3"></th>
-  </tr>
-
-  <% @users.each do |user| %>
+  <h1>Players:</h1>
+  <table class="table">
     <tr>
-      <td><%= user.id %></td>
-      <td><%= user.email %></td>
+      <th>ID</th>
+      <th>Username</th>
+      <th>Email</th>
+      <th>Wins</th>
+      <th>Cards played</th>
+      <th>Card combos played</th>
+      <th>Players killed</th>
+      <th colspan="3"></th>
     </tr>
-  <% end %>
-</table>
-</div>
+
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.id %></td>
+        <td><%= user.username %></td>
+        <td><%= user.email %></td>
+        <td><%= user.games_won.count %></td>
+        <td><%= user.stats.cards_played %></td>
+        <td><%= user.stats.card_combos_played %></td>
+        <td><%= user.stats.players_killed %></td>
+      </tr>
+    <% end %>
+  </table>
+  </div>
 
 </body>
 </html>

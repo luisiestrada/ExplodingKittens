@@ -7,38 +7,46 @@
   <%= csrf_meta_tags %>
 
 <link rel="stylesheet"
-	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
+  <%= csrf_meta_tag %>
 </head>
 <body>
 
-<p class="notice"><%= notice %></p>
-<p class="alert"><%= alert %></p>
+<% if notice.present? %><p class="notice"><%= notice %></p><% end %>
+<% if alert.present? %><p class="alert"><%= alert %></p><% end %>
 
 <%= yield %>
+</body>
+
+<%= yield :javascript %>
 
 <script>
-   $(document).ready(function () {
-     $('.dropdown-toggle').dropdown();
-   });
-</script>
+  AUTH_TOKEN = $('meta[name=csrf-token]').attr('content');
+  /* allows clicking of navbar dropdowns */
+  $(document).ready(function () {
+    $('.dropdown-toggle').dropdown();
+  });
 
-<script>
-    /* allows closing of navbar once opened */
-    $(document).click(function (event) {
-      var clickover = $(event.target);
-      var $navbar = $(".navbar-collapse");
-      var _opened = $navbar.hasClass("in");
-      if (_opened === true && !clickover.hasClass("navbar-toggle")) {
-        $("button.navbar-toggle").click();
-      }
+  /* allows closing of navbar once opened */
+  $(document).click(function (event) {
+    var clickover = $(event.target);
+    var $navbar = $(".navbar-collapse");
+    var _opened = $navbar.hasClass("in");
+    if (_opened === true && !clickover.hasClass("navbar-toggle")) {
+      $("button.navbar-toggle").click();
+    }
   });
 </script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js">
-</script>
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
-</script>
+<!-- Bootstrap -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
-</body>
+<!-- jQuery UI -->
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+
+<!-- handlebars -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
+
 </html>
