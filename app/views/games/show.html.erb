@@ -7,7 +7,7 @@
 <div id="status">
 
 <div class="main-display text-center">
-  <% if current_user.is_game_host? %>
+  <% if @user.is_game_host? %>
     <div class="btn btn-lg btn-success start-game-btn">Start Game!</div>
   <% end %>
   <%= link_to 'Leave Game!', game_leave_path(@game), class: 'btn btn-lg btn-primary leave-game-btn"' %>
@@ -130,7 +130,7 @@
 
 
     // DOM events
-    <% if current_user.is_game_host? %>
+    <% if @user.is_game_host? %>
       $('.start-game-btn').click(function() {
         $.ajax({
           method: 'POST',

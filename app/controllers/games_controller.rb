@@ -1,4 +1,5 @@
 class GamesController < ApplicationController
+  before_filter :set_user_context
   before_filter :set_game_context, except: [:create, :index]
   before_filter :set_pusher_context, except: [:create, :index]
 
@@ -7,14 +8,14 @@ class GamesController < ApplicationController
   end
 
   def create
-    if current_user
+    if @user
       @game = Game.new
       if params[:game].present?
         room_name = params[:game][:room_name]
         @game.room_name = room_name if room_name.present?
       end
 
-      @game.add_user(current_user)
+      @game.add_user(@user)
 
       @game.save!
 
@@ -52,15 +53,14 @@ class GamesController < ApplicationController
     @shuffle_cards = ['shuffle-1','shuffle-2','shuffle-3']
       .map { |c| i_tag.call(c) }
     @skip_cards = ['skip-1','skip-2'].map { |c| i_tag.call(c) }
-
   end
 
   def draw
-    if @game.can_draw?(current_user)
+    if @game.can_draw?(@user)
       card = @game.draw.first
-      current_user.hand << card
-      current_user.has_drawn = true
-      current_user.save!
+      @user.hand << card
+      @user.has_drawn = true
+      @user.save!
 
       @pusher_client.trigger(
         @user_channel,
@@ -79,11 +79,39 @@ class GamesController < ApplicationController
         {}
       )
     else
-      @pusher_client.trigger(
-        @user_channel,
-        'player.errors', {
-          error: "You can't do that right now."
-      })
+      send_action_error
+    end
+
+    render json: {}
+  end
+
+  def play_card
+    # make sure it's the players turn or they have an interrupt card
+    # make sure the player owns the card
+
+    if @user.has_card?(params[:card_type]) && @user.id == @game.current_turn_player.id
+      target_player = User.find_by_id(params[:target_player_id])
+      card = @user.hand.where(card_type: params[:card_type]).first
+
+      result = @game.play_card(@user, card, target_player: target_player)
+
+      if result[:card_was_played]
+        @pusher_client.trigger(
+          @main_channel,
+          'announcement', {
+            message: result[:global_announcements]
+        })
+
+        @pusher_client.trigger(
+          @user_channel,
+          'announcment', {
+            message: result[:player_announcements]
+        })
+      else
+        send_action_error
+      end
+    else
+      send_action_error
     end
 
     render json: {}
@@ -130,12 +158,12 @@ class GamesController < ApplicationController
       flash[:alert] = 'That game has already started.'
       redirect_to games_path and return
     else
-      @game.add_user(current_user)
+      @game.add_user(@user)
       flash[:notice] = "You have joined game ##{@game.id}!"
       @pusher_client.trigger(
         @main_channel,
         'game.player.joined',
-        username: current_user.username
+        username: @user.username
       )
 
       redirect_to @game and return
@@ -144,11 +172,11 @@ class GamesController < ApplicationController
 
   def leave
     # change the host if necessary
-    if @game.host.id == current_user.id && @game.players.length > 1
+    if @game.host.id == @user.id && @game.players.length > 1
       @game.host_id = @game.players.where.not(id: @game.host_id).first
     end
 
-    @game.remove_user(current_user)
+    @game.remove_user(@user)
 
     if @game.players.empty?
       @game.end!
@@ -156,7 +184,7 @@ class GamesController < ApplicationController
       @pusher_client.trigger(
         @main_channel,
         'game.player.left',
-        username: current_user.username
+        username: @user.username
       )
     end
 
@@ -170,7 +198,7 @@ class GamesController < ApplicationController
         @game.channel_for_player(player),
         'player.chat', {
           message: ActionController::Base.helpers.strip_tags(params[:message]),
-          username: player.id == current_user.id ? 'You' : current_user.username
+          username: player.id == @user.id ? 'You' : @user.username
         }
       )
     end
@@ -180,8 +208,12 @@ class GamesController < ApplicationController
 
   private
 
+  def set_user_context
+    @user = current_user
+  end
+
   def set_game_context
-    raise ActionController::RoutingError.new('Bad Request') unless current_user
+    raise ActionController::RoutingError.new('Bad Request') unless @user
 
     @game = Game.find_by_id(params[:id] || params[:game_id])
     raise ActionController::RoutingError.new('Not Found') unless @game
@@ -190,6 +222,14 @@ class GamesController < ApplicationController
   def set_pusher_context
     @pusher_client = Pusher.default_client
     @main_channel = "game_#{@game.id}_notifications_channel"
-    @user_channel = @game.channel_for_player(current_user) if current_user
+    @user_channel = @game.channel_for_player(@user) if @user
+  end
+
+  def send_action_error
+    @pusher_client.trigger(
+      @user_channel,
+      'player.errors', {
+        error: "You can't do that right now."
+    })
   end
 end
