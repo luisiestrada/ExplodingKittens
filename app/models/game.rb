@@ -160,7 +160,6 @@ class Game < ActiveRecord::Base
       next_player.save!
 
       self.end_current_turn!
-
       card_was_played = true
     end
 
@@ -174,6 +173,8 @@ class Game < ActiveRecord::Base
 
       global_announcements << "#{actor.username}#{message}"
       player_announcements << "You #{message}"
+    else
+      player_announcements << "You can't play that."
     end
 
     {
