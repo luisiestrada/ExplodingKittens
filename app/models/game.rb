@@ -172,14 +172,12 @@ class Game < ActiveRecord::Base
 
       global_announcements << "#{actor.username}#{message}"
       player_announcements << "You #{message}"
-    else
-      player_announcements << "You can't play that."
     end
 
     {
       card_was_played: card_was_played,
-      global_announcements: global_announcements,
-      player_announcements: player_announcements
+      global_announcements: global_announcements.join("\n"),
+      player_announcements: player_announcements.join("\n")
     }
   end
 
