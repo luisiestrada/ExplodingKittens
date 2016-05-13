@@ -147,16 +147,18 @@ class Game < ActiveRecord::Base
       # end your turn without drawing and force the next player
       # to take 2 turns in a row
 
-      if self.current_turn_player.turns_to_take > 1
+      if actor.turns_to_take > 1
         # if the victim of an attack card plays an attack card,
         # then their turn is immeidately over and the next player
         # must take 2 turns
-        self.current_turn_player.turns_to_take = 1
-        self.current_turn_player.save!
+        actor.turns_to_take = 1
+        actor.save!
       end
 
-      self.next_turn_player.turns_to_take = 2
-      self.next_turn_player.save!
+      next_player = self.next_turn_player
+      next_player.turns_to_take = 2
+      next_player.save!
+
       self.end_current_turn!
 
       card_was_played = true
