@@ -56,28 +56,35 @@ class GamesController < ApplicationController
   end
 
   def draw
-    if @game.can_draw?(@user)
+    if @game.active? && @game.can_draw?(@user)
       card = @game.draw.first
       @user.hand << card
       @user.has_drawn = true
       @user.save!
 
-      @pusher_client.trigger(
+      @pusher.trigger(
         @user_channel,
         'player.hand.updated',
         { card: card.as_json, action: 'add' }
       )
 
-      @game.end_current_turn!
-      @pusher_client.trigger(@user_channel, 'player.turn.end', {})
+      if @user.turns_to_take > 1
+        @user.turns_to_take -= 1
+        @user.save!
+        @pusher.trigger(@user_channel, 'announcement', {
+          message: "It's still your turn!"
+        })
+      else
+        @game.end_current_turn!
+        @pusher.trigger(@user_channel, 'player.turn.end', {})
 
-
-      # tell the next player that it's their turn
-      @pusher_client.trigger(
-        @game.channel_for_player(@game.current_turn_player),
-        'player.turn.start',
-        {}
-      )
+        # tell the next player that it's their turn
+        @pusher.trigger(
+          @game.channel_for_player(@game.current_turn_player),
+          'player.turn.start',
+          {}
+        )
+      end
     else
       send_action_error
     end
@@ -89,27 +96,48 @@ class GamesController < ApplicationController
     # make sure it's the players turn or they have an interrupt card
     # make sure the player owns the card
 
-    if @user.has_card?(params[:card_type]) && @user.id == @game.current_turn_player.id
-      target_player = User.find_by_id(params[:target_player_id])
-      card = @user.hand.where(card_type: params[:card_type]).first
+    card = PlayingCard.find_by_id(params[:card_id])
 
+    if card && @user.has_card?(card) && @user.id == @game.current_turn_player.id
+      target_player = User.find_by_id(params[:target_player_id])
       result = @game.play_card(@user, card, target_player: target_player)
 
       if result[:card_was_played]
-        @pusher_client.trigger(
-          @main_channel,
-          'announcement', {
-            message: result[:global_announcements]
-        })
+        @game.players.where.not(id: @user.id).each do |player|
+          @pusher.trigger(
+            @game.channel_for_player(player),
+            'announcement', {
+              message: result[:global_announcements]
+          })
+        end
 
-        @pusher_client.trigger(
-          @user_channel,
-          'announcment', {
+        @pusher.trigger(
+          @user_channel, 'announcement', {
             message: result[:player_announcements]
         })
+
+        @pusher.trigger(
+          @user_channel, 'player.hand.updated', {
+            card_id: card.id,
+            action: 'remove'
+        })
+
+        # some cards cause the player to end their turn
+        if @user.id != @game.current_turn_player.id
+          @pusher.trigger(@user_channel, 'player.turn.end', {})
+
+          # tell the next player that it's their turn
+          @pusher.trigger(
+            @game.channel_for_player(@game.current_turn_player),
+            'player.turn.start',
+            {}
+          )
+        end
       else
         send_action_error
       end
+    elsif card.nil?
+      send_action_error("You don't have that card.")
     else
       send_action_error
     end
@@ -122,13 +150,13 @@ class GamesController < ApplicationController
       @game.start_game!
 
       # send basic info about all players in game, (ids, usernames)
-      @pusher_client.trigger(@main_channel, 'game.start', @game.as_json)
+      @pusher.trigger(@main_channel, 'game.start', @game.as_json)
 
       # tell each player what hand they have...1 card at a time
       # Pusher limits the size of data sent at one time to 10kB
       @game.players.each do |player|
         player.hand.each do |card|
-          @pusher_client.trigger(
+          @pusher.trigger(
             @game.channel_for_player(player),
             'player.hand.updated',
             { card: card.as_json, action: 'add' }
@@ -137,13 +165,13 @@ class GamesController < ApplicationController
       end
 
       # tell whoever is going first that it's their turn
-      @pusher_client.trigger(
+      @pusher.trigger(
         @game.channel_for_player(@game.current_turn_player),
         'player.turn.start',
         {}
       )
     else
-      @pusher_client.trigger(
+      @pusher.trigger(
         @user_channel,
         'player.errors',
         { error: 'Not enough players or game has already started.' }
@@ -160,7 +188,7 @@ class GamesController < ApplicationController
     else
       @game.add_user(@user)
       flash[:notice] = "You have joined game ##{@game.id}!"
-      @pusher_client.trigger(
+      @pusher.trigger(
         @main_channel,
         'game.player.joined',
         username: @user.username
@@ -172,7 +200,7 @@ class GamesController < ApplicationController
 
   def leave
     # change the host if necessary
-    if @game.host.id == @user.id && @game.players.length > 1
+    if @game.host_id == @user.id && @game.players.length > 1
       @game.host_id = @game.players.where.not(id: @game.host_id).first
     end
 
@@ -181,7 +209,7 @@ class GamesController < ApplicationController
     if @game.players.empty?
       @game.end!
     else
-      @pusher_client.trigger(
+      @pusher.trigger(
         @main_channel,
         'game.player.left',
         username: @user.username
@@ -194,7 +222,7 @@ class GamesController < ApplicationController
 
   def send_chat
     @game.players.each do |player|
-      @pusher_client.trigger(
+      @pusher.trigger(
         @game.channel_for_player(player),
         'player.chat', {
           message: ActionController::Base.helpers.strip_tags(params[:message]),
@@ -220,16 +248,16 @@ class GamesController < ApplicationController
   end
 
   def set_pusher_context
-    @pusher_client = Pusher.default_client
+    @pusher = Pusher.default_client
     @main_channel = "game_#{@game.id}_notifications_channel"
     @user_channel = @game.channel_for_player(@user) if @user
   end
 
-  def send_action_error
-    @pusher_client.trigger(
+  def send_action_error(err=nil)
+    @pusher.trigger(
       @user_channel,
       'player.errors', {
-        error: "You can't do that right now."
+        error: err || "You can't do that right now."
     })
   end
 end

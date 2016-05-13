@@ -231,7 +231,7 @@ class Game < ActiveRecord::Base
 
   def next_turn_player
     index = self.current_turn_player_index + 1
-    index = 0 if index > self.players.length
+    index = 0 if index > self.players.length - 1
 
     self.players
       .where(id: self.turn_orders[index])
