@@ -26,8 +26,15 @@ class User < ActiveRecord::Base
     self.id == self.game.host.id
   end
 
-  def has_card?(card_type)
-    self.hand.where(card_type: card_type).length > 0
+  def has_card?(card)
+    case card
+    when String
+      self.hand.where(card_type: card).length > 0
+    when PlayingCard
+      self.hand.where(id: card.id).first.present?
+    else
+      false
+    end
   end
 
   def has_exploding_kitten?
@@ -58,6 +65,7 @@ class User < ActiveRecord::Base
     # clears all attributes relevant to gameplay, except game_id
     self.is_playing = false
     self.has_drawn = false
+    self.turns_to_take = 1
     self.clear_hand!
   end
 

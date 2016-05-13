@@ -12,9 +12,34 @@
 }
 
 /* every card */
-.card img, .card {
+.card img, .card, .card-container img {
   height: 150px;
   width: 90px;
+  cursor: pointer;
+}
+
+.card-container {
+  display: inline-block;
+  position: relative;
+}
+
+.action-dialog {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  background-color: white;
+  z-index: 999;
+}
+
+.action-dialog .action {
+  border-bottom: 1px solid gray;
+  padding: 1em 1em;
+  color: black;
+  cursor: pointer;
+}
+
+.action-dialog .action:hover {
+  background-color: gray;
 }
 
 /* each card in hand */
