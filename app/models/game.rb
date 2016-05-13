@@ -98,6 +98,12 @@ class Game < ActiveRecord::Base
       current_player.save!
     end
 
+    if current_player.turns_to_take > 1
+      current_player.turns_to_take -= 1
+      current_player.save!
+      return
+    end
+
     new_index = self.current_turn_player_index + 1
     new_index = 0 if new_index > self.players.length - 1
 
@@ -114,11 +120,67 @@ class Game < ActiveRecord::Base
   def deck
     self.draw_pile_ids
     .map { |id| PlayingCard.find(id) }
-    .select { |card| card.state == 'deck'}
+    .select { |card| card.state == 'deck' }
   end
 
   def draw(n=1)
     self.deck.first(n)
+  end
+
+  def play_card(actor, card, target_player: nil)
+    # Here begins the ugliest method I've ever written, quick & dirty.
+    # I'm ashamed.
+
+    global_announcements = []
+    player_announcements = []
+    card_was_played = false
+
+    case card.card_type
+    when 'defuse'
+      if actor.has_card?('exploding_kitten')
+        player_announcements << 'You played a defuse card.'
+        global_announcements << "#{actor.username} saved themselves from"\
+          " an exploding kitten with a defuse card!"
+        card_was_played = true
+      end
+    when 'attack'
+      # end your turn without drawing and force the next player
+      # to take 2 turns in a row
+
+      if self.current_turn_player.turns_to_take > 1
+        # if the victim of an attack card plays an attack card,
+        # then their turn is immeidately over and the next player
+        # must take 2 turns
+        self.current_turn_player.turns_to_take = 1
+        self.current_turn_player.save!
+      end
+
+      self.next_turn_player.turns_to_take = 2
+      self.next_turn_player.save!
+      self.end_current_turn!
+
+      card_was_played = true
+    end
+
+    if card_was_played
+      card.user_id = nil
+      card.save!
+
+      message = " played #{card.card_name}"
+      message << " on #{target_player.username}" if target_player
+      message << "!"
+
+      global_announcements << "#{actor.username}#{message}"
+      player_announcements << "You #{message}"
+    else
+      player_announcements << "You can't play that."
+    end
+
+    {
+      card_was_played: card_was_played,
+      global_announcements: global_announcements,
+      player_announcements: player_announcements
+    }
   end
 
   def shuffle_deck!
@@ -163,6 +225,15 @@ class Game < ActiveRecord::Base
   def current_turn_player
     self.players
       .where(id: self.turn_orders[self.current_turn_player_index])
+      .first
+  end
+
+  def next_turn_player
+    index = self.current_turn_player_index + 1
+    index = 0 if index > self.players.length
+
+    self.players
+      .where(id: self.turn_orders[index])
       .first
   end
 
