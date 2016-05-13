@@ -2,6 +2,20 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+h1 {
+font-variant: small-caps;
+}
+
+.bg-image img {
+position: fixed;
+left: 0;
+top: 60px;
+width: 100%;
+height: auto;
+opacity: 0.1;
+z-index: -1;
+}
+
 /*********** NAVBAR ***********/
 
 /* navbar */
@@ -137,6 +151,10 @@ color: black;
 
 /*********** CARD LIST ***********/
 
+.cards_table {
+margin-top: 50px;
+}
+
 .cards_table div {
 margin-bottom: 20px;
 margin-top: 10px;
@@ -164,6 +182,7 @@ width: 100%;
 }
 
 .cardtitle {
+/*
 color:#fff;
 text-shadow: 0 1px 0 #999999, 0 2px 0 #888888,
 0 3px 0 #777777, 0 4px 0 #666666,
@@ -175,6 +194,17 @@ font-family: lato,sans-serif;
 height: auto;
 line-height: 70px;
 margin-bottom: 20px;
+*/
+
+text-align: center;
+background-color: #7C2213;
+margin-left: auto;
+margin-right: auto;
+border-radius: 5px;
+width: 80%;
+font-size: 30px;
+font-variant: small-caps;
+
 }
 
 test {
@@ -248,15 +278,25 @@ padding-bottom: 10px !important;
 /*********** INSTRUCTIONS ***********/
 
 .instructions-table {
-text-align: left; 
 max-width: 50% !important;
 width: auto !important; 
 table-layout: fixed;
 margin-top: 50px;
-}
+} 	
 
 .instructions-table h1 {
 text-align: center;
+background-color: #7C2213;
+margin-left: auto;
+margin-right: auto;
+border-radius: 5px;
+width: 70%;
+font-size: 30px;
+}
+
+.instructions-table p {
+clear:left;
+font-size: 20px;
 }
 
 .instructions-table tr {
