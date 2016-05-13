@@ -1,18 +1,24 @@
 <%= hidden_field_tag :direction, params[:direction] %>
 <%= hidden_field_tag :sort, params[:sort] %>
 
-<table class="pretty">
-<tr>
-<th><%= sortable "name" %></th>
-<th><%= sortable "price" %></th>
-<th><%= sortable "released_at", "Released" %></th>
-</tr>
-<% for product in @products %>
-<tr>
-<td><%= product.name %></td>
-<td class="price"><%= number_to_currency(product.price) %></td>
-<td><%= product.released_at.strftime("%B %e, %Y") %></td>
-</tr>
+<table class="table">
+	<tr>
+		<th><%= sortable "id", "ID" %></th>
+		<th><%= sortable "username", "Username" %></th>
+		<th><%= sortable "email", "Email" %></th>
+		<th>Wins</th>
+		<th><%= sortable "stats.cards_played", "Cards played" %></th>
+		<th><%= sortable "stats.card_combos_played", "Card combos played" %></th>
+	</tr>
+<% for user in @users %>
+	<tr>
+		<td><%= user.id %></td>
+		<td><%= user.username %></td>
+		<td><%= user.email %></td>
+		<td><%= user.games_won.count %></td>
+		<td><%= user.stats.cards_played %></td>
+		<td><%= user.stats.card_combos_played %></td>
+	</tr>
 <% end %>
 </table>
 <%= will_paginate @users %>

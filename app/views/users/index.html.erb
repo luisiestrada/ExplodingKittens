@@ -8,48 +8,8 @@
 
 <body>
   <%= render 'nav/navbar' %>
-  
-  <%= will_paginate @users %>
 
-  <div class="container-fluid">
-  <h1>Players:</h1>
-  <table class="table">
-    <tr>
-      <th>ID</th>
-      <th>Username</th>
-      <th>Email</th>
-      <th>Wins</th>
-      <th>Cards played</th>
-      <th>Card combos played</th>
-      <th>Players killed</th>
-      <th colspan="3"></th>
-    </tr>
-
-    <% @users.each do |user| %>
-      <tr>
-        <td><%= user.id %></td>
-        <td><%= user.username %></td>
-        <td><%= user.email %></td>
-        <td><%= user.games_won.count %></td>
-        <td><%= user.stats.cards_played %></td>
-        <td><%= user.stats.card_combos_played %></td>
-        <td><%= user.stats.players_killed %></td>
-      </tr>
-    <% end %>
-  </table>
-  </div>
-  
-  
-
-<%= form_tag users_path, :method => 'get', :id => "users_search" do %>
-  <p>
-    <%= text_field_tag :search, params[:search] %>
-    <%= submit_tag "Search", :name => nil %>
-  </p>
   <div id="users"><%= render 'users' %></div>
-<% end %>
-
-  
 
 </body>
 </html>
