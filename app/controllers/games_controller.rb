@@ -98,7 +98,7 @@ class GamesController < ApplicationController
 
     card = PlayingCard.find_by_id(params[:card_id])
 
-    if card && @user.has_card?(card) && @user.id == @game.current_turn_player.id
+    if card
       target_player = User.find_by_id(params[:target_player_id])
       result = @game.play_card(@user, card, target_player: target_player)
 

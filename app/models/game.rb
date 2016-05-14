@@ -134,7 +134,10 @@ class Game < ActiveRecord::Base
     global_announcements = []
     player_announcements = []
     card_was_played = false
-    if actor.has_card?(card)
+    can_play_card =
+      (self.current_turn_player.id == actor.id || actor.card_type == 'nope')
+
+    if can_play_card && actor.has_card?(card)
       case card.card_type
       when 'defuse'
         if actor.has_card?('exploding_kitten')
