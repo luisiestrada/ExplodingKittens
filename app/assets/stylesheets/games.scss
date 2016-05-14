@@ -10,6 +10,8 @@
   color: white;
   text-align: center;
   position: relative;
+  height: 550px;
+  min-width: 800px;
 }
 
 /***** PLAYERS *****/
@@ -52,7 +54,6 @@
 }
 
 #deck-discard {
-  float: right;
   left: 44%;
   top: 200px;
   position: absolute;
@@ -63,6 +64,8 @@
 }
 #discard {
   float: right;
+  height: 150px;
+  width: 90px;
   border: 1px solid white;
 }
 #discard.hovered {
@@ -84,6 +87,7 @@ div#menu { padding: 10px 10px }
 #chat-wrapper {
   background:#7C2213;
   border: 2px solid #7C2213;
+  min-width: 800px;
   /*
   position: fixed;
   bottom: 0px;
