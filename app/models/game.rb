@@ -133,6 +133,8 @@ class Game < ActiveRecord::Base
 
     global_announcements = []
     player_announcements = []
+    action = { key: nil, data: nil }
+
     card_was_played = false
     can_play_card =
       (self.current_turn_player.id == actor.id || actor.card_type == 'nope')
@@ -169,6 +171,10 @@ class Game < ActiveRecord::Base
       when 'shuffle'
         self.shuffle_deck!
         card_was_played = true
+      when 'see_the_future'
+        action[:data] = self.draw(3)
+        action[:key] = 'see_the_future'
+        card_was_played = true
       end
     end
 
@@ -189,6 +195,7 @@ class Game < ActiveRecord::Base
 
     {
       card_was_played: card_was_played,
+      action: action,
       global_announcements: global_announcements.join("\n"),
       player_announcements: player_announcements.join("\n")
     }

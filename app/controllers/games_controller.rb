@@ -122,6 +122,16 @@ class GamesController < ApplicationController
             action: 'remove'
         })
 
+        # some cards return more data
+        if result[:action][:data]
+          case result[:action][:key]
+          when 'see_the_future'
+            @pusher.trigger(@user_channel, 'player.deck.see_the_future', {
+              cards: result[:action][:data].as_json
+            })
+          end
+        end
+
         # some cards cause the player to end their turn
         if @user.id != @game.current_turn_player.id
           @pusher.trigger(@user_channel, 'player.turn.end', {})
