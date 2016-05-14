@@ -159,8 +159,9 @@ RSpec.describe Game, type: :model do
 
       before(:each) do
         card.game_id = game_with_players.id
-        game_with_players.current_turn_player.hand << card
-        game_with_players.current_turn_player.save!
+        current_player = game_with_players.current_turn_player
+        current_player.hand << card
+        current_player.save!
       end
 
       after(:each) do
@@ -171,6 +172,28 @@ RSpec.describe Game, type: :model do
         next_player = game_with_players.next_turn_player
         game_with_players.play_card(player, card)
         expect(next_player.id).to eql(game_with_players.current_turn_player.id)
+      end
+    end
+
+    context 'shuffle card' do
+      let(:card) { PlayingCard.build_from_template(Settings.card_templates.shuffle.to_h) }
+      let(:player) { game_with_players.current_turn_player }
+
+      before(:each) do
+        card.game_id = game_with_players.id
+        current_player = game_with_players.current_turn_player
+        current_player.hand << card
+        current_player.save!
+      end
+
+      after(:each) do
+        card.destroy!
+      end
+
+      it 'shuffles the deck' do
+        old_deck_order = game_with_players.draw_pile_ids
+        game_with_players.play_card(player, card)
+        expect(old_deck_order).not_to eql(game_with_players.draw_pile_ids)
       end
     end
   end

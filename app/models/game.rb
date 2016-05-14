@@ -165,7 +165,8 @@ class Game < ActiveRecord::Base
       self.end_current_turn!
       card_was_played = true
     when 'shuffle'
-
+      self.shuffle_deck!
+      card_was_played = true
     end
 
     if card_was_played
