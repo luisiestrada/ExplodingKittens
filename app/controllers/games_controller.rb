@@ -78,12 +78,7 @@ class GamesController < ApplicationController
         @game.end_current_turn!
         @pusher.trigger(@user_channel, 'player.turn.end', {})
 
-        # tell the next player that it's their turn
-        @pusher.trigger(
-          @game.channel_for_player(@game.current_turn_player),
-          'player.turn.start',
-          {}
-        )
+        send_turn_start_event
       end
     else
       send_action_error
@@ -136,12 +131,7 @@ class GamesController < ApplicationController
         if @user.id != @game.current_turn_player.id
           @pusher.trigger(@user_channel, 'player.turn.end', {})
 
-          # tell the next player that it's their turn
-          @pusher.trigger(
-            @game.channel_for_player(@game.current_turn_player),
-            'player.turn.start',
-            {}
-          )
+          send_turn_start_event
         end
       else
         send_action_error
@@ -174,12 +164,7 @@ class GamesController < ApplicationController
         end
       end
 
-      # tell whoever is going first that it's their turn
-      @pusher.trigger(
-        @game.channel_for_player(@game.current_turn_player),
-        'player.turn.start',
-        {}
-      )
+      send_turn_start_event
     else
       @pusher.trigger(
         @user_channel,
@@ -270,5 +255,22 @@ class GamesController < ApplicationController
       'player.errors', {
         error: err || "You can't do that right now."
     })
+  end
+
+  def send_turn_start_event
+    @pusher.trigger(
+      @game.channel_for_player(@game.current_turn_player),
+      'player.turn.start',
+      { for_self: true }
+    )
+
+    @game.players.where.not(id: @game.current_turn_player.id).each do |player|
+      @pusher.trigger(
+        @game.channel_for_player(player),
+          'player.turn.start', {
+            player_id: @game.current_turn_player.id,
+            username: @game.current_turn_player.username
+        })
+    end
   end
 end
