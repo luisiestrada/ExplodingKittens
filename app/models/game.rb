@@ -137,7 +137,7 @@ class Game < ActiveRecord::Base
 
     card_was_played = false
     can_play_card =
-      (self.current_turn_player.id == actor.id || actor.card_type == 'nope')
+      (self.current_turn_player.id == actor.id || card.card_type == 'nope')
 
     if can_play_card && actor.has_card?(card)
       case card.card_type
