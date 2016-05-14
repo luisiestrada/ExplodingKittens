@@ -161,6 +161,8 @@ class Game < ActiveRecord::Base
 
       self.end_current_turn!
       card_was_played = true
+    when 'skip'
+      self.end_current_turn!
     end
 
     if card_was_played
