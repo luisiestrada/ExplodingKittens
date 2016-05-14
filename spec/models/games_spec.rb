@@ -90,9 +90,18 @@ RSpec.describe Game, type: :model do
       FactoryGirl.create(:game, :with_users, user_count: 3)
     end
 
+    let(:player) { game_with_players.current_turn_player }
+
     before(:each) do
       game_with_players.start_game!
       expect(game_with_players.active?).to be_truthy
+    end
+
+    def assign_card(player, card)
+      card.game_id = game_with_players.id
+      player.hand << card
+
+      player.save!
     end
 
     it 'should go to the discard pile' do
@@ -109,18 +118,9 @@ RSpec.describe Game, type: :model do
 
     context 'attack card' do
       let(:card) { PlayingCard.build_from_template(Settings.card_templates.attack.to_h) }
-      let(:player) { game_with_players.current_turn_player }
 
-      before(:each) do
-        card.game_id = game_with_players.id
-        current_player = game_with_players.current_turn_player
-        current_player.hand << card
-        current_player.save!
-      end
-
-      after(:each) do
-        card.destroy!
-      end
+      before(:each) { assign_card(player, card) }
+      after(:each) { card.destroy! }
 
       it "should end the current player's turn" do
         game_with_players.play_card(player, card)
@@ -137,12 +137,9 @@ RSpec.describe Game, type: :model do
 
       it 'an attack card victim who plays the same card should have their turn end immediately' do
         card2 = PlayingCard.build_from_template(Settings.card_templates.attack.to_h)
-        card2.user_id = game_with_players.next_turn_player.id
-        card2.game_id = game_with_players.id
-
         victim = game_with_players.next_turn_player
-        victim.hand << card2
-        victim.save!
+
+        assign_card(victim, card2)
         expect(victim.turns_to_take).to eql(1)
 
         # have the current player play their attack card on a victim
@@ -158,18 +155,9 @@ RSpec.describe Game, type: :model do
 
     context 'skip card' do
       let(:card) { PlayingCard.build_from_template(Settings.card_templates.skip.to_h) }
-      let(:player) { game_with_players.current_turn_player }
 
-      before(:each) do
-        card.game_id = game_with_players.id
-        current_player = game_with_players.current_turn_player
-        current_player.hand << card
-        current_player.save!
-      end
-
-      after(:each) do
-        card.destroy!
-      end
+      before(:each) { assign_card(player, card) }
+      after(:each) { card.destroy! }
 
       it "skip's the player's turn" do
         next_player = game_with_players.next_turn_player
@@ -180,23 +168,26 @@ RSpec.describe Game, type: :model do
 
     context 'shuffle card' do
       let(:card) { PlayingCard.build_from_template(Settings.card_templates.shuffle.to_h) }
-      let(:player) { game_with_players.current_turn_player }
 
-      before(:each) do
-        card.game_id = game_with_players.id
-        current_player = game_with_players.current_turn_player
-        current_player.hand << card
-        current_player.save!
-      end
-
-      after(:each) do
-        card.destroy!
-      end
+      before(:each) { assign_card(player, card) }
+      after(:each) { card.destroy! }
 
       it 'shuffles the deck' do
         old_deck_order = game_with_players.draw_pile_ids
         game_with_players.play_card(player, card)
         expect(old_deck_order).not_to eql(game_with_players.draw_pile_ids)
+      end
+    end
+
+    context 'see the future card' do
+      let(:card) { PlayingCard.build_from_template(Settings.card_templates.see_the_future.to_h) }
+
+      before(:each) { assign_card(player, card) }
+      after(:each) { card.destroy! }
+
+      it 'peeks at the top 3 cards' do
+        result = game_with_players.play_card(player, card)
+        expect(result[:action][:data] - game_with_players.draw(3)).to eql([])
       end
     end
   end
