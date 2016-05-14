@@ -20,7 +20,7 @@
 
 
 <!-- game window -->
-<div id="game-window" style="height: 550px;">
+<div id="game-window">
 
   <div id="players"></div>
 
@@ -101,6 +101,7 @@
       printToChat('User '+ data.username + ' joined the game!', {
         isGameMessage: true
       });
+
       $('.player').data('player_id', data.id);
       $('.player').data('player_username', data.username);
     });
