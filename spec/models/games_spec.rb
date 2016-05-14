@@ -187,7 +187,11 @@ RSpec.describe Game, type: :model do
 
       it 'peeks at the top 3 cards' do
         result = game_with_players.play_card(player, card)
-        expect(result[:action][:data] - game_with_players.draw(3)).to eql([])
+        cards = result[:action][:data]
+        expect(cards - game_with_players.draw(3)).to be_empty
+
+        # these cards should not be added to the players hand
+        expect(player.hand.where(id: cards.map(&:id))).to be_empty
       end
     end
   end
