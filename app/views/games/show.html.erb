@@ -169,7 +169,8 @@
     <% end %>
 
     $('#game-window').on('click', '.player', function() {
-      alert(this.id);
+      //alert(this.id);
+      sendPlayCardRequest.apply($.playingCardId, this.id);
     });
 
     $('#deck').click(function() {
@@ -229,16 +230,27 @@
 
       // right now im not checking if a target is required, this is just
       // a proof of concept!
-
+      
       var id = $(this).parent().siblings('.card').data('card-id');
+      
+      if ($(card).hasClass(‘requires_target’)){
+      	$.playingCardId = id;
+      }	else {
+		sendPlayCardRequest.apply(id);
+      }
 
+
+    });
+    
+    var sendPlayCardRequest = function(){
       $.ajax({
         headers: headers,
         url: '<%= game_play_card_path(@game) %>',
-        data: { card_id: id },
+        data: { card_id: arguments[0],
+        		target_player_id: arguments[1] },
         method: 'POST'
       });
-    });
+    }
 
     $('#game-window').on('click', '.action-dialog .action.description', function() {
       alert($(this).parent().siblings('.card').data('description'));
