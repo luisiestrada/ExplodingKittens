@@ -137,18 +137,21 @@ RSpec.describe Game, type: :model do
 
       it 'an attack card victim who plays the same card should have their turn end immediately' do
         card2 = PlayingCard.build_from_template(Settings.card_templates.attack.to_h)
-        card.game_id = game_with_players.id
-        card.user_id = game_with_players.next_turn_player.id
-        game_with_players.next_turn_player.save!
+        card2.user_id = game_with_players.next_turn_player.id
+        card2.game_id = game_with_players.id
+
+        victim = game_with_players.next_turn_player
+        victim.hand << card2
+        victim.save!
+        expect(victim.turns_to_take).to eql(1)
 
         # have the current player play their attack card on a victim
         game_with_players.play_card(player, card)
-        victim = game_with_players.current_turn_player
-        expect(victim.turns_to_take).to eql(2)
+        expect(victim.reload.turns_to_take).to eql(2)
 
         # have the victim play another attack card on the next player
-        game_with_players.play_card(victim, card)
-        expect(victim.turns_to_take).to eql(1)
+        game_with_players.play_card(victim, card2)
+        expect(victim.reload.turns_to_take).to eql(1)
         expect(game_with_players.current_turn_player.turns_to_take).to eql(2)
       end
     end
