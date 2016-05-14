@@ -135,8 +135,15 @@
       });
     });
 
-    userChannel.bind('player.turn.start', function() {
-      printToChat("It's your turn!", { isGameMessage: true });
+    userChannel.bind('player.turn.start', function(data) {
+      if (data.for_self) {
+        printToChat("It's your turn!", { isGameMessage: true });
+      } else {
+        // data.player_id is available also
+        printToChat("It's " + data.username + "'s turn.", {
+          isGameMessage: true
+        });
+      }
     });
 
     userChannel.bind('player.turn.end', function() {
@@ -159,7 +166,7 @@
     userChannel.bind('player.deck.see_the_future', function(data) {
       alert('You saw the future! Look in the console to view the cards.');
       console.log(data.cards);
-    })
+    });
 
 
     // DOM events
