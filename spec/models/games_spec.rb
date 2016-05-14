@@ -95,10 +95,17 @@ RSpec.describe Game, type: :model do
       expect(game_with_players.active?).to be_truthy
     end
 
-    # it 'should go to the discard pile' do
-    #   game_with_players
-    #   game_with_players.play_card(game_with_players.)
-    # end
+    it 'should go to the discard pile' do
+      card = PlayingCard.build_from_template(Settings.card_templates.attack.to_h)
+      card.game_id = game_with_players.id
+      current_player = game_with_players.current_turn_player
+      current_player.hand << card
+      current_player.save!
+
+      expect(card.state).to eql('hand')
+      game_with_players.play_card(current_player, card)
+      expect(card.state).to eql('discarded')
+    end
 
     context 'attack card' do
       let(:card) { PlayingCard.build_from_template(Settings.card_templates.attack.to_h) }
@@ -106,8 +113,9 @@ RSpec.describe Game, type: :model do
 
       before(:each) do
         card.game_id = game_with_players.id
-        game_with_players.current_turn_player.hand << card
-        game_with_players.current_turn_player.save!
+        current_player = game_with_players.current_turn_player
+        current_player.hand << card
+        current_player.save!
       end
 
       after(:each) do

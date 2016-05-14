@@ -163,10 +163,14 @@ class Game < ActiveRecord::Base
       card_was_played = true
     when 'skip'
       self.end_current_turn!
+      card_was_played = true
+    when 'shuffle'
+
     end
 
     if card_was_played
       card.user_id = nil
+      card.discarded = true
       card.save!
 
       message = " played #{card.card_name}"
