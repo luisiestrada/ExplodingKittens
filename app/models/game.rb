@@ -133,38 +133,54 @@ class Game < ActiveRecord::Base
 
     global_announcements = []
     player_announcements = []
-    card_was_played = false
+    action = { key: nil, data: nil }
 
-    case card.card_type
-    when 'defuse'
-      if actor.has_card?('exploding_kitten')
-        player_announcements << 'You played a defuse card.'
-        global_announcements << "#{actor.username} saved themselves from"\
-          " an exploding kitten with a defuse card!"
+    card_was_played = false
+    can_play_card =
+      (self.current_turn_player.id == actor.id || card.card_type == 'nope')
+
+    if can_play_card && actor.has_card?(card)
+      case card.card_type
+      when 'defuse'
+        if actor.has_card?('exploding_kitten')
+          global_announcements << "#{actor.username} saved themselves from"\
+            " an exploding kitten with a defuse card!"
+          card_was_played = true
+        end
+      when 'attack'
+        # end your turn without drawing and force the next player
+        # to take 2 turns in a row
+
+        if actor.turns_to_take > 1
+          # if the victim of an attack card plays an attack card,
+          # then their turn is immeidately over and the next player
+          # must take 2 turns
+          actor.turns_to_take = 1
+          actor.save!
+        end
+
+        next_player = self.next_turn_player
+        next_player.turns_to_take = 2
+        next_player.save!
+
+        self.end_current_turn!
+        card_was_played = true
+      when 'skip'
+        self.end_current_turn!
+        card_was_played = true
+      when 'shuffle'
+        self.shuffle_deck!
+        card_was_played = true
+      when 'see_the_future'
+        action[:data] = self.draw(3)
+        action[:key] = 'see_the_future'
         card_was_played = true
       end
-    when 'attack'
-      # end your turn without drawing and force the next player
-      # to take 2 turns in a row
-
-      if actor.turns_to_take > 1
-        # if the victim of an attack card plays an attack card,
-        # then their turn is immeidately over and the next player
-        # must take 2 turns
-        actor.turns_to_take = 1
-        actor.save!
-      end
-
-      next_player = self.next_turn_player
-      next_player.turns_to_take = 2
-      next_player.save!
-
-      self.end_current_turn!
-      card_was_played = true
     end
 
     if card_was_played
       card.user_id = nil
+      card.discarded = true
       card.save!
 
       message = " played #{card.card_name}"
@@ -179,6 +195,7 @@ class Game < ActiveRecord::Base
 
     {
       card_was_played: card_was_played,
+      action: action,
       global_announcements: global_announcements.join("\n"),
       player_announcements: player_announcements.join("\n")
     }

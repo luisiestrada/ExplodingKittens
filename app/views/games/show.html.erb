@@ -118,7 +118,7 @@
 
       playerArray = data.players;
       var p1 = data.players[0].username;
-      
+
       // alert($('.player').data('player_id'));
       spawnPlayer(data);
     });
@@ -155,6 +155,11 @@
       var msg = data.username + ': ' + data.message;
       printToChat(msg, { isUserMessage: true });
     });
+
+    userChannel.bind('player.deck.see_the_future', function(data) {
+      alert('You saw the future! Look in the console to view the cards.');
+      console.log(data.cards);
+    })
 
 
     // DOM events
@@ -337,7 +342,7 @@
     function spawnPlayer(data) {
       var iconArray = ['/assets/playericon1.png','/assets/playericon2.png',
         '/assets/playericon3.png','/assets/playericon4.png','/assets/playericon7.png']
-      
+
       for (i = 0; i < data.players.length; i++)
       {
         var img = document.createElement('img');
