@@ -9,9 +9,13 @@
   margin-right: auto;
   color: white;
   text-align: center;
+  position: relative;
 }
 
-/* every card */
+/***** PLAYERS *****/
+
+
+/***** CARDS *****/
 .card img, .card, .card-container img {
   height: 150px;
   width: 90px;
@@ -42,22 +46,15 @@
   background-color: gray;
 }
 
-/* each card in hand */
-.draggable-card {
-
-}
-/* hand as a whole */
 #hand {
-  position: relative;
-  top: 200px;
+  position: absolute;
+  bottom: 10px;
 }
 
-
-
-/* deck + discard pile */
 #deck-discard {
   float: right;
   left: 44%;
+  top: 200px;
   position: absolute;
 }
 #deck {
