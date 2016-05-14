@@ -237,25 +237,27 @@
       // a proof of concept!
       
       var id = $(this).parent().siblings('.card').data('card-id');
-      
-      if ($(card).hasClass(‘requires_target’)){
-      	$.playingCardId = id;
-      }	else {
-		sendPlayCardRequest.apply(id);
-      }
 
+    ///// some problems here /////
+    //   if ($(card).hasClass(‘requires_target’)){
+    //     $.playingCardId = id;
+    //   }	else {
+    //     sendPlayCardRequest.apply(id);
+    //   }
 
-    });
+    // });
     
-    var sendPlayCardRequest = function(){
+    // var sendPlayCardRequest = function(){
       $.ajax({
         headers: headers,
         url: '<%= game_play_card_path(@game) %>',
-        data: { card_id: arguments[0],
-        		target_player_id: arguments[1] },
+        data: {card_id: id},
+        // data: { card_id: arguments[0],
+        // 		target_player_id: arguments[1] },
         method: 'POST'
       });
-    }
+    // }
+    });
 
     $('#game-window').on('click', '.action-dialog .action.description', function() {
       alert($(this).parent().siblings('.card').data('description'));
@@ -337,7 +339,7 @@
       } else {
         cardContainer.find('.action-dialog').remove();
       }
-    }
+    };
 
     function spawnPlayer(data) {
       var iconArray = ['/assets/playericon1.png','/assets/playericon2.png',
