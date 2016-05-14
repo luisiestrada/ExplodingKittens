@@ -1,5 +1,10 @@
 <p><%= link_to 'Back', games_path %></p>
 
+<audio controls loop>
+  <source src="/elevator.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
 <p>
   <strong>Playing in room: <%= @game.room_name %></strong>
 </p>
@@ -16,6 +21,8 @@
 
 <!-- game window -->
 <div id="game-window" style="height: 550px;">
+
+  <div id="players"></div>
 
   <div id="deck-discard">
     <div id="deck" class="card-container"><%=image_tag("deck.jpg")%></div>
@@ -94,17 +101,26 @@
       printToChat('User '+ data.username + ' joined the game!', {
         isGameMessage: true
       });
+      $('.player').data('player_id', data.id);
+      $('.player').data('player_username', data.username);
     });
 
     gameChannel.bind('game.player.left', function(data) {
       printToChat('User '+ data.username + ' left the game. :(', {
         isGameMessage: true
       });
+      document.getElementById($('.player').data('player_id')).remove();
     });
 
     gameChannel.bind('game.start', function(data) {
       printToChat('The game has started.', { isGameMessage: true });
       console.log(data);
+
+      playerArray = data.players;
+      var p1 = data.players[0].username;
+      
+      // alert($('.player').data('player_id'));
+      spawnPlayer(data);
     });
 
     // pusher events for the player
@@ -151,6 +167,10 @@
         });
       });
     <% end %>
+
+    $('#game-window').on('click', '.player', function() {
+      alert(this.id);
+    });
 
     $('#deck').click(function() {
       $.ajax({
@@ -301,6 +321,20 @@
         cardContainer.find('.action-dialog').remove();
       }
     }
+
+    function spawnPlayer(data) {
+      var iconArray = ['/assets/playericon1.png','/assets/playericon2.png',
+        '/assets/playericon3.png','/assets/playericon4.png','/assets/playericon7.png']
+      
+      for (i = 0; i < data.players.length; i++)
+      {
+        var img = document.createElement('img');
+        img.src = iconArray[i];
+        img.setAttribute("id", data.players[i].id);
+        img.setAttribute("class", "player");
+        document.getElementById('players').appendChild(img);
+      }
+    };
   });
 </script>
 <% end %>

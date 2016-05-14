@@ -191,6 +191,7 @@ class GamesController < ApplicationController
       @pusher.trigger(
         @main_channel,
         'game.player.joined',
+        id: @user.id,
         username: @user.username
       )
 
