@@ -1,5 +1,10 @@
 <p><%= link_to 'Back', games_path %></p>
 
+<audio controls loop>
+  <source src="/elevator.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
 <p>
   <strong>Playing in room: <%= @game.room_name %></strong>
 </p>
