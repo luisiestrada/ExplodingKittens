@@ -176,9 +176,8 @@
         });
       });
     <% end %>
-////////////////
+
     $('#game-window').on('click', '.player', function() {
-      //sendPlayCardRequest($.playingCardId, this.id);
       $(this).animate({
         height: ($(this).height() == 150) ? 155 : 150,
         width: ($(this).width() == 150) ? 155 : 150
@@ -186,10 +185,8 @@
 
       $(this).toggleClass('targeted');
       console.log("Toggled target player");
-
-      //$(this).attr('data-card-id', card.id)
     });
-/////////////////
+
     $('#deck').click(function() {
       $.ajax({
         url: '<%= game_draw_path(@game) %>',
@@ -254,22 +251,19 @@
       // a proof of concept!
       
       var card = $(this).parent().siblings('.card');
-      var id = card.data('card-id');
+      var card_id = card.data('card-id');
       
       if ($(card).hasClass('requires_target')) {
         if ($('.player').hasClass('targeted')) {
           alert("You targeted a player, now playing card!");
 
-
-          // get target player
-          //$('.player[data-player_id=""]')
-
-
-          //sendPlayCardRequest(id, $());
+          var target = $('.player.targeted');
+          var target_id = $(target).attr('id');
+          sendPlayCardRequest(card_id, target_id);
+          
         } else {
           alert("You must target a player first!");
         }
-        //$.playingCardId = id;
       } else {
         sendPlayCardRequest(id);
       }
@@ -376,16 +370,16 @@
         '/assets/playericon3.png','/assets/playericon4.png','/assets/playericon7.png']
       for (i = 0; i < data.players.length; i++)
       {
-        //var playerContainer = $('<div>').addClass('player-container');
+        var playerContainer = $('<div>').addClass('player-container');
         var img = $('<img>');
         img.attr('src', iconArray[i]);
         img.attr("id", data.players[i].id);
         img.attr("class", "player");
         img.attr('data-player-id', data.players[i].id);
-        $('#players').append(img);
+        //$('#players').append(img);
 
-        //playerContainer.append(img);
-        //$('#players').append(playerContainer);
+        playerContainer.append(img);
+        $('#players').append(playerContainer);
       }
     };
 
