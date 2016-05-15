@@ -39,7 +39,7 @@
           <td><%= game.room_name %></td>
           <td><%= game.host.try(:username) || 'Abandoned' %></td>
           <td><%= "#{game.players.length}/#{Game::MAX_PLAYERS}" %></td>
-          <td><button><%= link_to 'Join', game_join_path(game) %></button></td>
+          <td><%= link_to "<button>Join</button>".html_safe, game_join_path(game) %></td>
         </tr>
         <% end %>
       </table>
