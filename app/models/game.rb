@@ -174,12 +174,14 @@ class Game < ActiveRecord::Base
 
     global_announcements = []
     player_announcements = []
-    action = { key: nil, data: nil }
+    action = { key: nil, data: {} }
 
     card_was_played = false
     can_play_card = (self.current_turn_player.is_playing? &&
       (self.current_turn_player.id == actor.id ||
       card.card_type == 'nope'))
+
+    stats = actor.stats
 
     if can_play_card && actor.has_card?(card)
       case card.card_type
@@ -214,7 +216,7 @@ class Game < ActiveRecord::Base
         self.shuffle_deck!
         card_was_played = true
       when 'see_the_future'
-        action[:data] = self.draw(3)
+        action[:data][:drawn_cards] = self.draw(3)
         action[:key] = 'see_the_future'
         card_was_played = true
       when 'favor'
@@ -229,7 +231,7 @@ class Game < ActiveRecord::Base
             # player and wait for the response in the controller.
 
             action[:key] = 'favor'
-            action[:data] = target_player
+            action[:data][:target_player] = target_player
 
             player_announcements << "Waiting for card from "\
               "#{target_player.username}..."
@@ -247,11 +249,15 @@ class Game < ActiveRecord::Base
           if target_player && target_player.is_playing?
             if target_player.hand.length > 0
               stolen_card = target_player.hand.sample
-              action[:data] = stolen_card.as_json
+              action[:data][:stolen_card] = stolen_card.as_json
               action[:key] = 'pair'
 
               actor.hand << stolen_card
               card_was_played = true
+
+              stats.card_combos_played += 1
+              stats.save!
+
             else
               player_announcements << " The player you targeted does not have "\
                 "any cards in their hand. Choose another player."
@@ -271,6 +277,23 @@ class Game < ActiveRecord::Base
       card.user_id = nil
       card.discarded = true
       card.save!
+      
+      stats.cards_played += 1
+      stats.save!
+
+      action[:data][:discarded_card_ids] = [card.id]
+
+      if card.card_type == 'pair'
+        card2 = actor.hand
+          .where(card_name: card.card_name)
+          .where.not(id: card.id)
+          .first
+        card2.user_id = nil
+        card2.discarded = true
+        card2.save!
+
+        action[:data][:discarded_card_ids] << card2.id
+      end
 
       message = " played #{card.card_name}"
       message << " on #{target_player.username}" if target_player

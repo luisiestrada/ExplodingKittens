@@ -187,7 +187,7 @@ RSpec.describe Game, type: :model do
 
       it 'peeks at the top 3 cards' do
         result = game_with_players.play_card(player, card)
-        cards = result[:action][:data]
+        cards = result[:action][:data][:drawn_cards]
         expect(cards - game_with_players.draw(3)).to be_empty
 
         # these cards should not be added to the players hand
@@ -223,7 +223,7 @@ RSpec.describe Game, type: :model do
         result = game_with_players.play_card(player, card, target_player: player2)
         stolen_card = game_with_players
           .playing_cards
-          .find(result[:action][:data]['id'])
+          .find(result[:action][:data][:stolen_card]['id'])
 
         # verify player2 had card originally
         expect(old_player2_hand).to include(stolen_card.id)
