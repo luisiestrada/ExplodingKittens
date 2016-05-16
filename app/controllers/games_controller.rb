@@ -267,7 +267,7 @@ class GamesController < ApplicationController
   end
 
   def set_existing_players
-    @other_players = @game.players
+    @other_players = @game.players.where.not(id: @user.id)
   end
 
   def set_player_icons
