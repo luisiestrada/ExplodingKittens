@@ -15,13 +15,17 @@
 }
 
 /***** PLAYERS *****/
-.player .player-container img {
-  cursor: pointer;
-}
 
 .player-container {
   display: inline-block;
   position: relative;
+  cursor: pointer;
+}
+
+.player-container .username {
+  margin-top: 10px;
+  position: absolute;
+  bottom: 0px;
 }
 
 /***** CARDS *****/
