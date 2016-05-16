@@ -1,5 +1,3 @@
-<p><%= link_to 'Back', games_path %></p>
-
 <audio controls loop>
   <source src="/elevator.mp3" type="audio/mpeg">
   Your browser does not support the audio element.
@@ -21,6 +19,7 @@
 
 <!-- game window -->
 <div id="game-window">
+
   <div id="players" class="text-center">
     <% if @other_players.present? %>
       <% @other_players.each_with_index do |player, i| %>
@@ -41,6 +40,7 @@
   <div class="game-message-field text-center"><div class="message"></div></div>
 
   <div id="hand"></div>
+  
 </div>
 
 
@@ -68,6 +68,28 @@
        />
     </div>
   </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Next 3 cards</h4>
+        </div>
+
+        <div id="modal-body" class="modal-body"></div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
 </div>
 
 <% content_for :javascript do %>
@@ -187,8 +209,21 @@
     });
 
     userChannel.bind('player.deck.see_the_future', function(data) {
-      alert('You saw the future! Look in the console to view the cards.');
-      console.log(data.cards);
+
+      $(function(){
+        var time = 1000 * 10; // 10 seconds
+        var images = {};
+        var tempDiv = $('<div>').addClass('card_box');
+        for (i = 0; i < 3; i++){
+          images[i] = $(_.sample(cards[data.cards[i].card_name]));
+          $(images[i].addClass('card'));
+          tempDiv.append(images[i]);
+        }
+
+        $('#modal-body').append(tempDiv);
+        $("#myModal").modal('show');
+      });
+
     });
 
     userChannel.bind('player.steal_card_favor', function(data) {
@@ -279,12 +314,12 @@
 
     $('#game-window').on('click', '.action-dialog .action.play', function() {
       var card = $(this).parent().siblings('.card');
-      var card_id = card.data('card-id');
+      var cardId = card.data('card-id');
 
       if ($(card).hasClass('requires-target')) {
         if ($('.player-container.targeted').length !== 0) {
-          var target_id = $('.player-container.targeted').data('player-id');
-          sendPlayCardRequest(card_id, target_id);
+          var targetId = $('.player-container.targeted').data('player-id');
+          sendPlayCardRequest(cardId, targetId);
         } else {
           $('.game-message-field .message')
             .text('You must first target a player by clicking on them in order to play this card.');
@@ -292,7 +327,7 @@
           $('.game-message-field').fadeOut(10000);
         }
       } else {
-        sendPlayCardRequest(card_id);
+        sendPlayCardRequest(cardId);
       }
     });
 
