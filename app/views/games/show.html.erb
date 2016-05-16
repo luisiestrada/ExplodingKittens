@@ -204,14 +204,14 @@
       $(function(){
         var time = 1000 * 10; // 10 seconds
         var images = {};
-        var temp_div = $('<div>').addClass('card_box');
-        for (i = 0; i <3; i++){
+        var tempDiv = $('<div>').addClass('card_box');
+        for (i = 0; i < 3; i++){
           images[i] = $(_.sample(cards[data.cards[i].card_name]));
           $(images[i].addClass('card'));
-          temp_div.append(images[i]);
+          tempDiv.append(images[i]);
         }
 
-        $('#modal-body').append(temp_div);
+        $('#modal-body').append(tempDiv);
         $("#myModal").modal('show');
       });
 
@@ -298,12 +298,12 @@
       // a proof of concept!
 
       var card = $(this).parent().siblings('.card');
-      var card_id = card.data('card-id');
+      var cardId = card.data('card-id');
 
       if ($(card).hasClass('requires-target')) {
         if ($('.player-container.targeted').length !== 0) {
-          var target_id = $('.player-container.targeted').data('player-id');
-          sendPlayCardRequest(card_id, target_id);
+          var targetId = $('.player-container.targeted').data('player-id');
+          sendPlayCardRequest(cardId, targetId);
         } else {
           $('.game-message-field .message')
             .text('You must first target a player by clicking on them in order to play this card.');
@@ -311,7 +311,7 @@
           $('.game-message-field').fadeOut(3000);
         }
       } else {
-        sendPlayCardRequest(card_id);
+        sendPlayCardRequest(cardId);
       }
     });
 
