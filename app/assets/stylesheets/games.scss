@@ -9,30 +9,53 @@
   margin-right: auto;
   color: white;
   text-align: center;
+  position: relative;
+  height: 550px;
+  min-width: 800px;
 }
 
-/* every card */
-.card img, .card {
+/***** PLAYERS *****/
+
+
+/***** CARDS *****/
+.card img, .card, .card-container img {
   height: 150px;
   width: 90px;
+  cursor: pointer;
 }
 
-/* each card in hand */
-.draggable-card {
-
-}
-/* hand as a whole */
-#hand {
+.card-container {
+  display: inline-block;
   position: relative;
-  top: 200px;
 }
 
+.action-dialog {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  background-color: white;
+  z-index: 999;
+}
 
+.action-dialog .action {
+  border-bottom: 1px solid gray;
+  padding: 1em 1em;
+  color: black;
+  cursor: pointer;
+}
 
-/* deck + discard pile */
+.action-dialog .action:hover {
+  background-color: gray;
+}
+
+#hand {
+  position: absolute;
+  bottom: 10px;
+}
+
 #deck-discard {
-  float: right;
   left: 44%;
+  top: 200px;
   position: absolute;
 }
 #deck {
@@ -41,6 +64,8 @@
 }
 #discard {
   float: right;
+  height: 150px;
+  width: 90px;
   border: 1px solid white;
 }
 #discard.hovered {
@@ -62,6 +87,7 @@ div#menu { padding: 10px 10px }
 #chat-wrapper {
   background:#7C2213;
   border: 2px solid #7C2213;
+  min-width: 800px;
   /*
   position: fixed;
   bottom: 0px;

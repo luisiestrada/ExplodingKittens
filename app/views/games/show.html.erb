@@ -1,5 +1,10 @@
 <p><%= link_to 'Back', games_path %></p>
 
+<audio controls loop>
+  <source src="/elevator.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
 <p>
   <strong>Playing in room: <%= @game.room_name %></strong>
 </p>
@@ -7,7 +12,7 @@
 <div id="status">
 
 <div class="main-display text-center">
-  <% if current_user.is_game_host? %>
+  <% if @user.is_game_host? %>
     <div class="btn btn-lg btn-success start-game-btn">Start Game!</div>
   <% end %>
   <%= link_to 'Leave Game!', game_leave_path(@game), class: 'btn btn-lg btn-primary leave-game-btn"' %>
@@ -15,11 +20,13 @@
 
 
 <!-- game window -->
-<div id="game-window" style="height: 550px;">
+<div id="game-window">
+
+  <div id="players"></div>
 
   <div id="deck-discard">
-    <div id="deck" class="card"><%=image_tag("deck.jpg")%></div>
-    <div id="discard" class="card">Discard</div>
+    <div id="deck" class="card-container"><%=image_tag("deck.jpg")%></div>
+    <div id="discard" class="card-container">Discard</div>
   </div>
 
   <div id="hand"></div>
@@ -86,24 +93,42 @@
     var userChannel = pusher.subscribe('<%= @user_channel %>');
 
      // listen for pusher events for the whole game
+     gameChannel.bind('announcement', function(data) {
+       printToChat(data.message, { isGameMessage: true});
+     });
+
     gameChannel.bind('game.player.joined', function(data) {
       printToChat('User '+ data.username + ' joined the game!', {
         isGameMessage: true
       });
+
+      $('.player').data('player_id', data.id);
+      $('.player').data('player_username', data.username);
     });
 
     gameChannel.bind('game.player.left', function(data) {
       printToChat('User '+ data.username + ' left the game. :(', {
         isGameMessage: true
       });
+      document.getElementById($('.player').data('player_id')).remove();
     });
 
     gameChannel.bind('game.start', function(data) {
       printToChat('The game has started.', { isGameMessage: true });
       console.log(data);
+
+      playerArray = data.players;
+      var p1 = data.players[0].username;
+
+      // alert($('.player').data('player_id'));
+      spawnPlayer(data);
     });
 
     // pusher events for the player
+    userChannel.bind('announcement', function(data) {
+      printToChat(data.message, { isGameMessage: true});
+    });
+
     userChannel.bind('player.errors', function(data) {
       printToChat(data.error, {
         isGameMessage: true,
@@ -111,8 +136,15 @@
       });
     });
 
-    userChannel.bind('player.turn.start', function() {
-      printToChat("It's your turn!", { isGameMessage: true });
+    userChannel.bind('player.turn.start', function(data) {
+      if (data.for_self) {
+        printToChat("It's your turn!", { isGameMessage: true });
+      } else {
+        // data.player_id is available also
+        printToChat("It's " + data.username + "'s turn.", {
+          isGameMessage: true
+        });
+      }
     });
 
     userChannel.bind('player.turn.end', function() {
@@ -120,7 +152,11 @@
     });
 
     userChannel.bind('player.hand.updated', function(data) {
-      spawnCard(data.card.card_name);
+      if (data.action === 'add') {
+        spawnCard(data.card);
+      } else if (data.action === 'remove') {
+        discardCard(data.card_id);
+      }
     });
 
     userChannel.bind('player.chat', function(data) {
@@ -128,9 +164,14 @@
       printToChat(msg, { isUserMessage: true });
     });
 
+    userChannel.bind('player.deck.see_the_future', function(data) {
+      alert('You saw the future! Look in the console to view the cards.');
+      console.log(data.cards);
+    });
+
 
     // DOM events
-    <% if current_user.is_game_host? %>
+    <% if @user.is_game_host? %>
       $('.start-game-btn').click(function() {
         $.ajax({
           method: 'POST',
@@ -139,6 +180,10 @@
         });
       });
     <% end %>
+
+    $('#game-window').on('click', '.player', function() {
+      alert(this.id);
+    });
 
     $('#deck').click(function() {
       $.ajax({
@@ -160,11 +205,15 @@
       stack: '.draggable-card'
     });
 
-    $('#game-window').on('click', '.draggable-card', function() {
+    $('#game-window').on('click', '.card', function() {
       $(this).animate({
         height: ($(this).height() == 300) ? 150 : 300,
         width: ($(this).width() == 180) ? 90 : 180
       }, 200);
+
+      var container = $(this).parent('.card-container');
+      container.toggleClass('focused');
+      displayActionDialog(container);
     });
 
     // send chat
@@ -186,6 +235,28 @@
     	}
     });
 
+    $('#game-window').on('click', '.action-dialog .action.play', function() {
+      // determine if the user needs to select a target to play this card
+      // if so, send the card and the target to the server
+      // otherwise just send the card being played
+
+      // right now im not checking if a target is required, this is just
+      // a proof of concept!
+
+      var id = $(this).parent().siblings('.card').data('card-id');
+
+      $.ajax({
+        headers: headers,
+        url: '<%= game_play_card_path(@game) %>',
+        data: { card_id: id },
+        method: 'POST'
+      });
+    });
+
+    $('#game-window').on('click', '.action-dialog .action.description', function() {
+      alert($(this).parent().siblings('.card').data('description'));
+    });
+
     // helper functions
 
     var printToChat = function(message, options) {
@@ -200,8 +271,8 @@
 
       var date = new Date();
       var rawHours = date.getHours();
-      var timeOfDay = rawHours > 12 ? 'PM' : 'AM';
-      var hours = rawHours - 12; // getHours returns military time
+      var timeOfDay = rawHours >= 12 ? 'PM' : 'AM';
+      var hours = rawHours !== 0 ? rawHours - 12 : '00'; // getHours returns military time
       var minutes = date.getMinutes();
       var seconds = date.getSeconds();
 
@@ -225,12 +296,14 @@
       draggable.remove();
     }
 
-    function spawnCard(card_name) {
-      var img = $(_.sample(cards[card_name]));
+    var spawnCard = function(card) {
+      var cardContainer = $('<div>').addClass('card-container');
+      var img = $(_.sample(cards[card.card_name]));
       img
         .addClass('card draggable-card')
-        .attr('id', card_name)
-        .appendTo('#hand');
+        .attr('id', card.card_name)
+        .attr('data-card-id', card.id)
+        .attr('data-description', card.description);
 
       img.draggable({
         cursor: 'move',
@@ -238,6 +311,42 @@
         containment: '#game-window',
         stack: '.draggable-card'
       });
+
+      cardContainer.append(img);
+      $('#hand').append(cardContainer);
+    };
+
+    var discardCard = function(id) {
+      $('.card[data-card-id="' + id + '"]').parent('.card-container').remove();
+    };
+
+    var displayActionDialog = function(cardContainer) {
+      if (cardContainer.hasClass('focused')) {
+        var dialog = $('<div>').addClass('action-dialog');
+        var description = $('<div>')
+          .addClass('action description')
+          .text('Description');
+        var play = $('<div>').addClass('action play').text('Play');
+
+        dialog.append(play).append(description);
+        cardContainer.append(dialog);
+      } else {
+        cardContainer.find('.action-dialog').remove();
+      }
+    }
+
+    function spawnPlayer(data) {
+      var iconArray = ['/assets/playericon1.png','/assets/playericon2.png',
+        '/assets/playericon3.png','/assets/playericon4.png','/assets/playericon7.png']
+
+      for (i = 0; i < data.players.length; i++)
+      {
+        var img = document.createElement('img');
+        img.src = iconArray[i];
+        img.setAttribute("id", data.players[i].id);
+        img.setAttribute("class", "player");
+        document.getElementById('players').appendChild(img);
+      }
     };
   });
 </script>

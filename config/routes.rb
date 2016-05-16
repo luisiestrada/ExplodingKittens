@@ -32,6 +32,7 @@ Rails.application.routes.draw do
     get 'leave'
     get 'draw'
     post 'send_chat'
+    post 'play_card'
   end
 
   resources :users

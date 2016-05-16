@@ -63,4 +63,6 @@ gem 'phaser-rails'
 
 gem 'handlebars_assets'
 
+gem 'will_paginate', '~> 3.0.5'
+
 ruby "2.3.0"
