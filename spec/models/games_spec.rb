@@ -250,6 +250,42 @@ RSpec.describe Game, type: :model do
         result = game_with_players.play_card(player, card)
         expect(result[:card_was_played]).to be(false)
       end
+
+      it 'target player must be playing' do
+        player2.is_playing = false
+        player2.save!
+        result = game_with_players.play_card(player, card, target_player: player2)
+        expect(result[:card_was_played]).to be(false)
+      end
+
+      it 'target player cannot be empty handed' do
+        player2.clear_hand!
+        result = game_with_players.play_card(player, card, target_player: player2)
+        expect(result[:card_was_played]).to be(false)
+      end
+    end
+
+    context 'favor' do
+      let(:card) { PlayingCard.build_from_template(Settings.card_templates.favor.to_h) }
+      let(:stolen_card) { game_with_players.next_turn_player.hand.sample }
+
+      let(:player2) { game_with_players.next_turn_player }
+
+      before(:each) do
+        assign_card(player, card)
+
+        expect(player2.has_card?(stolen_card)).to be(true)
+      end
+
+      after(:each) do
+        card.destroy!
+        stolen_card.destroy!
+      end
+
+      it 'must target a player' do
+        result = game_with_players.play_card(player, card)
+        expect(result[:card_was_played]).to be(false)
+      end
     end
   end
 end

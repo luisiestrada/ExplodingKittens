@@ -102,6 +102,12 @@ class GamesController < ApplicationController
             @pusher.trigger(@user_channel, 'player.deck.see_the_future', {
               cards: result[:action][:data].as_json
             })
+          when 'favor'
+            @pusher.trigger(@game.channel_for_player(target_player),
+              'player.steal_card_favor', {
+                username: @user.username,
+                id: @user.id
+            })
           end
         end
 
@@ -119,6 +125,38 @@ class GamesController < ApplicationController
     else
       send_action_error
     end
+
+    render json: {}
+  end
+
+  def give_card_to_thief
+    # This action exclusively for when a player is a victim of a favor card
+    # ...definitely bad design.
+
+    # Getting lazy here, just going to trust that the victim hasn't modified
+    # the original player id of the favor card.
+
+    victim = @user
+    favor_player = User.find_by_id(params[:favor_player_id])
+
+    stolen_card = victim.hand.find(params[:target_card_id])
+    favor_player.hand << stolen_card
+    favor_player.save!
+
+    @pusher.trigger(@game.channel_for_player(favor_player), 'announcement', {
+      message: "You received a #{stolen_card.card_type} card from #{victim.username}!"
+    })
+
+    @pusher.trigger(
+      @game.channel_for_player(favor_player),
+      'player.hand.updated', {
+        card: stolen_card.as_json,
+        action: 'add'
+    })
+
+    @pusher.trigger(@user_channel, 'announcement', {
+      message: "You gave up a #{stolen_card.card_type} card!"
+    })
 
     render json: {}
   end
