@@ -30,6 +30,7 @@
 .game-message-field .message {
   margin: 20% 20%;
 }
+
 /***** PLAYERS *****/
 
 .player-container {
@@ -41,6 +42,10 @@
 .player-container.targeted img {
   border: 8px solid white;
   border-radius: 50% 50%;
+}
+
+.player-border {
+  border: 2px solid blue;
 }
 
 /***** CARDS *****/

@@ -178,13 +178,12 @@
           isGameMessage: true
         });
       }
-
-
-
+      // $('.player-container[data-player-id="' + data.player_id + '"]').toggleClass('player-border');
     });
 
     userChannel.bind('player.turn.end', function() {
       printToChat('You ended your turn.', { isGameMessage: true });
+      // $('.player-container[data-player-id="' + data.player_id + '"]').toggleClass('player-border');
     });
 
     userChannel.bind('player.hand.updated', function(data) {
@@ -201,8 +200,8 @@
     });
 
     userChannel.bind('player.deck.see_the_future', function(data) {
+
       $(function(){
-        //var time = (Math.random()*20)*1000;
         var time = 1000 * 10; // 10 seconds
         var images = {};
         var temp_div = $('<div>').addClass('card_box');
@@ -211,13 +210,9 @@
           $(images[i].addClass('card'));
           temp_div.append(images[i]);
         }
-        // $('card_box').append(see_thediv);
 
         $('#modal-body').append(temp_div);
         $("#myModal").modal('show');
-
-        
-
       });
 
     });
