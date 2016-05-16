@@ -101,16 +101,12 @@
       printToChat('User '+ data.username + ' joined the game!', {
         isGameMessage: true
       });
-
-      $('.player').data('player_id', data.id);
-      $('.player').data('player_username', data.username);
     });
 
     gameChannel.bind('game.player.left', function(data) {
       printToChat('User '+ data.username + ' left the game. :(', {
         isGameMessage: true
       });
-      document.getElementById($('.player').data('player_id')).remove();
     });
 
     gameChannel.bind('game.start', function(data) {
@@ -182,7 +178,13 @@
     <% end %>
 
     $('#game-window').on('click', '.player', function() {
-      alert(this.id);
+      $(this).animate({
+        height: ($(this).height() == 150) ? 155 : 150,
+        width: ($(this).width() == 150) ? 155 : 150
+      }, 200);
+
+      $(this).toggleClass('targeted');
+      console.log("Toggled target player");
     });
 
     $('#deck').click(function() {
@@ -214,6 +216,11 @@
       var container = $(this).parent('.card-container');
       container.toggleClass('focused');
       displayActionDialog(container);
+
+      if($(this).hasClass('requires_target')) {
+        alert("Target a player!");
+      }
+
     });
 
     // send chat
@@ -228,7 +235,7 @@
           url: '<%= game_send_chat_path(@game) %>',
           method: 'POST',
           data: { message: message },
-          headers: headers,
+          headers: headers
         });
 
     		$('input#usermsg').val("");
@@ -242,16 +249,34 @@
 
       // right now im not checking if a target is required, this is just
       // a proof of concept!
+      
+      var card = $(this).parent().siblings('.card');
+      var card_id = card.data('card-id');
+      
+      if ($(card).hasClass('requires_target')) {
+        if ($('.player').hasClass('targeted')) {
+          alert("You targeted a player, now playing card!");
 
-      var id = $(this).parent().siblings('.card').data('card-id');
-
+          var target = $('.player.targeted');
+          var target_id = $(target).attr('id');
+          sendPlayCardRequest(card_id, target_id);
+          
+        } else {
+          alert("You must target a player first!");
+        }
+      } else {
+        sendPlayCardRequest(id);
+      }
+    });
+    
+    var sendPlayCardRequest = function(card, target){
       $.ajax({
         headers: headers,
         url: '<%= game_play_card_path(@game) %>',
-        data: { card_id: id },
+        data: { card_id: card, target_player_id: target },
         method: 'POST'
       });
-    });
+    };
 
     $('#game-window').on('click', '.action-dialog .action.description', function() {
       alert($(this).parent().siblings('.card').data('description'));
@@ -297,6 +322,7 @@
     }
 
     var spawnCard = function(card) {
+
       var cardContainer = $('<div>').addClass('card-container');
       var img = $(_.sample(cards[card.card_name]));
       img
@@ -304,6 +330,10 @@
         .attr('id', card.card_name)
         .attr('data-card-id', card.id)
         .attr('data-description', card.description);
+
+      if (card.requires_target) {
+        img.addClass('requires_target');
+      }
 
       img.draggable({
         cursor: 'move',
@@ -333,21 +363,26 @@
       } else {
         cardContainer.find('.action-dialog').remove();
       }
-    }
+    };
 
     function spawnPlayer(data) {
       var iconArray = ['/assets/playericon1.png','/assets/playericon2.png',
         '/assets/playericon3.png','/assets/playericon4.png','/assets/playericon7.png']
-
       for (i = 0; i < data.players.length; i++)
       {
-        var img = document.createElement('img');
-        img.src = iconArray[i];
-        img.setAttribute("id", data.players[i].id);
-        img.setAttribute("class", "player");
-        document.getElementById('players').appendChild(img);
+        var playerContainer = $('<div>').addClass('player-container');
+        var img = $('<img>');
+        img.attr('src', iconArray[i]);
+        img.attr("id", data.players[i].id);
+        img.attr("class", "player");
+        img.attr('data-player-id', data.players[i].id);
+        //$('#players').append(img);
+
+        playerContainer.append(img);
+        $('#players').append(playerContainer);
       }
     };
+
   });
 </script>
 <% end %>

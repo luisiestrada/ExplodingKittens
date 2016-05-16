@@ -15,7 +15,14 @@
 }
 
 /***** PLAYERS *****/
+.player .player-container img {
+  cursor: pointer;
+}
 
+.player-container {
+  display: inline-block;
+  position: relative;
+}
 
 /***** CARDS *****/
 .card img, .card, .card-container img {
