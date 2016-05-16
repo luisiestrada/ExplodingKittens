@@ -22,12 +22,26 @@
 <!-- game window -->
 <div id="game-window">
 
-  <div id="players"></div>
-  <div class="card_box"></div>
+  <div id="players" class="text-center">
+    <% if @other_players.present? %>
+      <% @other_players.each_with_index do |player, i| %>
+        <div class="player-container" data-player-id="<%= player.id %>"
+          data-player-username="<%= player.username %>">
+          <%= image_tag @player_icons[i], class: 'player' %>
+          <div class="username"><%= player.username %></div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+<div class="card_box"></div>
+
   <div id="deck-discard">
     <div id="deck" class="card-container"><%=image_tag("deck.jpg")%></div>
     <div id="discard" class="card-container">Discard</div>
   </div>
+
+  <div class="game-message-field text-center"><div class="message"></div></div>
 
   <div id="hand"></div>
   
@@ -64,24 +78,28 @@
   <%= javascript_include_tag 'chat' %>
 <script>
   var cards = {};
-  cards['attack'] = <%= raw @attack_cards %>;
-  cards['Beard Cat'] = <%= raw @beard_cat %>;
-  cards['Hairy Potato Cat'] = <%= raw @hairy_potato_cat %>;
-  cards['Rainbow Puking Cat'] = <%= raw @rainbow_puking_cat %>;
-  cards['Taco Cat'] = <%= raw @taco_cat %>;
-  cards['Watermelon Cat'] = <%= raw @watermelon_cat %>;
-  cards['defuse'] = <%= raw @defuse_cards %>;
-  cards['exploding_kitten'] = <%= raw @exploding_kitten_cards %>;
-  cards['favor'] = <%= raw @favor_cards %>;
-  cards['see_the_future'] = <%= raw @see_the_future_cards %>;
-  cards['nope'] = <%= raw @nope_cards %>;
-  cards['shuffle'] = <%= raw @shuffle_cards %>;
-  cards['skip'] = <%= raw @skip_cards %>;
+  cards['attack'] = <%= raw(@attack_cards.map { |c| image_tag(c) }) %>;
+  cards['Beard Cat'] = <%= raw(@beard_cat.map { |c| image_tag(c) }) %>;
+  cards['Hairy Potato Cat'] = <%= raw(@hairy_potato_cat.map { |c| image_tag(c) }) %>;
+  cards['Rainbow Puking Cat'] = <%= raw(@rainbow_puking_cat.map { |c| image_tag(c) }) %>;
+  cards['Taco Cat'] = <%= raw(@taco_cat.map { |c| image_tag(c) }) %>;
+  cards['Watermelon Cat'] = <%= raw(@watermelon_cat.map { |c| image_tag(c) }) %>;
+  cards['defuse'] = <%= raw(@defuse_cards.map { |c| image_tag(c) }) %>;
+  cards['exploding_kitten'] = <%= raw(@exploding_kitten_cards.map { |c| image_tag(c) }) %>;
+  cards['favor'] = <%= raw(@favor_cards.map { |c| image_tag(c) }) %>;
+  cards['see_the_future'] = <%= raw(@see_the_future_cards.map { |c| image_tag(c) }) %>;
+  cards['nope'] = <%= raw(@nope_cards.map { |c| image_tag(c) }) %>;
+  cards['shuffle'] = <%= raw(@shuffle_cards.map { |c| image_tag(c) }) %>;
+  cards['skip'] = <%= raw(@skip_cards.map { |c| image_tag(c) }) %>;
 
   $(function() {
     // for authenticating AJAX requests
     var headers = {};
     headers['X-CSRF-Token'] = AUTH_TOKEN;
+
+    // for keeping track of how many players have joined the game so far
+    var playerCounter = <%= @game.players.length - 1 %>;
+    var playerIcons = <%= raw(@player_icons.map { |i| image_tag(i, class: 'player') }) %>;
 
     // Enable pusher logging - don't include this in production
     Pusher.log = function(message) {
@@ -99,26 +117,26 @@
      });
 
     gameChannel.bind('game.player.joined', function(data) {
+      spawnPlayer(data);
       printToChat('User '+ data.username + ' joined the game!', {
         isGameMessage: true
       });
     });
 
     gameChannel.bind('game.player.left', function(data) {
-      printToChat('User '+ data.username + ' left the game. :(', {
-        isGameMessage: true
-      });
+      $('.player-container[data-player-id="' + data.id + '"]')
+        .fadeOut(function() {
+          $(this).remove();
+
+          printToChat('User '+ data.username + ' left the game. :(', {
+            isGameMessage: true
+          });
+        });
     });
 
     gameChannel.bind('game.start', function(data) {
       printToChat('The game has started.', { isGameMessage: true });
       console.log(data);
-
-      playerArray = data.players;
-      var p1 = data.players[0].username;
-
-      // alert($('.player').data('player_id'));
-      spawnPlayer(data);
     });
 
     // pusher events for the player
@@ -192,14 +210,14 @@
       });
     <% end %>
 
-    $('#game-window').on('click', '.player', function() {
+    $('#game-window').on('click', '.player-container', function() {
       $(this).animate({
         height: ($(this).height() == 150) ? 155 : 150,
         width: ($(this).width() == 150) ? 155 : 150
       }, 200);
 
+      $('.player-container.targeted').not(this).removeClass('targeted');
       $(this).toggleClass('targeted');
-      console.log("Toggled target player");
     });
 
     $('#deck').click(function() {
@@ -231,11 +249,6 @@
       var container = $(this).parent('.card-container');
       container.toggleClass('focused');
       displayActionDialog(container);
-
-      if($(this).hasClass('requires_target')) {
-        alert("Target a player!");
-      }
-
     });
 
     // send chat
@@ -264,26 +277,25 @@
 
       // right now im not checking if a target is required, this is just
       // a proof of concept!
-      
+
       var card = $(this).parent().siblings('.card');
       var card_id = card.data('card-id');
-      
-      if ($(card).hasClass('requires_target')) {
-        if ($('.player').hasClass('targeted')) {
-          alert("You targeted a player, now playing card!");
 
-          var target = $('.player.targeted');
-          var target_id = $(target).attr('id');
+      if ($(card).hasClass('requires-target')) {
+        if ($('.player-container.targeted').length !== 0) {
+          var target_id = $('.player-container.targeted').data('player-id');
           sendPlayCardRequest(card_id, target_id);
-          
         } else {
-          alert("You must target a player first!");
+          $('.game-message-field .message')
+            .text('You must first target a player by clicking on them in order to play this card.');
+          $('.game-message-field').show();
+          $('.game-message-field').fadeOut(3000);
         }
       } else {
-        sendPlayCardRequest(id);
+        sendPlayCardRequest(card_id);
       }
     });
-    
+
     var sendPlayCardRequest = function(card, target){
       $.ajax({
         headers: headers,
@@ -337,7 +349,6 @@
     }
 
     var spawnCard = function(card) {
-
       var cardContainer = $('<div>').addClass('card-container');
       var img = $(_.sample(cards[card.card_name]));
       img
@@ -347,7 +358,7 @@
         .attr('data-description', card.description);
 
       if (card.requires_target) {
-        img.addClass('requires_target');
+        img.addClass('requires-target');
       }
 
       img.draggable({
@@ -380,22 +391,18 @@
       }
     };
 
-    function spawnPlayer(data) {
-      var iconArray = ['/assets/playericon1.png','/assets/playericon2.png',
-        '/assets/playericon3.png','/assets/playericon4.png','/assets/playericon7.png']
-      for (i = 0; i < data.players.length; i++)
-      {
-        var playerContainer = $('<div>').addClass('player-container');
-        var img = $('<img>');
-        img.attr('src', iconArray[i]);
-        img.attr("id", data.players[i].id);
-        img.attr("class", "player");
-        img.attr('data-player-id', data.players[i].id);
-        //$('#players').append(img);
+    var spawnPlayer = function(player) {
+      var playerContainer = $('<div>').addClass('player-container');
+      playerContainer.attr('data-player-id', player.id);
+      playerContainer.attr('data-player-username', player.username);
 
-        playerContainer.append(img);
-        $('#players').append(playerContainer);
-      }
+      var img = $(playerIcons[playerCounter++]);
+      var userNameDisplay = $('<div>')
+        .addClass('username').text(player.username);
+
+      playerContainer.append(img);
+      playerContainer.append(userNameDisplay);
+      $('#players').append(playerContainer);
     };
 
   });

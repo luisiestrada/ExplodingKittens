@@ -2,6 +2,9 @@ class GamesController < ApplicationController
   before_filter :set_user_context
   before_filter :set_game_context, except: [:create, :index]
   before_filter :set_pusher_context, except: [:create, :index]
+  before_filter :set_player_icons, only: [:show]
+  before_filter :set_card_icons, only: [:show]
+  before_filter :set_existing_players, only: [:show]
 
   def index
     @games = Game.with_players
@@ -28,32 +31,7 @@ class GamesController < ApplicationController
     end
   end
 
-  def show
-    # get image tags for all the card assets
-    i_tag = -> (str) { ActionController::Base.helpers.image_tag(str) }
-
-    @attack_cards =
-      ['attack-1','attack-2','attack-3','attack-4'].map { |c| i_tag.call(c) }
-
-    @beard_cat = [i_tag.call('cat-3')]
-    @hairy_potato_cat = [i_tag.call('cat-6')]
-    @rainbow_puking_cat = [i_tag.call('cat-5')]
-    @taco_cat = [i_tag.call('cat-2')]
-    @watermelon_cat = [i_tag.call('cat-4')]
-    @defuse_cards =
-      ['defuse-1','defuse-2','defuse-3','defuse-4','defuse-5']
-        .map { |c| i_tag.call(c) }
-    @exploding_kitten_cards =
-      ['exploding-kitten-1','exploding-kitten-2','exploding-kitten-3']
-        .map { |c| i_tag.call(c) }
-    @favor_cards = ['favor-1','favor-2'].map { |c| i_tag.call(c) }
-    @see_the_future_cards = ['future-1','future-2','future-3']
-      .map { |c| i_tag.call(c) }
-    @nope_cards = ['nope-1','nope-2'].map { |c| i_tag.call(c) }
-    @shuffle_cards = ['shuffle-1','shuffle-2','shuffle-3']
-      .map { |c| i_tag.call(c) }
-    @skip_cards = ['skip-1','skip-2'].map { |c| i_tag.call(c) }
-  end
+  def show; end
 
   def draw
     if @game.active? && @game.can_draw?(@user)
@@ -208,7 +186,8 @@ class GamesController < ApplicationController
       @pusher.trigger(
         @main_channel,
         'game.player.left',
-        username: @user.username
+        username: @user.username,
+        id: @user.id
       )
     end
 
@@ -247,6 +226,42 @@ class GamesController < ApplicationController
     @pusher = Pusher.default_client
     @main_channel = "game_#{@game.id}_notifications_channel"
     @user_channel = @game.channel_for_player(@user) if @user
+  end
+
+  def set_existing_players
+    @other_players = @game.players
+  end
+
+  def set_player_icons
+    @player_icons = [
+      'playericon1.png', 'playericon2.png', 'playericon3.png',
+      'playericon4.png', 'playericon7.png'
+    ]
+  end
+
+  def set_card_icons
+    # get image tags for all the card assets
+    @attack_cards =
+      ['attack-1','attack-2','attack-3','attack-4']
+
+    @beard_cat = ['cat-3']
+    @hairy_potato_cat = ['cat-6']
+    @rainbow_puking_cat = ['cat-5']
+    @taco_cat = ['cat-2']
+    @watermelon_cat = ['cat-4']
+    @defuse_cards =
+      ['defuse-1','defuse-2','defuse-3','defuse-4','defuse-5']
+
+    @exploding_kitten_cards =
+      ['exploding-kitten-1','exploding-kitten-2','exploding-kitten-3']
+
+    @favor_cards = ['favor-1','favor-2']
+    @see_the_future_cards = ['future-1','future-2','future-3']
+
+    @nope_cards = ['nope-1','nope-2']
+    @shuffle_cards = ['shuffle-1','shuffle-2','shuffle-3']
+
+    @skip_cards = ['skip-1','skip-2']
   end
 
   def send_action_error(err=nil)
