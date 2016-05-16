@@ -216,7 +216,6 @@
         var tempDiv = $('<div>').addClass('card_box');
         for (i = 0; i < 3; i++){
           images[i] = $(_.sample(cards[data.cards[i].card_name]));
-          $(images[i].addClass('card'));
           tempDiv.append(images[i]);
         }
 
@@ -283,11 +282,6 @@
     });
 
     $('#game-window').on('click', '.card', function() {
-      $(this).animate({
-        height: ($(this).height() == 300) ? 150 : 300,
-        width: ($(this).width() == 180) ? 90 : 180
-      }, 200);
-
       var container = $(this).parent('.card-container');
       container.toggleClass('focused');
       displayActionDialog(container, $('#hand').hasClass('steal-card'));
@@ -356,7 +350,8 @@
     };
 
     $('#game-window').on('click', '.action-dialog .action.description', function() {
-      alert($(this).parent().siblings('.card').data('description'));
+      var card = $(this).parent().siblings('.card');
+      alert(card.data('card-name') + '\n' + card.data('description'));
     });
 
     // helper functions
@@ -405,6 +400,7 @@
         .addClass('card draggable-card')
         .attr('id', card.card_name)
         .attr('data-card-id', card.id)
+        .attr('data-card-name', card.card_name)
         .attr('data-description', card.description);
 
       if (card.requires_target) {

@@ -1,4 +1,6 @@
 class GamesController < ApplicationController
+  before_action :authenticate_user!
+  
   before_filter :set_user_context
   before_filter :set_game_context, except: [:create, :index]
   before_filter :set_pusher_context, except: [:create, :index]

@@ -27,7 +27,7 @@ card_templates:
     requires_target: true
 
   nope:
-    description: 'Cancels any cards except defuse & exploding kittens'
+    description: 'Cancels any cards except defuse & exploding kittens.'
     card_type: 'nope'
     cancel: true
     playable_on_opponent_turn: true
@@ -53,35 +53,40 @@ card_templates:
     default_quantity: 4
 
   pair:
-    - card_type: 'pair'
+    - description: "Play 2 of these to steal a card."
+      card_type: 'pair'
       card_name: 'Beard Cat'
       pair_required: true
       steal_card: true
       default_quantity: 4
       requires_target: true
 
-    - card_type: 'pair'
+    - description: "Play 2 of these to steal a card."
+      card_type: 'pair'
       card_name: 'Hairy Potato Cat'
       pair_required: true
       steal_card: true
       default_quantity: 4
       requires_target: true
 
-    - card_type: 'pair'
+    - description: "Play 2 of these to steal a card."
+      card_type: 'pair'
       card_name: 'Rainbow Puking Cat'
       pair_required: true
       steal_card: true
       default_quantity: 4
       requires_target: true
 
-    - card_type: 'pair'
+    - description: "Play 2 of these to steal a card."
+      card_type: 'pair'
       card_name: 'Taco Cat'
       pair_required: true
       steal_card: true
       default_quantity: 4
       requires_target: true
 
-    - card_type: 'pair'
+    - description: "Play 2 of these to steal a card."
+      card_type: 'pair'
       card_name: 'Watermelon Cat'
       pair_required: true
       steal_card: true
