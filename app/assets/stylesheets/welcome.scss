@@ -100,6 +100,10 @@ width: auto\9;
 margin-top: 50px;
 }
 
+.cards_table td {
+border: none !important;
+}
+
 .cards_table div {
 margin-bottom: 20px;
 margin-top: 10px;
@@ -260,6 +264,7 @@ padding: 20px;
 color: black;
 background-color: #7C2213;
 border-radius: 10px;
+max-width: 80%;
 }
 
 #users table {
