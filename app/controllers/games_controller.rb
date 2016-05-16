@@ -43,7 +43,6 @@ class GamesController < ApplicationController
 
       if @user.has_exploding_kitten? && !@user.has_defuse?
         @game.lose_player!(@user)
-        @pusher.trigger(@user_channel, 'player.lose', {})
       end
 
       @pusher.trigger(
