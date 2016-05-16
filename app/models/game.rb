@@ -181,6 +181,8 @@ class Game < ActiveRecord::Base
       (self.current_turn_player.id == actor.id ||
       card.card_type == 'nope'))
 
+    stats = actor.stats
+
     if can_play_card && actor.has_card?(card)
       case card.card_type
       when 'defuse'
@@ -252,6 +254,10 @@ class Game < ActiveRecord::Base
 
               actor.hand << stolen_card
               card_was_played = true
+
+              stats.card_combos_played += 1
+              stats.save!
+
             else
               player_announcements << " The player you targeted does not have "\
                 "any cards in their hand. Choose another player."
@@ -271,6 +277,10 @@ class Game < ActiveRecord::Base
       card.user_id = nil
       card.discarded = true
       card.save!
+      
+      stats.cards_played += 1
+      stats.save!
+
       action[:data][:discarded_card_ids] = [card.id]
 
       if card.card_type == 'pair'
