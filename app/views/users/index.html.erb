@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Exploding Kittens</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Exploding Kittens</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body>
-  <%= render 'nav/navbar' %>
+	<%= render 'nav/navbar' %>
+	<div class="container-fluid" align="center">
+		<div class="bg-image">
+			<%=image_tag("kaboom.png")%>
+		</div>
+		<h1>Players and Statistics</h1>
 
-  <div id="users"><%= render 'users' %></div>
-
+		<div id="users"><%= render 'users' %></div>
+	</div>
 </body>
 </html>

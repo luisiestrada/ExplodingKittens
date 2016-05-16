@@ -250,3 +250,45 @@ margin-top: 300px !important;
 .instructions-table td {
 border: none !important;
 }
+
+
+/*********** USERS ***********/
+
+#users {
+margin-top: 50px;
+padding: 20px;
+color: black;
+background-color: #7C2213;
+border-radius: 10px;
+}
+
+#users table {
+background-color: white;
+border-radius: 10px;
+}
+
+#users a {
+color: white;
+color: #7C2213;
+}
+
+#users th {
+font-size: 18px;
+font-variant: small-caps;
+min-width: 100px;
+border: none !important;
+}
+
+#users th .current {
+padding-right: 15px;
+background-repeat: no-repeat;
+background-position: right center;
+}
+
+#users th .asc {
+background-image: image-url("arrow-asc.png");
+}
+
+#users th .desc {
+background-image: image-url("arrow-desc.png")
+}
