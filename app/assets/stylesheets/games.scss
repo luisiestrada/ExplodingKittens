@@ -14,6 +14,21 @@
   min-width: 800px;
 }
 
+.game-message-field {
+  display: none;
+  z-index: 9999;
+  min-height: 100px;
+  max-width: 300px;
+  background-color: white;
+  color: gray;
+  border-radius: 5px 5px;
+  box-shadow: 2px 2px 2px 0px;
+  float-right;
+}
+
+.game-message-field .message {
+  margin: 20% 20%;
+}
 /***** PLAYERS *****/
 
 .player-container {
@@ -45,7 +60,7 @@
   position: absolute;
   top: 0;
   background-color: white;
-  z-index: 999;
+  z-index: 998;
 }
 
 .action-dialog .action {

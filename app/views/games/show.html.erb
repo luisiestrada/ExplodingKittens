@@ -38,6 +38,8 @@
     <div id="discard" class="card-container">Discard</div>
   </div>
 
+  <div class="game-message-field text-center"><div class="message"></div></div>
+
   <div id="hand"></div>
 </div>
 
@@ -229,11 +231,6 @@
       var container = $(this).parent('.card-container');
       container.toggleClass('focused');
       displayActionDialog(container);
-
-      if($(this).hasClass('requires-target')) {
-        alert("Target a player!");
-      }
-
     });
 
     // send chat
@@ -268,11 +265,13 @@
 
       if ($(card).hasClass('requires-target')) {
         if ($('.player.targeted').length !== 0) {
-          var target_id = $('.player.targeted').attr('user-id');
+          var target_id = $('.player.targeted').data('player-id');
           sendPlayCardRequest(card_id, target_id);
-
         } else {
-          alert("You must target a player first!");
+          $('.game-message-field .message')
+            .text('You must first target a player by clicking on them in order to play this card.');
+          $('.game-message-field').show();
+          $('.game-message-field').fadeOut(3000);
         }
       } else {
         sendPlayCardRequest(id);
@@ -332,7 +331,6 @@
     }
 
     var spawnCard = function(card) {
-
       var cardContainer = $('<div>').addClass('card-container');
       var img = $(_.sample(cards[card.card_name]));
       img
