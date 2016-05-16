@@ -1,5 +1,3 @@
-<p><%= link_to 'Back', games_path %></p>
-
 <audio controls loop>
   <source src="/elevator.mp3" type="audio/mpeg">
   Your browser does not support the audio element.
@@ -21,6 +19,7 @@
 
 <!-- game window -->
 <div id="game-window">
+
   <div id="players" class="text-center">
     <% if @other_players.present? %>
       <% @other_players.each_with_index do |player, i| %>
@@ -41,6 +40,7 @@
   <div class="game-message-field text-center"><div class="message"></div></div>
 
   <div id="hand"></div>
+  
 </div>
 
 
@@ -68,6 +68,28 @@
        />
     </div>
   </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Next 3 cards</h4>
+        </div>
+
+        <div id="modal-body" class="modal-body"></div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
 </div>
 
 <% content_for :javascript do %>
@@ -96,6 +118,9 @@
     // for keeping track of how many players have joined the game so far
     var playerCounter = <%= @game.players.length - 1 %>;
     var playerIcons = <%= raw(@player_icons.map { |i| image_tag(i, class: 'player') }) %>;
+
+    // for when someone is the victim of a favor card
+    var thiefId = null;
 
     // Enable pusher logging - don't include this in production
     Pusher.log = function(message) {
@@ -168,6 +193,14 @@
       } else if (data.action === 'remove') {
         discardCard(data.card_id);
       }
+
+      if (data.did_lose) {
+        // insert cool exploding animation or something here
+        alert("You drew an exploding kitten! Since you don't have a "+
+        "defuse card, you lose!");
+
+        $('#hand').remove();
+      }
     });
 
     userChannel.bind('player.chat', function(data) {
@@ -176,8 +209,34 @@
     });
 
     userChannel.bind('player.deck.see_the_future', function(data) {
-      alert('You saw the future! Look in the console to view the cards.');
-      console.log(data.cards);
+
+      $(function(){
+        var time = 1000 * 10; // 10 seconds
+        var images = {};
+        var tempDiv = $('<div>').addClass('card_box');
+        for (i = 0; i < 3; i++){
+          images[i] = $(_.sample(cards[data.cards[i].card_name]));
+          tempDiv.append(images[i]);
+        }
+
+        $('#modal-body').append(tempDiv);
+        $("#myModal").modal('show');
+      });
+
+    });
+
+    userChannel.bind('player.steal_card_favor', function(data) {
+      thiefId = data.id;
+      $('#hand').addClass('steal-card');
+      $('.game-message-field .message')
+        .text(data.username + ' played a favor card! Choose a card from your '+
+        ' hand to give up.');
+      $('.game-message-field').show();
+      $('.game-message-field').fadeOut(8000);
+    });
+
+    userChannel.bind('player.win', function(data) {
+      alert(data.message);
     });
 
 
@@ -223,14 +282,9 @@
     });
 
     $('#game-window').on('click', '.card', function() {
-      $(this).animate({
-        height: ($(this).height() == 300) ? 150 : 300,
-        width: ($(this).width() == 180) ? 90 : 180
-      }, 200);
-
       var container = $(this).parent('.card-container');
       container.toggleClass('focused');
-      displayActionDialog(container);
+      displayActionDialog(container, $('#hand').hasClass('steal-card'));
     });
 
     // send chat
@@ -253,32 +307,40 @@
     });
 
     $('#game-window').on('click', '.action-dialog .action.play', function() {
-      // determine if the user needs to select a target to play this card
-      // if so, send the card and the target to the server
-      // otherwise just send the card being played
-
-      // right now im not checking if a target is required, this is just
-      // a proof of concept!
-
       var card = $(this).parent().siblings('.card');
-      var card_id = card.data('card-id');
+      var cardId = card.data('card-id');
 
       if ($(card).hasClass('requires-target')) {
         if ($('.player-container.targeted').length !== 0) {
-          var target_id = $('.player-container.targeted').data('player-id');
-          sendPlayCardRequest(card_id, target_id);
+          var targetId = $('.player-container.targeted').data('player-id');
+          sendPlayCardRequest(cardId, targetId);
         } else {
           $('.game-message-field .message')
             .text('You must first target a player by clicking on them in order to play this card.');
           $('.game-message-field').show();
-          $('.game-message-field').fadeOut(3000);
+          $('.game-message-field').fadeOut(10000);
         }
       } else {
-        sendPlayCardRequest(card_id);
+        sendPlayCardRequest(cardId);
       }
     });
 
-    var sendPlayCardRequest = function(card, target){
+    $('#game-window').on('click', '.action-dialog .action.choose', function() {
+      $('#hand').removeClass('steal-card');
+
+      var card_id = $(this).parent().siblings('.card').data('card-id');
+      $.ajax({
+        headers: headers,
+        url: '<%= game_give_card_to_thief_path @game %>',
+        data: { target_card_id: card_id, favor_player_id: thiefId },
+        method: 'POST'
+      });
+
+      // remove the card container
+      $(this).parent().parent().remove();
+    });
+
+    var sendPlayCardRequest = function(card, target) {
       $.ajax({
         headers: headers,
         url: '<%= game_play_card_path(@game) %>',
@@ -288,7 +350,8 @@
     };
 
     $('#game-window').on('click', '.action-dialog .action.description', function() {
-      alert($(this).parent().siblings('.card').data('description'));
+      var card = $(this).parent().siblings('.card');
+      alert(card.data('card-name') + '\n' + card.data('description'));
     });
 
     // helper functions
@@ -337,6 +400,7 @@
         .addClass('card draggable-card')
         .attr('id', card.card_name)
         .attr('data-card-id', card.id)
+        .attr('data-card-name', card.card_name)
         .attr('data-description', card.description);
 
       if (card.requires_target) {
@@ -358,15 +422,22 @@
       $('.card[data-card-id="' + id + '"]').parent('.card-container').remove();
     };
 
-    var displayActionDialog = function(cardContainer) {
+    var displayActionDialog = function(cardContainer, stealCard) {
       if (cardContainer.hasClass('focused')) {
         var dialog = $('<div>').addClass('action-dialog');
         var description = $('<div>')
           .addClass('action description')
           .text('Description');
-        var play = $('<div>').addClass('action play').text('Play');
 
-        dialog.append(play).append(description);
+        if (stealCard) {
+          var chooseButton = $('<div>').addClass('action choose').text('Choose this');
+          dialog.append(chooseButton);
+        } else {
+          var play = $('<div>').addClass('action play').text('Play');
+          dialog.append(play);
+        }
+
+        dialog.append(description);
         cardContainer.append(dialog);
       } else {
         cardContainer.find('.action-dialog').remove();

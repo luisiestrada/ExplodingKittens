@@ -83,6 +83,7 @@ class Game < ActiveRecord::Base
   end
 
   def remove_user(user)
+    self.reset_turn_orders!(user)
     user.leave_game!
   end
 
@@ -111,6 +112,16 @@ class Game < ActiveRecord::Base
     self.save!
   end
 
+  def win_player!(player)
+    self.winner_id = player.id
+    self.save!
+  end
+
+  def lose_player!(player)
+    self.reset_turn_orders!(player)
+    player.lose!
+  end
+
   def end!
     self.players.map(&:leave_game!)
     self.active = false
@@ -127,7 +138,37 @@ class Game < ActiveRecord::Base
     self.deck.first(n)
   end
 
-  def play_card(actor, card, target_player: nil)
+  def reset_turn_orders!(player_to_exclude)
+    # find the index of the of the player to exclude in order to remove
+    # them yet preserve the ordering
+
+    old_ordering = self.turn_orders.dup
+
+    index_to_exclude = nil
+    self.turn_orders.each do |index, player_id|
+      if player_to_exclude.id == player_id
+        index_to_exclude = player_id
+        break
+      end
+    end
+
+    # edge case, if this was the last guy in the turn ordering we can
+    # just pop him off
+    if index_to_exclude == self.players.length - 1
+      self.turn_orders.delete(index_to_exclude)
+    else
+      # move everyone back one step
+      old_ordering.each do |index, player_id|
+        if index > index_to_exclude
+          self.turn_orders[index - 1] = player_id
+        end
+      end
+    end
+
+    self.save!
+  end
+
+  def play_card(actor, card, target_player: nil, target_card: nil)
     # Here begins the ugliest method I've ever written, quick & dirty.
     # I'm ashamed.
 
@@ -136,8 +177,9 @@ class Game < ActiveRecord::Base
     action = { key: nil, data: nil }
 
     card_was_played = false
-    can_play_card =
-      (self.current_turn_player.id == actor.id || card.card_type == 'nope')
+    can_play_card = (self.current_turn_player.is_playing? &&
+      (self.current_turn_player.id == actor.id ||
+      card.card_type == 'nope'))
 
     if can_play_card && actor.has_card?(card)
       case card.card_type
@@ -175,10 +217,57 @@ class Game < ActiveRecord::Base
         action[:data] = self.draw(3)
         action[:key] = 'see_the_future'
         card_was_played = true
+      when 'favor'
+        # Two Phases:
+
+        # 1. player plays card, we verify they can play it, then we tell that
+        # player to choose a card from their hand to give up.
+
+        if target_player && target_player.is_playing?
+          if target_player.hand.length > 0
+            # Target player hasn't chosen a card yet. Pass that event to the
+            # player and wait for the response in the controller.
+
+            action[:key] = 'favor'
+            action[:data] = target_player
+
+            player_announcements << "Waiting for card from "\
+              "#{target_player.username}..."
+            card_was_played = true
+          else
+            player_announcements << " The player you targeted does not have "\
+              "any cards in their hand. Choose another player."
+          end
+        else
+          player_announcements << "The player you targeted does not exist "\
+            " or is no longer playing."
+        end
+      when 'pair'
+        if actor.hand.where(card_name: card.card_name).length >= 2
+          if target_player && target_player.is_playing?
+            if target_player.hand.length > 0
+              stolen_card = target_player.hand.sample
+              action[:data] = stolen_card.as_json
+              action[:key] = 'pair'
+
+              actor.hand << stolen_card
+              card_was_played = true
+            else
+              player_announcements << " The player you targeted does not have "\
+                "any cards in their hand. Choose another player."
+            end
+          else
+            player_announcements << "The player you targeted does not exist "\
+              " or is no longer playing."
+          end
+        else
+          player_announcements << "You need another pair card of the same name"\
+            " to player that. Pair cards must be played in pairs."
+        end
       end
     end
 
-    if card_was_played
+    if card && card_was_played
       card.user_id = nil
       card.discarded = true
       card.save!
@@ -190,7 +279,7 @@ class Game < ActiveRecord::Base
       global_announcements << "#{actor.username}#{message}"
       player_announcements << "You #{message}"
     else
-      player_announcements << "You can't play that."
+      player_announcements << "You can't play that." if player_announcements.empty?
     end
 
     {
@@ -237,7 +326,7 @@ class Game < ActiveRecord::Base
   end
 
   def can_draw?(player)
-    self.current_turn_player.id == player.id
+    self.current_turn_player.id == player.id && self.current_turn_player.try(:is_playing?)
   end
 
   def current_turn_player
