@@ -2,6 +2,65 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+h1 {
+font-variant: small-caps;
+}
+
+.bg-image img {
+position: fixed;
+left: 0;
+top: 60px;
+width: 100%;
+height: auto;
+opacity: 0.1;
+z-index: -1;
+}
+
+/*********** NAVBAR ***********/
+
+/* navbar */
+.navbar.navbar-custom.navbar-fixed-top {
+background-color: #7C2213;
+border: none;
+}
+
+/* navbar links */
+.navbar a {
+color: white;
+}
+
+/* navbar links upon hover */
+.navbar a:hover {
+color: black;
+background-color: white !important;
+}
+
+/* navbar dropdown-menu link upon click */
+.dropdown-toggle:active, .open .dropdown-toggle {
+color: black !important;
+}
+
+/* drop-down menu links */
+#nav .open .dropdown-menu>li>a, .navbar-nav .open .dropdown-menu {
+color: white;
+background-color: #7C2213;
+}
+
+/* drop-down menu links upon hover */
+#nav .open .dropdown-menu>li>a:hover, .navbar-nav .open .dropdown-menu {
+color: black;
+}
+
+/* hamburger icon */
+.icon-bar {
+background-color: white;
+}
+
+/* active links */
+.active.link {
+background-color: #303030 !important;
+}
+
 
 /*********** PAGE BODY ***********/
 
@@ -37,21 +96,26 @@ width: auto\9;
 
 /*********** CARD LIST ***********/
 
-.card_size {
-width: 100%;
-height: 300px;
-border: 5px #7C2213;
-/*box-shadow: 1px 1px 4px #888;*/
-border-top: 5px #7C2213;
-margin-bottom: 100px;
-float: left;
-margin-right: 100%;
+.cards_table {
+margin-top: 50px;
+}
 
+.cards_table div {
+margin-bottom: 20px;
+margin-top: 10px;
+}
+
+.card_size {
+height: 300px;
+width: 250px;
+float: left;
 }
 
 .card_size img {
-height: 100%;
-width: 100%;
+max-width: 100%;
+max-height: 100%;
+height: auto;
+width: auto;
 display: block;
 margin-left: auto;
 }
@@ -63,8 +127,8 @@ width: 100%;
 }
 
 .cardtitle {
+/*
 color:#fff;
-background-color: black;
 text-shadow: 0 1px 0 #999999, 0 2px 0 #888888,
 0 3px 0 #777777, 0 4px 0 #666666,
 0 5px 0 #555555, 0 6px 0 #444444,
@@ -74,7 +138,18 @@ font-size: 50px;
 font-family: lato,sans-serif;
 height: auto;
 line-height: 70px;
+margin-bottom: 20px;
+*/
+
 text-align: center;
+background-color: #7C2213;
+margin-left: auto;
+margin-right: auto;
+border-radius: 5px;
+width: 80%;
+font-size: 30px;
+font-variant: small-caps;
+
 }
 
 test {
@@ -86,3 +161,134 @@ text-shadow:#fff 0 -1px 4px, #ff0 0 -2px 10px, #ff8000 0 -10px 20px, red 0 -18px
 
 /************phaser canvas centering************/
 canvas {   display : block;   margin : auto;}
+
+
+/*********** CREATE NEW GAME ***********/
+
+.btn-create {
+margin-top: 50px;
+background-color: #7C2213 !important; 
+border-color: #7C2213 !important;
+}
+
+.black-content {
+color: black;
+}
+
+.modal-content {
+color: black !important;
+}
+
+
+/*********** GAME LOBBY ***********/
+
+.game-box {
+background-color: white;
+padding: 15px;
+width: 50%;	
+border-radius: 10px;
+margin-top: 50px;
+margin-bottom: 50px;
+}
+
+.games-table {
+width: auto !important; 
+min-width: 100% !important;
+background-color: #7C2213 !important;
+margin-bottom: 0 !important;
+table-layout: fixed;
+}
+
+.games-table th, .games-table td {
+vertical-align: middle !important;
+word-wrap: break-word;
+}
+
+.games-table th {
+background-color: #42130a;
+font-size: 16px;
+padding-top: 20px !important;
+padding-bottom: 20px !important;
+border-bottom: 25px solid white !important;
+}
+
+.games-table td {
+border-top: 10px solid white !important;
+padding-top: 10px !important;
+padding-bottom: 10px !important;
+}
+
+
+/*********** INSTRUCTIONS ***********/
+
+.instructions-table {
+max-width: 50% !important;
+width: auto !important; 
+table-layout: fixed;
+margin-top: 50px;
+} 	
+
+.instructions-table h1 {
+text-align: center;
+background-color: #7C2213;
+margin-left: auto;
+margin-right: auto;
+border-radius: 5px;
+width: 70%;
+font-size: 30px;
+}
+
+.instructions-table p {
+clear:left;
+font-size: 18px;
+}
+
+.instructions-table tr {
+margin-top: 300px !important;
+}
+
+.instructions-table td {
+border: none !important;
+}
+
+
+/*********** USERS ***********/
+
+#users {
+margin-top: 50px;
+padding: 20px;
+color: black;
+background-color: #7C2213;
+border-radius: 10px;
+}
+
+#users table {
+background-color: white;
+border-radius: 10px;
+}
+
+#users a {
+color: white;
+color: #7C2213;
+}
+
+#users th {
+font-size: 18px;
+font-variant: small-caps;
+min-width: 100px;
+border: none !important;
+}
+
+#users th .current {
+padding-right: 15px;
+background-repeat: no-repeat;
+background-position: right center;
+}
+
+#users th .asc {
+background-image: image-url("arrow-asc.png");
+}
+
+#users th .desc {
+background-image: image-url("arrow-desc.png")
+}
