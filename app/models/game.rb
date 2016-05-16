@@ -84,6 +84,7 @@ class Game < ActiveRecord::Base
 
   def remove_user(user)
     user.leave_game!
+    self.reset_turn_orders!(user)
   end
 
   def active_players
@@ -116,6 +117,11 @@ class Game < ActiveRecord::Base
     self.save!
   end
 
+  def lose_player!(player)
+    player.lose!
+    self.reset_turn_orders!
+  end
+
   def end!
     self.players.map(&:leave_game!)
     self.active = false
@@ -130,6 +136,30 @@ class Game < ActiveRecord::Base
 
   def draw(n=1)
     self.deck.first(n)
+  end
+
+  def reset_turn_orders!(player_to_exclude)
+    # find the index of the of the player to exclude in order to remove
+    # them yet preserve the ordering
+
+    old_ordering = self.turn_orders.dup
+    index_to_exclude = nil
+    self.turn_orders.each do |index, player_id|
+      if player_to_exclude.id == player_id
+        index_to_exclude = player_id
+        break
+      end
+    end
+
+    # move everyone back one step
+    old_ordering.each do |index, player_id|
+      if index != index_to_exclude && index != 0
+        self.turn_orders[index - 1] = player_id
+      end
+    end
+
+    self.current_turn_player_index = 0
+    self.save!
   end
 
   def play_card(actor, card, target_player: nil, target_card: nil)
@@ -290,7 +320,7 @@ class Game < ActiveRecord::Base
   end
 
   def can_draw?(player)
-    self.current_turn_player.id == player.id
+    self.current_turn_player.id == player.id && self.current_turn_player.try(:is_playing?)
   end
 
   def current_turn_player

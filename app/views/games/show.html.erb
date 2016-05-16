@@ -171,6 +171,12 @@
       } else if (data.action === 'remove') {
         discardCard(data.card_id);
       }
+
+      if (data.did_lose) {
+        // insert cool exploding animation or something here
+        alert("You drew an exploding kitten! Since you don't have a "+
+        "defuse card, you lose!");
+      }
     });
 
     userChannel.bind('player.chat', function(data) {

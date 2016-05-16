@@ -35,16 +35,23 @@ class GamesController < ApplicationController
 
   def draw
     if @game.active? && @game.can_draw?(@user)
+
       card = @game.draw.first
       @user.hand << card
       @user.has_drawn = true
       @user.save!
 
+      if @user.has_exploding_kitten? && !@user.has_defuse?
+        @game.lose_player!(@user)
+        @pusher.trigger(@user_channel, 'player.lose', {})
+      end
+
       @pusher.trigger(
-        @user_channel,
-        'player.hand.updated',
-        { card: card.as_json, action: 'add' }
-      )
+        @user_channel, 'player.hand.updated', {
+          card: card.as_json,
+          action: 'add',
+          did_lose: !@user.is_playing?
+      })
 
       if @user.turns_to_take > 1
         @user.turns_to_take -= 1
