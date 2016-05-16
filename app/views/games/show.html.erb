@@ -178,12 +178,10 @@
           isGameMessage: true
         });
       }
-      // $('.player-container[data-player-id="' + data.player_id + '"]').toggleClass('player-border');
     });
 
     userChannel.bind('player.turn.end', function() {
       printToChat('You ended your turn.', { isGameMessage: true });
-      // $('.player-container[data-player-id="' + data.player_id + '"]').toggleClass('player-border');
     });
 
     userChannel.bind('player.hand.updated', function(data) {
