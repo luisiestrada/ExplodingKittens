@@ -1,6 +1,6 @@
 class GamesController < ApplicationController
   before_action :authenticate_user!
-  
+
   before_filter :set_user_context
   before_filter :set_game_context, except: [:create, :index]
   before_filter :set_pusher_context, except: [:create, :index]
@@ -97,24 +97,46 @@ class GamesController < ApplicationController
             message: result[:player_announcements]
         })
 
-        @pusher.trigger(
-          @user_channel, 'player.hand.updated', {
-            card_id: card.id,
-            action: 'remove'
-        })
+        # remove the card(s) that were played from the actor's hand
+        result[:action][:data][:discarded_card_ids].each do |id|
+          @pusher.trigger(
+            @user_channel, 'player.hand.updated', {
+              card_id: id,
+              action: 'remove'
+          })
+        end
 
         # some cards return more data
         if result[:action][:data]
           case result[:action][:key]
           when 'see_the_future'
             @pusher.trigger(@user_channel, 'player.deck.see_the_future', {
-              cards: result[:action][:data].as_json
+              cards: result[:action][:data][:drawn_cards].as_json
             })
           when 'favor'
             @pusher.trigger(@game.channel_for_player(target_player),
               'player.steal_card_favor', {
                 username: @user.username,
                 id: @user.id
+            })
+          when 'pair'
+            # remove the stolen card from the original owner's hand
+            @pusher.trigger(@game.channel_for_player(target_player),
+              'player.hand.updated', {
+                card_id: result[:action][:data][:stolen_card]['id'],
+                action: 'remove'
+            })
+
+            # add it to the new player's hand
+            @pusher.trigger(@user_channel, 'player.hand.updated', {
+              card: result[:action][:data][:stolen_card],
+              action: 'add'
+            })
+
+            @pusher.trigger(@game.channel_for_player(target_player),
+              'announcement', {
+                message: "#{@user.username} stole a "\
+                  "#{result[:action][:data][:stolen_card]['card_type']} card from you!"
             })
           end
         end
