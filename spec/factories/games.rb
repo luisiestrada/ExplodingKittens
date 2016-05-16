@@ -7,7 +7,9 @@ FactoryGirl.define do
         user_count 0
       end
 
-      users { (1..user_count).map { FactoryGirl.create(:user) } }
+      after(:build) do |g, factory|
+        (1..factory.user_count).map { g.add_user(FactoryGirl.create(:user)) }
+      end
     end
   end
 end

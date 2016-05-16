@@ -33,6 +33,7 @@ Rails.application.routes.draw do
     get 'draw'
     post 'send_chat'
     post 'play_card'
+    post 'give_card_to_thief'
   end
 
   resources :users

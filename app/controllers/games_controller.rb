@@ -35,16 +35,22 @@ class GamesController < ApplicationController
 
   def draw
     if @game.active? && @game.can_draw?(@user)
+
       card = @game.draw.first
       @user.hand << card
       @user.has_drawn = true
       @user.save!
 
+      if @user.has_exploding_kitten? && !@user.has_defuse?
+        @game.lose_player!(@user)
+      end
+
       @pusher.trigger(
-        @user_channel,
-        'player.hand.updated',
-        { card: card.as_json, action: 'add' }
-      )
+        @user_channel, 'player.hand.updated', {
+          card: card.as_json,
+          action: 'add',
+          did_lose: !@user.is_playing?
+      })
 
       if @user.turns_to_take > 1
         @user.turns_to_take -= 1
@@ -102,6 +108,12 @@ class GamesController < ApplicationController
             @pusher.trigger(@user_channel, 'player.deck.see_the_future', {
               cards: result[:action][:data].as_json
             })
+          when 'favor'
+            @pusher.trigger(@game.channel_for_player(target_player),
+              'player.steal_card_favor', {
+                username: @user.username,
+                id: @user.id
+            })
           end
         end
 
@@ -119,6 +131,38 @@ class GamesController < ApplicationController
     else
       send_action_error
     end
+
+    render json: {}
+  end
+
+  def give_card_to_thief
+    # This action exclusively for when a player is a victim of a favor card
+    # ...definitely bad design.
+
+    # Getting lazy here, just going to trust that the victim hasn't modified
+    # the original player id of the favor card.
+
+    victim = @user
+    favor_player = User.find_by_id(params[:favor_player_id])
+
+    stolen_card = victim.hand.find(params[:target_card_id])
+    favor_player.hand << stolen_card
+    favor_player.save!
+
+    @pusher.trigger(@game.channel_for_player(favor_player), 'announcement', {
+      message: "You received a #{stolen_card.card_type} card from #{victim.username}!"
+    })
+
+    @pusher.trigger(
+      @game.channel_for_player(favor_player),
+      'player.hand.updated', {
+        card: stolen_card.as_json,
+        action: 'add'
+    })
+
+    @pusher.trigger(@user_channel, 'announcement', {
+      message: "You gave up a #{stolen_card.card_type} card!"
+    })
 
     render json: {}
   end
@@ -173,14 +217,31 @@ class GamesController < ApplicationController
   end
 
   def leave
+    if @game.winner.present? && !@game.active?
+      flash[:notice] = 'You have left the game.'
+      redirect_to games_path and return
+    end
+
     # change the host if necessary
     if @game.host_id == @user.id && @game.players.length > 1
       @game.host_id = @game.players.where.not(id: @game.host_id).first
     end
 
+    # if everyone forfeits/leaves & there is only 1 player remaining
+    # then they win by default
+    if @game.active? && @game.players.length == 2
+      last_man_standing = @game.players.where.not(id: @user.id).first
+      @game.win_player!(last_man_standing)
+
+      @pusher.trigger(@game.channel_for_player(last_man_standing),
+        'player.win', {
+          message: "You're the last one here, WHICH MAKES YOU THE WINNER!!!!"
+      })
+    end
+
     @game.remove_user(@user)
 
-    if @game.players.empty?
+    if @game.players.empty? || @game.winner.present?
       @game.end!
     else
       @pusher.trigger(
@@ -229,7 +290,7 @@ class GamesController < ApplicationController
   end
 
   def set_existing_players
-    @other_players = @game.players
+    @other_players = @game.players.where.not(id: @user.id)
   end
 
   def set_player_icons
