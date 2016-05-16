@@ -23,7 +23,7 @@
   color: gray;
   border-radius: 5px 5px;
   box-shadow: 2px 2px 2px 0px;
-  float-right;
+  float: right;
 }
 
 .game-message-field .message {
@@ -37,10 +37,9 @@
   cursor: pointer;
 }
 
-.player-container .username {
-  margin-top: 10px;
-  position: absolute;
-  bottom: 0px;
+.player-container.targeted img {
+  border: 8px solid white;
+  border-radius: 50% 50%;
 }
 
 /***** CARDS *****/

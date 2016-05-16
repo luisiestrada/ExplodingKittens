@@ -192,14 +192,14 @@
       });
     <% end %>
 
-    $('#game-window').on('click', '.player', function() {
+    $('#game-window').on('click', '.player-container', function() {
       $(this).animate({
         height: ($(this).height() == 150) ? 155 : 150,
         width: ($(this).width() == 150) ? 155 : 150
       }, 200);
 
+      $('.player-container.targeted').not(this).removeClass('targeted');
       $(this).toggleClass('targeted');
-      console.log("Toggled target player");
     });
 
     $('#deck').click(function() {
@@ -264,8 +264,8 @@
       var card_id = card.data('card-id');
 
       if ($(card).hasClass('requires-target')) {
-        if ($('.player.targeted').length !== 0) {
-          var target_id = $('.player.targeted').data('player-id');
+        if ($('.player-container.targeted').length !== 0) {
+          var target_id = $('.player-container.targeted').data('player-id');
           sendPlayCardRequest(card_id, target_id);
         } else {
           $('.game-message-field .message')
@@ -274,7 +274,7 @@
           $('.game-message-field').fadeOut(3000);
         }
       } else {
-        sendPlayCardRequest(id);
+        sendPlayCardRequest(card_id);
       }
     });
 

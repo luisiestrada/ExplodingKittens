@@ -4,6 +4,7 @@ class GamesController < ApplicationController
   before_filter :set_pusher_context, except: [:create, :index]
   before_filter :set_player_icons, only: [:show]
   before_filter :set_card_icons, only: [:show]
+  before_filter :set_existing_players, only: [:show]
 
   def index
     @games = Game.with_players
@@ -158,7 +159,6 @@ class GamesController < ApplicationController
       flash[:alert] = 'That game has already started.'
       redirect_to games_path and return
     else
-      @other_players = @game.players
       @game.add_user(@user)
       flash[:notice] = "You have joined game ##{@game.id}!"
       @pusher.trigger(
@@ -186,7 +186,8 @@ class GamesController < ApplicationController
       @pusher.trigger(
         @main_channel,
         'game.player.left',
-        username: @user.username
+        username: @user.username,
+        id: @user.id
       )
     end
 
@@ -225,6 +226,10 @@ class GamesController < ApplicationController
     @pusher = Pusher.default_client
     @main_channel = "game_#{@game.id}_notifications_channel"
     @user_channel = @game.channel_for_player(@user) if @user
+  end
+
+  def set_existing_players
+    @other_players = @game.players
   end
 
   def set_player_icons
