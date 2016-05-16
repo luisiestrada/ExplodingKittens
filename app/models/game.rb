@@ -83,8 +83,8 @@ class Game < ActiveRecord::Base
   end
 
   def remove_user(user)
-    user.leave_game!
     self.reset_turn_orders!(user)
+    user.leave_game!
   end
 
   def active_players
@@ -118,8 +118,8 @@ class Game < ActiveRecord::Base
   end
 
   def lose_player!(player)
+    self.reset_turn_orders!(player)
     player.lose!
-    self.reset_turn_orders!
   end
 
   def end!
@@ -143,6 +143,7 @@ class Game < ActiveRecord::Base
     # them yet preserve the ordering
 
     old_ordering = self.turn_orders.dup
+
     index_to_exclude = nil
     self.turn_orders.each do |index, player_id|
       if player_to_exclude.id == player_id
@@ -151,14 +152,19 @@ class Game < ActiveRecord::Base
       end
     end
 
-    # move everyone back one step
-    old_ordering.each do |index, player_id|
-      if index != index_to_exclude && index != 0
-        self.turn_orders[index - 1] = player_id
+    # edge case, if this was the last guy in the turn ordering we can
+    # just pop him off
+    if index_to_exclude == self.players.length - 1
+      self.turn_orders.delete(index_to_exclude)
+    else
+      # move everyone back one step
+      old_ordering.each do |index, player_id|
+        if index > index_to_exclude
+          self.turn_orders[index - 1] = player_id
+        end
       end
     end
 
-    self.current_turn_player_index = 0
     self.save!
   end
 
