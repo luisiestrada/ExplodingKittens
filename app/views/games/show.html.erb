@@ -34,7 +34,7 @@
     <% end %>
   </div>
 
-<div class="card_box"></div>
+  <div id="kevin"></div>
 
   <div id="deck-discard">
     <div id="deck" class="card-container"><%=image_tag("deck.jpg")%></div>
@@ -182,19 +182,29 @@
     userChannel.bind('player.deck.see_the_future', function(data) {
       alert('You saw the future! Look in the console to view the cards.');
       
-      console.log(data.cards);
+      console.log(data.cards[0].card_name + ", " + data.cards[1].card_name
+          + ", " + data.cards[2].card_name);
 
-      // $(function(){
-      //   var time = (math.random()*20)*1000;
-      //   var temp_div = $('<div>').addClass('card_box');
-      //   var img = $(_.sample(cards[data.card_name]));
-      //   temp_div.append(img);
-      //   // $('card_box').append(see_thediv);
-      //   temp_div.show(1).delay(time).hide(1, function(){
-      //     $(this).remove();
-      //   });
+      $(function(){
+        //var time = (Math.random()*20)*1000;
+        var time = 1000 * 10; // 10 seconds
+        var temp_div = $('<div>').addClass('card_box');
+        var img = $(_.sample(cards[data.cards[0].card_name]));
+        $(img).attr('class', 'card');
+        
+        temp_div.append(img);
+        // $('card_box').append(see_thediv);
 
-      // });
+        $('#kevin').append(temp_div);
+
+        //temp_div.show();
+
+
+        // temp_div.show(1).delay(time).hide(1, function(){
+        //   $(this).remove();
+        // });
+
+      });
 
     });
 
