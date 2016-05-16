@@ -193,6 +193,10 @@
       $('.game-message-field').fadeOut(8000);
     });
 
+    userChannel.bind('player.win', function(data) {
+      alert(data.message);
+    });
+
 
     // DOM events
     <% if @user.is_game_host? %>

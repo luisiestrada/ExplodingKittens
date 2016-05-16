@@ -111,6 +111,11 @@ class Game < ActiveRecord::Base
     self.save!
   end
 
+  def win_player!(player)
+    self.winner_id = player.id
+    self.save!
+  end
+
   def end!
     self.players.map(&:leave_game!)
     self.active = false

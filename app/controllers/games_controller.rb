@@ -211,14 +211,31 @@ class GamesController < ApplicationController
   end
 
   def leave
+    if @game.winner.present? && !@game.active?
+      flash[:notice] = 'You have left the game.'
+      redirect_to games_path and return
+    end
+
     # change the host if necessary
     if @game.host_id == @user.id && @game.players.length > 1
       @game.host_id = @game.players.where.not(id: @game.host_id).first
     end
 
+    # if everyone forfeits/leaves & there is only 1 player remaining
+    # then they win by default
+    if @game.active? && @game.players.length == 2
+      last_man_standing = @game.players.where.not(id: @user.id).first
+      @game.win_player!(last_man_standing)
+
+      @pusher.trigger(@game.channel_for_player(last_man_standing),
+        'player.win', {
+          message: "You're the last one here, WHICH MAKES YOU THE WINNER!!!!"
+      })
+    end
+
     @game.remove_user(@user)
 
-    if @game.players.empty?
+    if @game.players.empty? || @game.winner.present?
       @game.end!
     else
       @pusher.trigger(
