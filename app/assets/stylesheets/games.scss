@@ -12,6 +12,7 @@
   position: relative;
   height: 550px;
   min-width: 800px;
+  background-image: url("background.jpg");
 }
 
 .game-message-field {
@@ -92,6 +93,13 @@
   height: 150px;
   width: 90px;
   border: 1px solid white;
+  border-radius: 10px;
+  background: black;
+  background-image: url("luis.png");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+
 }
 #discard.hovered {
   background: #aaa;
@@ -219,11 +227,11 @@ padding-top: 10px !important;
 padding-bottom: 10px !important;
 }
 
-/* card_box */
+#myModal {
+  text-align: center;
+}
 
-.card_box{
- top: 200px;
- position: absolute;
- float: left;
-
+#myModal img {
+  height: 300px;
+  width: 180px;
 }
