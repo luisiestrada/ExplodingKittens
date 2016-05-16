@@ -175,6 +175,30 @@ class Game < ActiveRecord::Base
         action[:data] = self.draw(3)
         action[:key] = 'see_the_future'
         card_was_played = true
+      when 'pair'
+        if actor.hand.where(card_name: card.card_name).length >= 2
+          if target_player && target_player.is_playing?
+            if target_player.hand.length > 0
+              stolen_card = target_player.hand.sample
+              action[:data] = stolen_card.as_json
+              action[:key] = 'pair'
+
+              actor.hand << stolen_card
+              actor.save!
+              target_player.save!
+              card_was_played = true
+            else
+              player_announcements << " The player you targeted does not have "\
+                "any cards in their hand. Choose another player."
+            end
+          else
+            player_announcements << "The player you targeted does not exist "\
+              " or is no longer playing."
+          end
+        else
+          player_announcements << "You need another pair card of the same name"\
+            " to player that. Pair cards must be played in pairs."
+        end
       end
     end
 
@@ -190,7 +214,7 @@ class Game < ActiveRecord::Base
       global_announcements << "#{actor.username}#{message}"
       player_announcements << "You #{message}"
     else
-      player_announcements << "You can't play that."
+      player_announcements << "You can't play that." if player_announcements.empty?
     end
 
     {
