@@ -12,7 +12,7 @@
   position: relative;
   height: 550px;
   min-width: 800px;
-  background-image: url("background.jpg");
+  background: url("background2.jpg");
 }
 
 .game-message-field {
@@ -108,7 +108,6 @@
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center;
-
 }
 #discard.hovered {
   background: #aaa;
@@ -131,11 +130,6 @@ div#menu { padding: 10px 10px }
   background:#7C2213;
   border: 2px solid #7C2213;
   min-width: 800px;
-  /*
-  position: fixed;
-  bottom: 0px;
-  width: 100%;
-  */
 }
 
 .start-game-btn {
@@ -239,7 +233,6 @@ padding-bottom: 10px !important;
 #myModal {
   text-align: center;
 }
-
 #myModal img {
   height: 300px;
   width: 180px;
