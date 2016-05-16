@@ -180,6 +180,9 @@
           isGameMessage: true
         });
       }
+
+
+
     });
 
     userChannel.bind('player.turn.end', function() {
@@ -200,33 +203,22 @@
     });
 
     userChannel.bind('player.deck.see_the_future', function(data) {
-      alert('You saw the future! Look in the console to view the cards.');
-      
-      console.log(data.cards[0].card_name + ", " + data.cards[1].card_name
-          + ", " + data.cards[2].card_name);
-
       $(function(){
         //var time = (Math.random()*20)*1000;
         var time = 1000 * 10; // 10 seconds
+        var images = {};
         var temp_div = $('<div>').addClass('card_box');
-        var img1 = $(_.sample(cards[data.cards[0].card_name]));
-        var img2 = $(_.sample(cards[data.cards[1].card_name]));
-        var img3 = $(_.sample(cards[data.cards[2].card_name]));
-        $(img1).attr('class', 'card');
-        $(img2).attr('class', 'card');
-        $(img3).attr('class', 'card');
-        
-        temp_div.append(img1);
-        temp_div.append(img2);
-        temp_div.append(img3);
+        for (i = 0; i <3; i++){
+          images[i] = $(_.sample(cards[data.cards[i].card_name]));
+          $(images[i].addClass('card'));
+          temp_div.append(images[i]);
+        }
         // $('card_box').append(see_thediv);
 
         $('#modal-body').append(temp_div);
         $("#myModal").modal('show');
 
-        // temp_div.delay(time).hide(1, function(){
-        //   $(this).remove();
-        // });
+        
 
       });
 
