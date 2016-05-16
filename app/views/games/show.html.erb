@@ -23,13 +23,14 @@
 <div id="game-window">
 
   <div id="players"></div>
-
+  <div class="card_box"></div>
   <div id="deck-discard">
     <div id="deck" class="card-container"><%=image_tag("deck.jpg")%></div>
     <div id="discard" class="card-container">Discard</div>
   </div>
 
   <div id="hand"></div>
+  
 </div>
 
 
@@ -162,7 +163,21 @@
 
     userChannel.bind('player.deck.see_the_future', function(data) {
       alert('You saw the future! Look in the console to view the cards.');
+      
       console.log(data.cards);
+
+      // $(function(){
+      //   var time = (math.random()*20)*1000;
+      //   var temp_div = $('<div>').addClass('card_box');
+      //   var img = $(_.sample(cards[data.card_name]));
+      //   temp_div.append(img);
+      //   // $('card_box').append(see_thediv);
+      //   temp_div.show(1).delay(time).hide(1, function(){
+      //     $(this).remove();
+      //   });
+
+      // });
+
     });
 
 
