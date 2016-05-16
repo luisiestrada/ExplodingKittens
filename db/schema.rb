@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160510040800) do
+ActiveRecord::Schema.define(version: 20160514083030) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(version: 20160510040800) do
     t.integer  "user_id"
     t.integer  "game_id",                                    null: false
     t.string   "state",                     default: "deck", null: false
+    t.boolean  "requires_target",           default: false
   end
 
   add_index "cards", ["game_id"], name: "index_cards_on_game_id", using: :btree
