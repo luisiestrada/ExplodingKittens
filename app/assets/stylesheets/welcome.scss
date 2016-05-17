@@ -171,7 +171,7 @@ canvas {   display : block;   margin : auto;}
 
 .btn-create {
 margin-top: 50px;
-background-color: #7C2213 !important; 
+background-color: #7C2213 !important;
 border-color: #7C2213 !important;
 }
 
@@ -189,14 +189,14 @@ color: black !important;
 .game-box {
 background-color: white;
 padding: 15px;
-width: 50%;	
+width: 50%;
 border-radius: 10px;
 margin-top: 50px;
 margin-bottom: 50px;
 }
 
 .games-table {
-width: auto !important; 
+width: auto !important;
 min-width: 100% !important;
 background-color: #7C2213 !important;
 margin-bottom: 0 !important;
@@ -227,10 +227,10 @@ padding-bottom: 10px !important;
 
 .instructions-table {
 max-width: 50% !important;
-width: auto !important; 
+width: auto !important;
 table-layout: fixed;
 margin-top: 50px;
-} 	
+}
 
 .instructions-table h1 {
 text-align: center;
@@ -291,9 +291,9 @@ background-position: right center;
 }
 
 #users th .asc {
-background-image: image-url("arrow-asc.png");
+background-image: asset-data-url("arrow-asc.png");
 }
 
 #users th .desc {
-background-image: image-url("arrow-desc.png")
+background-image: asset-data-url("arrow-desc.png")
 }
