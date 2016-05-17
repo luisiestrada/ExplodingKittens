@@ -45,14 +45,40 @@ class GamesController < ApplicationController
 
       if @user.has_exploding_kitten? && !@user.has_defuse?
         @game.lose_player!(@user)
+        @pusher.trigger(@main_channel, 'announcement', {
+          message: "#{@user.username} drew an exploding kitten! They lose!"
+        })
       end
 
-      @pusher.trigger(
-        @user_channel, 'player.hand.updated', {
-          card: card.as_json,
-          action: 'add',
-          did_lose: !@user.is_playing?
-      })
+      was_saved = @user.has_exploding_kitten? && @user.has_defuse?
+
+      if was_saved
+        defuse = @user.hand.where(card_type: 'defuse').first
+        e_kitten = @user.hand.where(card_type: 'exploding_kitten').first
+
+        defuse.user_id = nil
+        e_kitten.user_id = nil
+        defuse.discarded = true
+
+        defuse.save!
+        e_kitten.save!
+
+        @game.shuffle_deck!(true)
+
+        [defuse.id, e_kitten.id].each do |id|
+          @pusher.trigger(@user_channel, 'player.hand.updated', {
+              card_id: id,
+              action: 'remove'
+          })
+        end
+      else
+        @pusher.trigger(
+          @user_channel, 'player.hand.updated', {
+            card: card.as_json,
+            action: 'add',
+            did_lose: !@user.is_playing?
+        })
+      end
 
       if @user.turns_to_take > 1
         @user.turns_to_take -= 1

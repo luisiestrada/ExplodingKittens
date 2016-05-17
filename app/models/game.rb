@@ -213,7 +213,7 @@ class Game < ActiveRecord::Base
         self.end_current_turn!
         card_was_played = true
       when 'shuffle'
-        self.shuffle_deck!
+        self.shuffle_deck!(true)
         card_was_played = true
       when 'see_the_future'
         action[:data][:drawn_cards] = self.draw(3)
@@ -277,7 +277,7 @@ class Game < ActiveRecord::Base
       card.user_id = nil
       card.discarded = true
       card.save!
-      
+
       stats.cards_played += 1
       stats.save!
 
@@ -313,8 +313,15 @@ class Game < ActiveRecord::Base
     }
   end
 
-  def shuffle_deck!
-    self.draw_pile_ids = self.playing_cards.map(&:id).shuffle
+  def shuffle_deck!(ignore_discard=false)
+    if ignore_discard
+      self.draw_pile_ids = self.playing_cards
+        .where(state: 'deck')
+        .map(&:id).shuffle
+    else
+      self.draw_pile_ids = self.playing_cards.map(&:id).shuffle
+    end
+
     self.save!
   end
 
