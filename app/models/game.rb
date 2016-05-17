@@ -147,7 +147,7 @@ class Game < ActiveRecord::Base
     index_to_exclude = nil
     self.turn_orders.each do |index, player_id|
       if player_to_exclude.id == player_id
-        index_to_exclude = player_id
+        index_to_exclude = index
         break
       end
     end
