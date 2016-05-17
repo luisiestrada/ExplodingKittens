@@ -12,7 +12,7 @@
   position: relative;
   height: 550px;
   min-width: 800px;
-  background: url("background2.jpg");
+  background: asset-data-url("background2.jpg");
 }
 
 .game-message-field {
