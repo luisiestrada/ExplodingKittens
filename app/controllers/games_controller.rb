@@ -48,6 +48,14 @@ class GamesController < ApplicationController
         @pusher.trigger(@main_channel, 'announcement', {
           message: "#{@user.username} drew an exploding kitten! They lose!"
         })
+
+        if @game.active_players.length == 1
+          @pusher.trigger(
+            @game.channel_for_player(@game.active_players.first),
+            'player.win', {
+              message: 'You win!'
+          })
+        end
       end
 
       was_saved = @user.has_exploding_kitten? && @user.has_defuse?
