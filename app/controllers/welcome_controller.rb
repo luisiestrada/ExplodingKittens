@@ -16,7 +16,4 @@ class WelcomeController < ApplicationController
   def test
   end
 
-  def toc
-  end
-
 end

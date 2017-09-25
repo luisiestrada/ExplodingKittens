@@ -9,7 +9,6 @@ Rails.application.routes.draw do
   get 'card_list' => 'welcome#card_list'
   get 'instructions' => 'welcome#instructions'
   get 'about_us' => 'welcome#about_us'
-  get 'toc' => 'welcome#toc'
   get 'test' => 'welcome#test'
   get 'gamewindow' => 'welcome#gamewindow'
 
