@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.3'
+gem 'rails'
 #heroku requires postgresql instead of sqlite3
 gem 'pg'
 # lodash for _
@@ -44,7 +44,7 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
   gem 'factory_girl_rails', '~> 4.0'
-  gem 'rspec-rails', '~> 3.0'  
+  gem 'rspec-rails', '~> 3.0'
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
