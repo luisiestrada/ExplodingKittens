@@ -9,7 +9,6 @@ Rails.application.routes.draw do
   get 'card_list' => 'welcome#card_list'
   get 'instructions' => 'welcome#instructions'
   get 'about_us' => 'welcome#about_us'
-  get 'test' => 'welcome#test'
   get 'gamewindow' => 'welcome#gamewindow'
 
   # The priority is based upon order of creation: first created -> highest priority.
