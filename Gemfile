@@ -59,8 +59,6 @@ gem 'devise', '~> 3'
 #for Heroku logging and static asset serving
 gem 'rails_12factor', group: :production
 
-gem 'phaser-rails'
-
 gem 'handlebars_assets'
 
 gem 'will_paginate', '~> 3.0.5'
