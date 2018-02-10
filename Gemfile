@@ -2,9 +2,9 @@ source 'https://rubygems.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails'
+gem 'rails', '4.2.6'
 #heroku requires postgresql instead of sqlite3
-gem 'pg'
+gem 'pg', '~> 0.18'
 # lodash for _
 gem 'lodash-rails'
 # pusher for chat
@@ -55,7 +55,7 @@ group :development do
   gem 'pry'
 end
 
-gem 'devise'
+gem 'devise', '~> 3'
 #for Heroku logging and static asset serving
 gem 'rails_12factor', group: :production
 
