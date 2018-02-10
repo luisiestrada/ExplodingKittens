@@ -90,10 +90,6 @@ width: auto\9;
 }
 
 
-/*********** CHAT BOX ***********/
-
-
-
 /*********** CARD LIST ***********/
 
 .cards_table {
@@ -131,20 +127,6 @@ width: 100%;
 }
 
 .cardtitle {
-/*
-color:#fff;
-text-shadow: 0 1px 0 #999999, 0 2px 0 #888888,
-0 3px 0 #777777, 0 4px 0 #666666,
-0 5px 0 #555555, 0 6px 0 #444444,
-#ff0 0 -2px 10px, #ff8000 0 -10px 20px,
-red 0 -18px 40px;
-font-size: 50px;
-font-family: lato,sans-serif;
-height: auto;
-line-height: 70px;
-margin-bottom: 20px;
-*/
-
 text-align: center;
 background-color: #7C2213;
 margin-left: auto;
@@ -153,19 +135,7 @@ border-radius: 5px;
 width: 80%;
 font-size: 30px;
 font-variant: small-caps;
-
 }
-
-test {
-color:#fff;
-background-color: black;
-text-shadow:#fff 0 -1px 4px, #ff0 0 -2px 10px, #ff8000 0 -10px 20px, red 0 -18px 40px;
-}
-
-
-/************phaser canvas centering************/
-canvas {   display : block;   margin : auto;}
-
 
 /*********** CREATE NEW GAME ***********/
 
