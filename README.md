@@ -21,7 +21,7 @@ create database kittens_development;
 create user kittens with password 'password1';
 export PGHOST=localhost
 ```
-Exit this window using ctrl+D, then switch back to your role with: `su - your_username`.
+Then exit the window you're in using Ctrl+D, and switch back to your role with: `su - your_username`.
 Then navigate to the ExplodingKittens directory and run: `rake db:schema:load`.
 
 ### Running the application
